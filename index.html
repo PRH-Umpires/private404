@@ -813,30 +813,7 @@ async function loadFixturesFromSupabase() {
     `;
   }).join("");
 
-  const statLabels = Array.from(document.querySelectorAll("div,span,p,strong,h2,h3,h4"));
-
-  const fixturesLabel = statLabels.find(el => el.textContent.trim() === "Fixtures");
-  if (fixturesLabel) {
-    const card = fixturesLabel.closest("div")?.parentElement;
-    if (card) {
-      const numberEl = Array.from(card.querySelectorAll("div,span,strong,h2,h3,h4")).find(el =>
-        /^\d+$/.test(el.textContent.trim())
-      );
-      if (numberEl) numberEl.textContent = data.length;
-    }
   }
-
-  const umpiresLabel = statLabels.find(el => el.textContent.trim() === "Umpires");
-  if (umpiresLabel) {
-    const card = umpiresLabel.closest("div")?.parentElement;
-    if (card) {
-      const numberEl = Array.from(card.querySelectorAll("div,span,strong,h2,h3,h4")).find(el =>
-        /^\d+$/.test(el.textContent.trim())
-      );
-      if (numberEl) numberEl.textContent = document.querySelectorAll('select option').length - 1;
-    }
-  }
-}
 
 async function initSupabaseApp() {
   await loadUmpiresFromSupabase();
