@@ -742,7 +742,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Example: load umpires
 async function loadUmpires() {
   const { data, error } = await supabaseClient
-    .from("umpires")
+    .from("Umpires")
     .select("*");
 
   if (error) {
