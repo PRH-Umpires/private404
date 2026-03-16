@@ -844,6 +844,44 @@ async function initSupabaseApp() {
 }
 
 initSupabaseApp();
+  document.getElementById("addUmpireBtn").addEventListener("click", async () => {
+
+  const name = document.getElementById("umpireName").value.trim();
+  const level = document.getElementById("umpireLevel").value.trim();
+  const area = document.getElementById("umpireArea").value.trim();
+
+  if (!name) {
+    alert("Please enter a name");
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("Umpires")
+    .insert([
+      {
+        name: name,
+        level: level,
+        email: ""
+      }
+    ]);
+
+  if (error) {
+    console.error("Error saving umpire:", error);
+    alert("Error saving umpire");
+    return;
+  }
+
+  console.log("Umpire saved:", data);
+
+  // clear form
+  document.getElementById("umpireName").value = "";
+  document.getElementById("umpireLevel").value = "";
+  document.getElementById("umpireArea").value = "";
+
+  // reload dropdown
+  await loadUmpiresFromSupabase();
+
+});
 </script>
 </body>
 </html>
