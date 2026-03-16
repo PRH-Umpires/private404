@@ -295,15 +295,18 @@
     </div>
   </main>
 
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const STORAGE_KEY = 'umpire-availability-manager-v1';
+    const SUPABASE_URL = "https://xhuijmuqzlysufaegfgb.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhodWlqbXVxemx5c3VmYWVnZmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODE3NTMsImV4cCI6MjA4OTI1Nzc1M30.6OQXMwLdE0OfEmstDmqC0JZvR71zOzs3yx6MryXD-xE";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const defaultData = {
+    let state = {
       umpires: [],
-      fixtures: []
+      fixtures: [],
+      availability: []
     };
-
-    let state = loadState();
 
     const els = {
       viewMode: document.getElementById('viewMode'),
@@ -315,7 +318,7 @@
       umpireName: document.getElementById('umpireName'),
       umpireLevel: document.getElementById('umpireLevel'),
       umpireArea: document.getElementById('umpireArea'),
-      addUmpireBtn: document.getElementById('addUmpireBtn'),
+      addUmpireBtn: document.getElementById('saveUmpireSupabaseBtn'),
       fixtureDate: document.getElementById('fixtureDate'),
       fixtureTime: document.getElementById('fixtureTime'),
       fixtureTitle: document.getElementById('fixtureTitle'),
@@ -336,263 +339,262 @@
       importFile: document.getElementById('importFile')
     };
 
-    function uid(prefix='id'){
-      return prefix + '_' + Math.random().toString(36).slice(2,10);
-    }
-
-    function loadState(){
-      try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        if(saved && typeof saved === 'object') return saved;
-      } catch(e){}
-      return structuredClone(defaultData);
-    }
-
-    function saveState(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function currentView(){
+    function currentView() {
       return els.viewMode.value;
     }
 
-    function currentUmpireId(){
+    function currentUmpireId() {
       return els.umpireSelect.value || '';
     }
 
-    function getUmpire(id){
+    function getUmpire(id) {
       return state.umpires.find(u => String(u.id) === String(id));
     }
 
-    function getAvailability(fixture, umpireId){
-      return fixture.responses?.find(r => String(r.umpireId) === String(umpireId)) || null;
+    function getAvailability(fixture, umpireId) {
+      return state.availability.find(
+        r => String(r.fixtureId) === String(fixture.id) && String(r.umpireId) === String(umpireId)
+      ) || null;
     }
 
-    function setAvailability(fixtureId, umpireId, status){
-      const fixture = state.fixtures.find(f => String(f.id) === String(fixtureId));
-      if(!fixture || !umpireId) return;
-      fixture.responses = fixture.responses || [];
-      const existing = fixture.responses.find(r => String(r.umpireId) === String(umpireId));
-      if(existing){
-        existing.status = status;
-        existing.updatedAt = new Date().toISOString();
-      } else {
-        fixture.responses.push({ umpireId, status, updatedAt: new Date().toISOString() });
-      }
-      if(status === 'Unavailable'){
-        fixture.assignedUmpireIds = (fixture.assignedUmpireIds || []).filter(id => String(id) !== String(umpireId));
-      }
-      saveState();
-      render();
+    function getCounts(fixture) {
+      const rows = state.availability.filter(r => String(r.fixtureId) === String(fixture.id));
+      return {
+        available: rows.filter(r => r.status === 'Available').length,
+        maybe: rows.filter(r => r.status === 'Maybe').length,
+        unavailable: rows.filter(r => r.status === 'Unavailable').length,
+        assigned: 0
+      };
     }
 
-    function toggleAssigned(fixtureId, umpireId){
-      const fixture = state.fixtures.find(f => String(f.id) === String(fixtureId));
-      if(!fixture) return;
-      fixture.assignedUmpireIds = fixture.assignedUmpireIds || [];
-      const idx = fixture.assignedUmpireIds.findIndex(id => String(id) === String(umpireId));
-      if(idx >= 0){
-        fixture.assignedUmpireIds.splice(idx,1);
-      } else {
-        fixture.assignedUmpireIds.push(umpireId);
-        fixture.responses = fixture.responses || [];
-        const existing = fixture.responses.find(r => String(r.umpireId) === String(umpireId));
-        if(existing){
-          existing.status = 'Available';
-        } else {
-          fixture.responses.push({ umpireId, status:'Available', updatedAt: new Date().toISOString() });
-        }
-      }
-      fixture.status = fixture.assignedUmpireIds.length >= Number(fixture.umpiresNeeded || 1) ? 'Assigned' : 'Open';
-      saveState();
-      render();
-    }
-
-    function deleteFixture(fixtureId){
-      if(!confirm('Delete this fixture?')) return;
-      state.fixtures = state.fixtures.filter(f => String(f.id) !== String(fixtureId));
-      saveState();
-      render();
-    }
-
-    function deleteUmpire(umpireId){
-      if(!confirm('Delete this umpire?')) return;
-      state.umpires = state.umpires.filter(u => String(u.id) !== String(umpireId));
-      state.fixtures.forEach(f => {
-        f.responses = (f.responses || []).filter(r => String(r.umpireId) !== String(umpireId));
-        f.assignedUmpireIds = (f.assignedUmpireIds || []).filter(id => String(id) !== String(umpireId));
+    function formatDate(date, time) {
+      const dt = new Date(date + 'T' + (time || '00:00'));
+      return dt.toLocaleString([], {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       });
-      saveState();
+    }
+
+    async function syncStateFromSupabase() {
+      const [umpireResult, fixtureResult, availabilityResult] = await Promise.all([
+        supabaseClient.from("Umpires").select("*").order("name", { ascending: true }),
+        supabaseClient.from("Fixtures").select("*").order("date", { ascending: true }),
+        supabaseClient.from("availability").select("*")
+      ]);
+
+      if (umpireResult.error) console.error("Error loading umpires:", umpireResult.error);
+      if (fixtureResult.error) console.error("Error loading fixtures:", fixtureResult.error);
+      if (availabilityResult.error) console.error("Error loading availability:", availabilityResult.error);
+
+      const umpireRows = umpireResult.data || [];
+      const fixtureRows = fixtureResult.data || [];
+      const availabilityRows = availabilityResult.data || [];
+
+      state.umpires = umpireRows.map(row => ({
+        id: String(row.id),
+        name: row.name || "",
+        level: row.level || "",
+        area: row.area || ""
+      }));
+
+      state.fixtures = fixtureRows.map(row => ({
+        id: String(row.id),
+        date: row.date || "",
+        time: row.time || "",
+        title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || row.title || "Fixture"),
+        venue: row.venue || "",
+        league: row.league || "",
+        umpiresNeeded: Number(row.umpires_needed ?? row.umpiresNeeded ?? 2),
+        status: row.status || "Open",
+        notes: row.notes || ""
+      }));
+
+      state.availability = availabilityRows.map(row => ({
+        id: String(row.id),
+        umpireId: String(row.umpire_id),
+        fixtureId: String(row.fixture_id),
+        status: row.status || ""
+      }));
+
       render();
     }
 
-    function addUmpire(){
+    async function addUmpire() {
       const name = els.umpireName.value.trim();
       const level = els.umpireLevel.value.trim();
-      const area = els.umpireArea.value.trim();
-      if(!name){ alert('Please enter an umpire name.'); return; }
-      state.umpires.push({ id: uid('ump'), name, level, area });
-      els.umpireName.value='';
-      els.umpireLevel.value='';
-      els.umpireArea.value='';
-      saveState();
-      render();
+
+      if (!name) {
+        alert('Please enter an umpire name.');
+        return;
+      }
+
+      const { error } = await supabaseClient.from("Umpires").insert([{
+        name,
+        level,
+        email: ""
+      }]);
+
+      if (error) {
+        console.error("Error saving umpire:", error);
+        alert("Error saving umpire");
+        return;
+      }
+
+      els.umpireName.value = '';
+      els.umpireLevel.value = '';
+      els.umpireArea.value = '';
+
+      await syncStateFromSupabase();
+      alert("Umpire saved");
     }
 
-    function addFixture(){
+    async function addFixture() {
       const date = els.fixtureDate.value;
       const time = els.fixtureTime.value;
       const title = els.fixtureTitle.value.trim();
-      if(!date || !time || !title){
+      const venue = els.fixtureVenue.value.trim();
+      const umpiresNeeded = Number(els.fixtureNeed.value || 2);
+
+      if (!date || !time || !title) {
         alert('Please add date, time, and fixture title.');
         return;
       }
-      state.fixtures.push({
-        id: uid('fix'),
+
+      const { error } = await supabaseClient.from("Fixtures").insert([{
         date,
         time,
-        title,
-        venue: els.fixtureVenue.value.trim(),
-        league: els.fixtureLeague.value.trim(),
-        umpiresNeeded: Number(els.fixtureNeed.value || 1),
-        status: els.fixtureStatus.value,
-        notes: els.fixtureNotes.value.trim(),
-        responses: [],
-        assignedUmpireIds: []
-      });
-      ['fixtureDate','fixtureTime','fixtureTitle','fixtureVenue','fixtureLeague','fixtureNotes'].forEach(k => els[k].value='');
-      els.fixtureNeed.value=2;
-      els.fixtureStatus.value='Open';
-      saveState();
-      render();
+        home_team: title,
+        venue,
+        umpires_needed: umpiresNeeded,
+        status: els.fixtureStatus.value || 'Open',
+        notes: els.fixtureNotes.value.trim()
+      }]);
+
+      if (error) {
+        console.error("Error saving fixture:", error);
+        alert("Error saving fixture");
+        return;
+      }
+
+      els.fixtureDate.value = '';
+      els.fixtureTime.value = '';
+      els.fixtureTitle.value = '';
+      els.fixtureVenue.value = '';
+      els.fixtureLeague.value = '';
+      els.fixtureNotes.value = '';
+      els.fixtureNeed.value = 2;
+      els.fixtureStatus.value = 'Open';
+
+      await syncStateFromSupabase();
+      alert("Fixture saved");
     }
 
-    function seedDemo(){
-      state = {
-        umpires: [
-          { id:'ump_amy', name:'Amy Clarke', level:'Level 2', area:'Reading' },
-          { id:'ump_james', name:'James Patel', level:'Level 1', area:'Henley' },
-          { id:'ump_sophie', name:'Sophie Reed', level:'Level 2', area:'Didcot' },
-          { id:'ump_luke', name:'Luke Miles', level:'Trainee', area:'Wallingford' }
-        ],
-        fixtures: [
-          {
-            id:'fix_1',
-            date:'2026-04-12',
-            time:'10:30',
-            title:'Henley Hawks vs Reading United',
-            venue:'Henley Sports Ground',
-            league:'County Division A',
-            umpiresNeeded:2,
-            status:'Open',
-            notes:'Arrival 45 mins before start.',
-            responses:[
-              { umpireId:'ump_amy', status:'Available', updatedAt:new Date().toISOString() },
-              { umpireId:'ump_james', status:'Maybe', updatedAt:new Date().toISOString() },
-              { umpireId:'ump_sophie', status:'Unavailable', updatedAt:new Date().toISOString() }
-            ],
-            assignedUmpireIds:['ump_amy']
-          },
-          {
-            id:'fix_2',
-            date:'2026-04-19',
-            time:'14:00',
-            title:'Wallingford Town vs Oxford City',
-            venue:'Wallingford College',
-            league:'Youth Premier',
-            umpiresNeeded:1,
-            status:'Assigned',
-            notes:'Parking at rear entrance.',
-            responses:[
-              { umpireId:'ump_luke', status:'Available', updatedAt:new Date().toISOString() },
-              { umpireId:'ump_james', status:'Available', updatedAt:new Date().toISOString() }
-            ],
-            assignedUmpireIds:['ump_james']
-          }
-        ]
-      };
-      saveState();
-      render();
+    async function setAvailability(fixtureId, umpireId, status) {
+      if (!fixtureId || !umpireId) return;
+
+      const existing = state.availability.find(
+        r => String(r.fixtureId) === String(fixtureId) && String(r.umpireId) === String(umpireId)
+      );
+
+      let error = null;
+
+      if (existing) {
+        const result = await supabaseClient
+          .from("availability")
+          .update({ status })
+          .eq("id", Number(existing.id));
+        error = result.error;
+      } else {
+        const result = await supabaseClient
+          .from("availability")
+          .insert([{
+            umpire_id: Number(umpireId),
+            fixture_id: Number(fixtureId),
+            status
+          }]);
+        error = result.error;
+      }
+
+      if (error) {
+        console.error("Error saving availability:", error);
+        alert("Error saving availability");
+        return;
+      }
+
+      await syncStateFromSupabase();
     }
 
-    function exportData(){
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'umpire-app-data.json';
-      a.click();
-      URL.revokeObjectURL(url);
+    async function deleteFixture(fixtureId) {
+      if (!confirm('Delete this fixture?')) return;
+
+      await supabaseClient.from("availability").delete().eq("fixture_id", Number(fixtureId));
+      const { error } = await supabaseClient.from("Fixtures").delete().eq("id", Number(fixtureId));
+
+      if (error) {
+        console.error("Error deleting fixture:", error);
+        alert("Error deleting fixture");
+        return;
+      }
+
+      await syncStateFromSupabase();
     }
 
-    function importData(file){
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          if(!parsed.umpires || !parsed.fixtures) throw new Error('Invalid file');
-          state = parsed;
-          saveState();
-          render();
-          alert('Data imported.');
-        } catch(err){
-          alert('That file could not be imported.');
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function formatDate(date, time){
-      const dt = new Date(date + 'T' + (time || '00:00'));
-      return dt.toLocaleString([], { weekday:'short', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
-    }
-
-    function getCounts(fixture){
-      const responses = fixture.responses || [];
-      return {
-        available: responses.filter(r => r.status === 'Available').length,
-        maybe: responses.filter(r => r.status === 'Maybe').length,
-        unavailable: responses.filter(r => r.status === 'Unavailable').length,
-        assigned: (fixture.assignedUmpireIds || []).length
-      };
-    }
-
-    function renderStats(){
+    function renderStats() {
       const totalFixtures = state.fixtures.length;
       const openFixtures = state.fixtures.filter(f => f.status === 'Open').length;
       const totalUmpires = state.umpires.length;
-      const assignedSlots = state.fixtures.reduce((sum, f) => sum + (f.assignedUmpireIds || []).length, 0);
+      const assignedSlots = 0;
+
       els.statsRow.innerHTML = [
         ['Fixtures', totalFixtures],
         ['Open', openFixtures],
         ['Umpires', totalUmpires],
         ['Assignments', assignedSlots]
-      ].map(([label,value]) => `<div class="stat"><span class="muted">${label}</span><b>${value}</b></div>`).join('');
+      ].map(([label, value]) =>
+        `<div class="stat"><span class="muted">${label}</span><b>${value}</b></div>`
+      ).join('');
     }
 
-    function renderUmpireSelect(){
+    function renderUmpireSelect() {
       const current = currentUmpireId();
       els.umpireSelect.innerHTML = state.umpires.length
         ? state.umpires.map(u => `<option value="${u.id}">${u.name}${u.level ? ' · ' + u.level : ''}</option>`).join('')
         : '<option value="">No umpires yet</option>';
-      if(state.umpires.some(u => String(u.id) === String(current))) els.umpireSelect.value = current;
+
+      if (state.umpires.some(u => String(u.id) === String(current))) {
+        els.umpireSelect.value = current;
+      }
     }
 
-    function filteredFixtures(){
-      let fixtures = [...state.fixtures].sort((a,b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+    function filteredFixtures() {
+      let fixtures = [...state.fixtures].sort(
+        (a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time)
+      );
+
       const filter = els.fixtureFilter.value;
       const umpireId = currentUmpireId();
-      if(filter === 'open') fixtures = fixtures.filter(f => f.status === 'Open');
-      if(filter === 'assigned') fixtures = fixtures.filter(f => f.status === 'Assigned');
-      if(filter === 'mine' && umpireId) fixtures = fixtures.filter(f => (f.responses || []).some(r => String(r.umpireId) === String(umpireId)));
+
+      if (filter === 'open') fixtures = fixtures.filter(f => f.status === 'Open');
+      if (filter === 'assigned') fixtures = fixtures.filter(f => f.status === 'Assigned');
+      if (filter === 'mine' && umpireId) {
+        fixtures = fixtures.filter(f =>
+          state.availability.some(r => String(r.fixtureId) === String(f.id) && String(r.umpireId) === String(umpireId))
+        );
+      }
+
       return fixtures;
     }
 
-    function renderFixtures(){
+    function renderFixtures() {
       const view = currentView();
       const umpireId = currentUmpireId();
       const fixtures = filteredFixtures();
-      if(!fixtures.length){
+
+      if (!fixtures.length) {
         els.fixtureList.innerHTML = `<div class="notice">No fixtures to show yet.</div>`;
         return;
       }
@@ -600,17 +602,22 @@
       els.fixtureList.innerHTML = fixtures.map(fixture => {
         const counts = getCounts(fixture);
         const myResponse = getAvailability(fixture, umpireId);
-        const assignedNames = (fixture.assignedUmpireIds || []).map(id => getUmpire(id)?.name).filter(Boolean);
-        const candidateRows = view === 'admin' ? state.umpires.map(u => {
-          const resp = getAvailability(fixture, u.id);
-          const assigned = (fixture.assignedUmpireIds || []).some(id => String(id) === String(u.id));
-          const style = resp?.status === 'Available' ? 'available' : resp?.status === 'Maybe' ? 'maybe' : resp?.status === 'Unavailable' ? 'unavailable' : '';
-          return `<tr>
-            <td>${u.name}<div class="small muted">${[u.level,u.area].filter(Boolean).join(' · ')}</div></td>
-            <td>${resp?.status ? `<span class="tag ${style}">${resp.status}</span>` : '<span class="muted small">No response</span>'}</td>
-            <td><button class="btn btn-secondary small" onclick="toggleAssigned('${fixture.id}','${u.id}')">${assigned ? 'Unassign' : 'Assign'}</button></td>
-          </tr>`;
-        }).join('') : '';
+
+        const candidateRows = view === 'admin'
+          ? state.umpires.map(u => {
+              const resp = getAvailability(fixture, u.id);
+              const style =
+                resp?.status === 'Available' ? 'available' :
+                resp?.status === 'Maybe' ? 'maybe' :
+                resp?.status === 'Unavailable' ? 'unavailable' : '';
+
+              return `<tr>
+                <td>${u.name}<div class="small muted">${[u.level, u.area].filter(Boolean).join(' · ')}</div></td>
+                <td>${resp?.status ? `<span class="tag ${style}">${resp.status}</span>` : '<span class="muted small">No response</span>'}</td>
+                <td><span class="muted small">—</span></td>
+              </tr>`;
+            }).join('')
+          : '';
 
         return `
           <div class="fixture">
@@ -659,7 +666,6 @@
                   <span class="tag">Unavailable: ${counts.unavailable}</span>
                   <span class="tag">Assigned: ${counts.assigned}/${fixture.umpiresNeeded}</span>
                 </div>
-                ${assignedNames.length ? `<div class="assign-list">${assignedNames.map(n => `<span class="assign-chip">${n}</span>`).join('')}</div>` : ''}
               </div>
               ${view === 'admin' ? `<button class="btn btn-danger" onclick="deleteFixture('${fixture.id}')">Delete fixture</button>` : ''}
             </div>
@@ -668,22 +674,26 @@
       }).join('');
     }
 
-    function renderOverview(){
-      const rows = [...state.fixtures].sort((a,b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
-      els.overviewBody.innerHTML = rows.length ? rows.map(f => {
-        const counts = getCounts(f);
-        const assignedNames = (f.assignedUmpireIds || []).map(id => getUmpire(id)?.name).filter(Boolean).join(', ') || '—';
-        return `<tr>
-          <td><strong>${f.title}</strong><div class="small muted">${formatDate(f.date, f.time)}</div></td>
-          <td>${counts.available}</td>
-          <td>${counts.maybe}</td>
-          <td>${counts.unavailable}</td>
-          <td>${assignedNames}</td>
-        </tr>`;
-      }).join('') : '<tr><td colspan="5" class="muted">No fixtures yet.</td></tr>';
+    function renderOverview() {
+      const rows = [...state.fixtures].sort(
+        (a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time)
+      );
+
+      els.overviewBody.innerHTML = rows.length
+        ? rows.map(f => {
+            const counts = getCounts(f);
+            return `<tr>
+              <td><strong>${f.title}</strong><div class="small muted">${formatDate(f.date, f.time)}</div></td>
+              <td>${counts.available}</td>
+              <td>${counts.maybe}</td>
+              <td>${counts.unavailable}</td>
+              <td>—</td>
+            </tr>`;
+          }).join('')
+        : '<tr><td colspan="5" class="muted">No fixtures yet.</td></tr>';
     }
 
-    function renderAdminCards(){
+    function renderAdminCards() {
       const admin = currentView() === 'admin';
       els.adminPanel.classList.toggle('hidden', !admin);
       els.addUmpireCard.classList.toggle('hidden', !admin);
@@ -694,7 +704,7 @@
         : 'Choose your name and update your availability for each fixture.';
     }
 
-    function render(){
+    function render() {
       renderAdminCards();
       renderUmpireSelect();
       renderStats();
@@ -703,497 +713,38 @@
     }
 
     window.setAvailability = setAvailability;
-    window.toggleAssigned = toggleAssigned;
     window.deleteFixture = deleteFixture;
 
-    if (els.addUmpireBtn) {
-      els.addUmpireBtn.addEventListener('click', addUmpire);
-    }
+    els.addUmpireBtn.addEventListener('click', addUmpire);
     els.addFixtureBtn.addEventListener('click', addFixture);
     els.viewMode.addEventListener('change', render);
     els.umpireSelect.addEventListener('change', render);
     els.fixtureFilter.addEventListener('change', render);
-    els.seedDemoBtn.addEventListener('click', seedDemo);
-    els.exportBtn.addEventListener('click', exportData);
-    els.importFile.addEventListener('change', (e) => {
-      const file = e.target.files?.[0];
-      if(file) importData(file);
-      e.target.value = '';
+
+    els.seedDemoBtn.addEventListener('click', () => {
+      alert('Demo data is disabled in database mode.');
     });
-    els.clearBtn.addEventListener('click', () => {
-      if(!confirm('This will erase all saved data in this browser. Continue?')) return;
-      state = structuredClone(defaultData);
-      saveState();
-      render();
+
+    els.exportBtn.addEventListener('click', () => {
+      alert('Export is disabled in database mode.');
+    });
+
+    els.importFile.addEventListener('change', () => {
+      alert('Import is disabled in database mode.');
+      els.importFile.value = '';
+    });
+
+    els.clearBtn.addEventListener('click', async () => {
+      await syncStateFromSupabase();
     });
 
     document.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter' && document.activeElement === els.umpireName){
-        document.getElementById('saveUmpireSupabaseBtn').click();
+      if (e.key === 'Enter' && document.activeElement === els.umpireName) {
+        els.addUmpireBtn.click();
       }
     });
 
-    render();
+    syncStateFromSupabase();
   </script>
-
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://xhuijmuqzlysufaegfgb.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhodWlqbXVxemx5c3VmYWVnZmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODE3NTMsImV4cCI6MjA4OTI1Nzc1M30.6OQXMwLdE0OfEmstDmqC0JZvR71zOzs3yx6MryXD-xE";
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  let state = {
-    umpires: [],
-    fixtures: [],
-    availability: []
-  };
-
-  const els = {
-    viewMode: document.getElementById('viewMode'),
-    umpireSelect: document.getElementById('umpireSelect'),
-    umpireLoginArea: document.getElementById('umpireLoginArea'),
-    adminPanel: document.getElementById('adminPanel'),
-    addUmpireCard: document.getElementById('addUmpireCard'),
-    addFixtureCard: document.getElementById('addFixtureCard'),
-    umpireName: document.getElementById('umpireName'),
-    umpireLevel: document.getElementById('umpireLevel'),
-    umpireArea: document.getElementById('umpireArea'),
-    addUmpireBtn: document.getElementById('saveUmpireSupabaseBtn'),
-    fixtureDate: document.getElementById('fixtureDate'),
-    fixtureTime: document.getElementById('fixtureTime'),
-    fixtureTitle: document.getElementById('fixtureTitle'),
-    fixtureVenue: document.getElementById('fixtureVenue'),
-    fixtureLeague: document.getElementById('fixtureLeague'),
-    fixtureNeed: document.getElementById('fixtureNeed'),
-    fixtureStatus: document.getElementById('fixtureStatus'),
-    fixtureNotes: document.getElementById('fixtureNotes'),
-    addFixtureBtn: document.getElementById('addFixtureBtn'),
-    statsRow: document.getElementById('statsRow'),
-    fixtureList: document.getElementById('fixtureList'),
-    overviewBody: document.getElementById('overviewBody'),
-    clearBtn: document.getElementById('clearBtn'),
-    fixtureFilter: document.getElementById('fixtureFilter'),
-    dashboardText: document.getElementById('dashboardText'),
-    seedDemoBtn: document.getElementById('seedDemoBtn'),
-    exportBtn: document.getElementById('exportBtn'),
-    importFile: document.getElementById('importFile')
-  };
-
-  function currentView() {
-    return els.viewMode.value;
-  }
-
-  function currentUmpireId() {
-    return els.umpireSelect.value || '';
-  }
-
-  function getUmpire(id) {
-    return state.umpires.find(u => String(u.id) === String(id));
-  }
-
-  function getAvailability(fixture, umpireId) {
-    return state.availability.find(
-      r => String(r.fixtureId) === String(fixture.id) && String(r.umpireId) === String(umpireId)
-    ) || null;
-  }
-
-  function getCounts(fixture) {
-    const rows = state.availability.filter(r => String(r.fixtureId) === String(fixture.id));
-    return {
-      available: rows.filter(r => r.status === 'Available').length,
-      maybe: rows.filter(r => r.status === 'Maybe').length,
-      unavailable: rows.filter(r => r.status === 'Unavailable').length,
-      assigned: 0
-    };
-  }
-
-  function formatDate(date, time) {
-    const dt = new Date(date + 'T' + (time || '00:00'));
-    return dt.toLocaleString([], {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
-  async function syncStateFromSupabase() {
-    const [umpireResult, fixtureResult, availabilityResult] = await Promise.all([
-      supabaseClient.from("Umpires").select("*").order("name", { ascending: true }),
-      supabaseClient.from("Fixtures").select("*").order("date", { ascending: true }),
-      supabaseClient.from("availability").select("*")
-    ]);
-
-    if (umpireResult.error) {
-      console.error("Error loading umpires:", umpireResult.error);
-    }
-    if (fixtureResult.error) {
-      console.error("Error loading fixtures:", fixtureResult.error);
-    }
-    if (availabilityResult.error) {
-      console.error("Error loading availability:", availabilityResult.error);
-    }
-
-    const umpireRows = umpireResult.data || [];
-    const fixtureRows = fixtureResult.data || [];
-    const availabilityRows = availabilityResult.data || [];
-
-    state.umpires = umpireRows.map(row => ({
-      id: String(row.id),
-      name: row.name || "",
-      level: row.level || "",
-      area: row.area || ""
-    }));
-
-    state.fixtures = fixtureRows.map(row => ({
-      id: String(row.id),
-      date: row.date || "",
-      time: row.time || "",
-      title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || row.title || "Fixture"),
-      venue: row.venue || "",
-      league: row.league || "",
-      umpiresNeeded: Number(row.umpires_needed ?? row.umpiresNeeded ?? 2),
-      status: row.status || "Open",
-      notes: row.notes || ""
-    }));
-
-    state.availability = availabilityRows.map(row => ({
-      id: String(row.id),
-      umpireId: String(row.umpire_id),
-      fixtureId: String(row.fixture_id),
-      status: row.status || ""
-    }));
-
-    render();
-  }
-
-  async function addUmpire() {
-    const name = els.umpireName.value.trim();
-    const level = els.umpireLevel.value.trim();
-    const area = els.umpireArea.value.trim();
-
-    if (!name) {
-      alert('Please enter an umpire name.');
-      return;
-    }
-
-    const payload = {
-      name,
-      level,
-      email: ""
-    };
-
-    const { error } = await supabaseClient.from("Umpires").insert([payload]);
-
-    if (error) {
-      console.error("Error saving umpire:", error);
-      alert("Error saving umpire");
-      return;
-    }
-
-    els.umpireName.value = '';
-    els.umpireLevel.value = '';
-    els.umpireArea.value = '';
-
-    await syncStateFromSupabase();
-    alert("Umpire saved");
-  }
-
-  async function addFixture() {
-    const date = els.fixtureDate.value;
-    const time = els.fixtureTime.value;
-    const title = els.fixtureTitle.value.trim();
-    const venue = els.fixtureVenue.value.trim();
-    const umpiresNeeded = Number(els.fixtureNeed.value || 2);
-
-    if (!date || !time || !title) {
-      alert('Please add date, time, and fixture title.');
-      return;
-    }
-
-    const payload = {
-      date,
-      time,
-      home_team: title,
-      venue,
-      umpires_needed: umpiresNeeded
-    };
-
-    const { error } = await supabaseClient.from("Fixtures").insert([payload]);
-
-    if (error) {
-      console.error("Error saving fixture:", error);
-      alert("Error saving fixture");
-      return;
-    }
-
-    els.fixtureDate.value = '';
-    els.fixtureTime.value = '';
-    els.fixtureTitle.value = '';
-    els.fixtureVenue.value = '';
-    els.fixtureLeague.value = '';
-    els.fixtureNotes.value = '';
-    els.fixtureNeed.value = 2;
-    els.fixtureStatus.value = 'Open';
-
-    await syncStateFromSupabase();
-    alert("Fixture saved");
-  }
-
-  async function setAvailability(fixtureId, umpireId, status) {
-    if (!fixtureId || !umpireId) return;
-
-    const existing = state.availability.find(
-      r => String(r.fixtureId) === String(fixtureId) && String(r.umpireId) === String(umpireId)
-    );
-
-    let error = null;
-
-    if (existing) {
-      const result = await supabaseClient
-        .from("availability")
-        .update({ status })
-        .eq("id", Number(existing.id));
-      error = result.error;
-    } else {
-      const result = await supabaseClient
-        .from("availability")
-        .insert([{
-          umpire_id: Number(umpireId),
-          fixture_id: Number(fixtureId),
-          status
-        }]);
-      error = result.error;
-    }
-
-    if (error) {
-      console.error("Error saving availability:", error);
-      alert("Error saving availability");
-      return;
-    }
-
-    await syncStateFromSupabase();
-  }
-
-  async function deleteFixture(fixtureId) {
-    if (!confirm('Delete this fixture?')) return;
-
-    await supabaseClient.from("availability").delete().eq("fixture_id", Number(fixtureId));
-    const { error } = await supabaseClient.from("Fixtures").delete().eq("id", Number(fixtureId));
-
-    if (error) {
-      console.error("Error deleting fixture:", error);
-      alert("Error deleting fixture");
-      return;
-    }
-
-    await syncStateFromSupabase();
-  }
-
-  function renderStats() {
-    const totalFixtures = state.fixtures.length;
-    const openFixtures = state.fixtures.filter(f => f.status === 'Open').length;
-    const totalUmpires = state.umpires.length;
-    const assignedSlots = 0;
-
-    els.statsRow.innerHTML = [
-      ['Fixtures', totalFixtures],
-      ['Open', openFixtures],
-      ['Umpires', totalUmpires],
-      ['Assignments', assignedSlots]
-    ].map(([label, value]) =>
-      `<div class="stat"><span class="muted">${label}</span><b>${value}</b></div>`
-    ).join('');
-  }
-
-  function renderUmpireSelect() {
-    const current = currentUmpireId();
-    els.umpireSelect.innerHTML = state.umpires.length
-      ? state.umpires.map(u => `<option value="${u.id}">${u.name}${u.level ? ' · ' + u.level : ''}</option>`).join('')
-      : '<option value="">No umpires yet</option>';
-
-    if (state.umpires.some(u => String(u.id) === String(current))) {
-      els.umpireSelect.value = current;
-    }
-  }
-
-  function filteredFixtures() {
-    let fixtures = [...state.fixtures].sort(
-      (a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time)
-    );
-
-    const filter = els.fixtureFilter.value;
-    const umpireId = currentUmpireId();
-
-    if (filter === 'open') fixtures = fixtures.filter(f => f.status === 'Open');
-    if (filter === 'assigned') fixtures = fixtures.filter(f => f.status === 'Assigned');
-    if (filter === 'mine' && umpireId) {
-      fixtures = fixtures.filter(f =>
-        state.availability.some(r => String(r.fixtureId) === String(f.id) && String(r.umpireId) === String(umpireId))
-      );
-    }
-
-    return fixtures;
-  }
-
-  function renderFixtures() {
-    const view = currentView();
-    const umpireId = currentUmpireId();
-    const fixtures = filteredFixtures();
-
-    if (!fixtures.length) {
-      els.fixtureList.innerHTML = `<div class="notice">No fixtures to show yet.</div>`;
-      return;
-    }
-
-    els.fixtureList.innerHTML = fixtures.map(fixture => {
-      const counts = getCounts(fixture);
-      const myResponse = getAvailability(fixture, umpireId);
-
-      const candidateRows = view === 'admin'
-        ? state.umpires.map(u => {
-            const resp = getAvailability(fixture, u.id);
-            const style =
-              resp?.status === 'Available' ? 'available' :
-              resp?.status === 'Maybe' ? 'maybe' :
-              resp?.status === 'Unavailable' ? 'unavailable' : '';
-
-            return `<tr>
-              <td>${u.name}<div class="small muted">${[u.level, u.area].filter(Boolean).join(' · ')}</div></td>
-              <td>${resp?.status ? `<span class="tag ${style}">${resp.status}</span>` : '<span class="muted small">No response</span>'}</td>
-              <td><span class="muted small">—</span></td>
-            </tr>`;
-          }).join('')
-        : '';
-
-      return `
-        <div class="fixture">
-          <div class="fixture-head">
-            <div>
-              <div class="fixture-title">${fixture.title}</div>
-              <div class="muted" style="margin-top:6px">${formatDate(fixture.date, fixture.time)}</div>
-            </div>
-            <span class="tag">${fixture.status}</span>
-          </div>
-
-          <div class="meta">
-            ${fixture.venue ? `<span class="tag">Venue: ${fixture.venue}</span>` : ''}
-            ${fixture.league ? `<span class="tag">League: ${fixture.league}</span>` : ''}
-            <span class="tag">Need: ${fixture.umpiresNeeded}</span>
-          </div>
-
-          ${fixture.notes ? `<div class="notice" style="margin-top:14px">${fixture.notes}</div>` : ''}
-
-          ${view === 'umpire' ? `
-            <div class="availability-row">
-              <button class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Available')">Available</button>
-              <button class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe')">Maybe</button>
-              <button class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable')">Unavailable</button>
-            </div>
-          ` : `
-            <div class="table-wrap" style="margin-top:14px">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Umpire</th>
-                    <th>Availability</th>
-                    <th>Assignment</th>
-                  </tr>
-                </thead>
-                <tbody>${candidateRows}</tbody>
-              </table>
-            </div>
-          `}
-
-          <div class="fixture-footer">
-            <div>
-              <div class="counts">
-                <span class="tag">Available: ${counts.available}</span>
-                <span class="tag">Maybe: ${counts.maybe}</span>
-                <span class="tag">Unavailable: ${counts.unavailable}</span>
-                <span class="tag">Assigned: ${counts.assigned}/${fixture.umpiresNeeded}</span>
-              </div>
-            </div>
-            ${view === 'admin' ? `<button class="btn btn-danger" onclick="deleteFixture('${fixture.id}')">Delete fixture</button>` : ''}
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  function renderOverview() {
-    const rows = [...state.fixtures].sort(
-      (a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time)
-    );
-
-    els.overviewBody.innerHTML = rows.length
-      ? rows.map(f => {
-          const counts = getCounts(f);
-          return `<tr>
-            <td><strong>${f.title}</strong><div class="small muted">${formatDate(f.date, f.time)}</div></td>
-            <td>${counts.available}</td>
-            <td>${counts.maybe}</td>
-            <td>${counts.unavailable}</td>
-            <td>—</td>
-          </tr>`;
-        }).join('')
-      : '<tr><td colspan="5" class="muted">No fixtures yet.</td></tr>';
-  }
-
-  function renderAdminCards() {
-    const admin = currentView() === 'admin';
-    els.adminPanel.classList.toggle('hidden', !admin);
-    els.addUmpireCard.classList.toggle('hidden', !admin);
-    els.addFixtureCard.classList.toggle('hidden', !admin);
-    els.umpireLoginArea.classList.toggle('hidden', admin);
-    els.dashboardText.textContent = admin
-      ? 'Add fixtures, manage availability, and assign umpires.'
-      : 'Choose your name and update your availability for each fixture.';
-  }
-
-  function render() {
-    renderAdminCards();
-    renderUmpireSelect();
-    renderStats();
-    renderFixtures();
-    renderOverview();
-  }
-
-  window.setAvailability = setAvailability;
-  window.deleteFixture = deleteFixture;
-
-  els.addUmpireBtn.addEventListener('click', addUmpire);
-  els.addFixtureBtn.addEventListener('click', addFixture);
-  els.viewMode.addEventListener('change', render);
-  els.umpireSelect.addEventListener('change', render);
-  els.fixtureFilter.addEventListener('change', render);
-
-  els.seedDemoBtn.addEventListener('click', () => {
-    alert('Demo data is disabled in database mode.');
-  });
-
-  els.exportBtn.addEventListener('click', () => {
-    alert('Export is disabled in database mode.');
-  });
-
-  els.importFile.addEventListener('change', () => {
-    alert('Import is disabled in database mode.');
-    els.importFile.value = '';
-  });
-
-  els.clearBtn.addEventListener('click', async () => {
-    await syncStateFromSupabase();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && document.activeElement === els.umpireName) {
-      els.addUmpireBtn.click();
-    }
-  });
-
-  syncStateFromSupabase();
-</script>
 </body>
 </html>
