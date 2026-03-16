@@ -732,18 +732,17 @@
     render();
   </script>
   
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 const SUPABASE_URL = "https://xhuijmuqzlysufaegfgb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhodWlqbXVxemx5c3VmYWVnZmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODE3NTMsImV4cCI6MjA4OTI1Nzc1M30.6OQXMwLdE0OfEmstDmqC0JZvR71zOzs3yx6MryXD-xE";
-
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Example: load umpires
-async function loadUmpires() {
+async function loadUmpiresFromSupabase() {
   const { data, error } = await supabaseClient
     .from("Umpires")
-    .select("*");
+    .select("*")
+    .order("name", { ascending: true });
 
   if (error) {
     console.error("Error loading umpires:", error);
@@ -751,9 +750,38 @@ async function loadUmpires() {
   }
 
   console.log("Umpires:", data);
+
+  const umpireSelect = document.querySelector("select");
+  if (!umpireSelect) return;
+
+  const nameSelects = Array.from(document.querySelectorAll("select"));
+  const targetSelect = nameSelects.find(s =>
+    s.previousElementSibling &&
+    s.previousElementSibling.textContent &&
+    s.previousElementSibling.textContent.toLowerCase().includes("choose your name")
+  ) || nameSelects[1];
+
+  if (!targetSelect) return;
+
+  targetSelect.innerHTML = "";
+
+  if (!data || data.length === 0) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "No umpires yet";
+    targetSelect.appendChild(opt);
+    return;
+  }
+
+  data.forEach(umpire => {
+    const opt = document.createElement("option");
+    opt.value = umpire.id;
+    opt.textContent = umpire.name;
+    targetSelect.appendChild(opt);
+  });
 }
 
-loadUmpires();
+loadUmpiresFromSupabase();
 </script>
 </body>
 </html>
