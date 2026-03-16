@@ -751,15 +751,12 @@ async function loadUmpiresFromSupabase() {
 
   console.log("Umpires:", data);
 
-  const umpireSelect = document.querySelector("select");
-  if (!umpireSelect) return;
-
-  const nameSelects = Array.from(document.querySelectorAll("select"));
-  const targetSelect = nameSelects.find(s =>
+  const selects = Array.from(document.querySelectorAll("select"));
+  const targetSelect = selects.find(s =>
     s.previousElementSibling &&
     s.previousElementSibling.textContent &&
     s.previousElementSibling.textContent.toLowerCase().includes("choose your name")
-  ) || nameSelects[1];
+  ) || selects[1];
 
   if (!targetSelect) return;
 
@@ -781,7 +778,72 @@ async function loadUmpiresFromSupabase() {
   });
 }
 
-loadUmpiresFromSupabase();
+async function loadFixturesFromSupabase() {
+  const { data, error } = await supabaseClient
+    .from("Fixtures")
+    .select("*")
+    .order("date", { ascending: true });
+
+  if (error) {
+    console.error("Error loading fixtures:", error);
+    return;
+  }
+
+  console.log("Fixtures:", data);
+
+  const fixturesStat = Array.from(document.querySelectorAll("*")).find(el =>
+    el.textContent && el.textContent.trim() === "Fixtures"
+  );
+
+  if (fixturesStat) {
+    const card = fixturesStat.closest(".stat-card, .card, div");
+    if (card) {
+      const numberEl = card.querySelector("strong, .stat-number, h3, h2");
+      if (numberEl) {
+        numberEl.textContent = data.length;
+      }
+    }
+  }
+
+  const upcomingHeader = Array.from(document.querySelectorAll("h1,h2,h3,h4")).find(el =>
+    el.textContent && el.textContent.toLowerCase().includes("upcoming fixtures")
+  );
+
+  if (!upcomingHeader) return;
+
+  const upcomingSection = upcomingHeader.closest("section, .card, .panel, div");
+  if (!upcomingSection) return;
+
+  const infoBox = upcomingSection.querySelector(".empty-state, .info, .notice, p, div");
+  if (!infoBox) return;
+
+  if (!data || data.length === 0) {
+    infoBox.textContent = "No fixtures to show yet.";
+    return;
+  }
+
+  infoBox.innerHTML = data.map(fixture => {
+    const matchTitle = fixture.away_team
+      ? `${fixture.home_team} vs ${fixture.away_team}`
+      : `${fixture.home_team} at ${fixture.venue || "TBC"}`;
+
+    return `
+      <div style="padding:12px 0;border-bottom:1px solid #e5e7eb;">
+        <div style="font-weight:600;">${matchTitle}</div>
+        <div style="font-size:14px;opacity:.8;">
+          ${fixture.date || ""} ${fixture.time || ""} · ${fixture.venue || "Venue TBC"} · Umpires needed: ${fixture.umpires_needed ?? 0}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function initSupabaseApp() {
+  await loadUmpiresFromSupabase();
+  await loadFixturesFromSupabase();
+}
+
+initSupabaseApp();
 </script>
 </body>
 </html>
