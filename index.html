@@ -731,5 +731,30 @@
 
     render();
   </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+const SUPABASE_URL = "https://xhuijmuqzlysufaegfgb.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhodWlqbXVxemx5c3VmYWVnZmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODE3NTMsImV4cCI6MjA4OTI1Nzc1M30.6OQXMwLdE0OfEmstDmqC0JZvR71zOzs3yx6MryXD-xE";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Example: load umpires
+async function loadUmpires() {
+  const { data, error } = await supabaseClient
+    .from("umpires")
+    .select("*");
+
+  if (error) {
+    console.error("Error loading umpires:", error);
+    return;
+  }
+
+  console.log("Umpires:", data);
+}
+
+loadUmpires();
+</script>
 </body>
 </html>
+
