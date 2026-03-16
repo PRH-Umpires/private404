@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Umpire Availability Manager</title>
+  <style>
+    :root{
+      --bg:#f5f6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --brand:#1d4ed8;
+      --brand2:#0f172a;
+      --good:#15803d;
+      --warn:#b45309;
+      --bad:#b91c1c;
+      --shadow:0 10px 28px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    header{
+      background:linear-gradient(135deg, var(--brand2), var(--brand));
+      color:#fff;
+      padding:28px 20px;
+      box-shadow:var(--shadow);
+    }
+    .wrap{max-width:1180px;margin:0 auto}
+    h1,h2,h3,p{margin:0}
+    .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
+    .hero p{max-width:720px;opacity:.92;margin-top:8px;line-height:1.5}
+    .pill{
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.18);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:14px;
+      white-space:nowrap;
+    }
+    main{padding:22px 20px 48px}
+    .grid{
+      display:grid;
+      grid-template-columns: 300px 1fr;
+      gap:22px;
+      align-items:start;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .sidebar .card + .card{margin-top:16px}
+    label{display:block;font-size:13px;font-weight:600;margin:14px 0 7px}
+    input, select, textarea{
+      width:100%;
+      padding:12px 13px;
+      border:1px solid #d1d5db;
+      border-radius:12px;
+      font:inherit;
+      background:#fff;
+    }
+    textarea{min-height:90px;resize:vertical}
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:12px 14px;
+      font:inherit;
+      font-weight:700;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--brand);color:#fff}
+    .btn-secondary{background:#eef2ff;color:var(--brand)}
+    .btn-danger{background:#fee2e2;color:var(--bad)}
+    .btn-ghost{background:#f3f4f6;color:var(--text)}
+    .stack > * + *{margin-top:10px}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px}
+    .muted{color:var(--muted)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .stat{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff}
+    .stat b{display:block;font-size:26px;margin-top:4px}
+    .list{display:grid;gap:14px}
+    .fixture{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      background:#fff;
+    }
+    .fixture-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+    .fixture-title{font-size:18px;font-weight:800}
+    .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .tag{
+      background:#f3f4f6;
+      color:#374151;
+      border-radius:999px;
+      padding:8px 10px;
+      font-size:12px;
+      font-weight:700;
+    }
+    .availability-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .availability-btn{flex:1 1 140px}
+    .available{background:#dcfce7;color:var(--good)}
+    .maybe{background:#fef3c7;color:var(--warn)}
+    .unavailable{background:#fee2e2;color:var(--bad)}
+    .fixture-footer{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:14px}
+    .counts{display:flex;gap:8px;flex-wrap:wrap}
+    .counts .tag{font-size:11px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .hidden{display:none !important}
+    .small{font-size:12px}
+    .assign-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .assign-chip{background:#eff6ff;color:#1e40af;padding:8px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;vertical-align:top}
+    th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+    .notice{padding:12px 14px;border-radius:14px;background:#eff6ff;color:#1e3a8a;font-size:14px;line-height:1.45}
+    .danger-note{background:#fef2f2;color:#991b1b}
+    .footer-note{margin-top:18px;font-size:12px;color:var(--muted)}
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .two-col{grid-template-columns:1fr}
+    }
+    @media (max-width: 560px){
+      .stats{grid-template-columns:1fr}
+      header{padding:24px 16px}
+      main{padding:18px 16px 34px}
+      .card{padding:15px}
+      .fixture{padding:14px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div>
+        <h1>Umpire Availability Manager</h1>
+        <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
+      </div>
+      <div class="pill">Single-file app · saves in your browser</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap grid">
+      <aside class="sidebar">
+        <div class="card">
+          <div class="section-title">
+            <h3>Your View</h3>
+          </div>
+          <label for="viewMode">Role</label>
+          <select id="viewMode">
+            <option value="umpire">Umpire</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          <div id="umpireLoginArea">
+            <label for="umpireSelect">Choose your name</label>
+            <select id="umpireSelect"></select>
+            <div class="small muted" style="margin-top:8px">Tip: add umpire names in the admin panel first.</div>
+          </div>
+        </div>
+
+        <div class="card" id="adminPanel">
+          <div class="section-title">
+            <h3>Admin Panel</h3>
+          </div>
+          <div class="stack">
+            <button class="btn btn-secondary" id="seedDemoBtn">Load demo data</button>
+            <button class="btn btn-ghost" id="exportBtn">Export data</button>
+            <label for="importFile">Import data</label>
+            <input type="file" id="importFile" accept="application/json" />
+          </div>
+        </div>
+
+        <div class="card" id="addUmpireCard">
+          <div class="section-title">
+            <h3>Add Umpire</h3>
+          </div>
+          <label for="umpireName">Name</label>
+          <input id="umpireName" placeholder="e.g. Sarah Jones" />
+          <label for="umpireLevel">Grade / Level</label>
+          <input id="umpireLevel" placeholder="e.g. Level 2" />
+          <label for="umpireArea">Area / Base</label>
+          <input id="umpireArea" placeholder="e.g. Reading" />
+          <button class="btn btn-primary" id="addUmpireBtn" style="margin-top:14px;width:100%">Save umpire</button>
+        </div>
+
+        <div class="card" id="addFixtureCard">
+          <div class="section-title">
+            <h3>Add Fixture</h3>
+          </div>
+          <div class="two-col">
+            <div>
+              <label for="fixtureDate">Date</label>
+              <input id="fixtureDate" type="date" />
+            </div>
+            <div>
+              <label for="fixtureTime">Time</label>
+              <input id="fixtureTime" type="time" />
+            </div>
+          </div>
+          <label for="fixtureTitle">Fixture</label>
+          <input id="fixtureTitle" placeholder="e.g. Henley vs Reading" />
+          <div class="two-col">
+            <div>
+              <label for="fixtureVenue">Venue</label>
+              <input id="fixtureVenue" placeholder="e.g. Henley Sports Park" />
+            </div>
+            <div>
+              <label for="fixtureLeague">League</label>
+              <input id="fixtureLeague" placeholder="e.g. County League" />
+            </div>
+          </div>
+          <div class="two-col">
+            <div>
+              <label for="fixtureNeed">Umpires needed</label>
+              <input id="fixtureNeed" type="number" min="1" value="2" />
+            </div>
+            <div>
+              <label for="fixtureStatus">Status</label>
+              <select id="fixtureStatus">
+                <option value="Open">Open</option>
+                <option value="Assigned">Assigned</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+          </div>
+          <label for="fixtureNotes">Notes</label>
+          <textarea id="fixtureNotes" placeholder="Optional match notes"></textarea>
+          <button class="btn btn-primary" id="addFixtureBtn" style="margin-top:14px;width:100%">Save fixture</button>
+        </div>
+      </aside>
+
+      <section>
+        <div class="topbar">
+          <div>
+            <h2>Dashboard</h2>
+            <p class="muted" id="dashboardText">See fixtures, availability, and assignments.</p>
+          </div>
+          <button class="btn btn-ghost" id="clearBtn">Reset all data</button>
+        </div>
+
+        <div class="stats" id="statsRow"></div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="section-title">
+            <h3>Upcoming Fixtures</h3>
+            <select id="fixtureFilter" style="max-width:220px">
+              <option value="all">All fixtures</option>
+              <option value="open">Open only</option>
+              <option value="assigned">Assigned only</option>
+              <option value="mine">Only where I responded</option>
+            </select>
+          </div>
+          <div id="fixtureList" class="list"></div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="section-title">
+            <h3>Availability Overview</h3>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fixture</th>
+                  <th>Available</th>
+                  <th>Maybe</th>
+                  <th>Unavailable</th>
+                  <th>Assigned</th>
+                </tr>
+              </thead>
+              <tbody id="overviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="footer-note">
+          This MVP stores data in your browser using localStorage. For a real shared app across multiple people, the next step would be moving this to Supabase or Firebase so every umpire can log in from their own phone.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'umpire-availability-manager-v1';
+
+    const defaultData = {
+      umpires: [],
+      fixtures: []
+    };
+
+    let state = loadState();
+
+    const els = {
+      viewMode: document.getElementById('viewMode'),
+      umpireSelect: document.getElementById('umpireSelect'),
+      umpireLoginArea: document.getElementById('umpireLoginArea'),
+      adminPanel: document.getElementById('adminPanel'),
+      addUmpireCard: document.getElementById('addUmpireCard'),
+      addFixtureCard: document.getElementById('addFixtureCard'),
+      umpireName: document.getElementById('umpireName'),
+      umpireLevel: document.getElementById('umpireLevel'),
+      umpireArea: document.getElementById('umpireArea'),
+      addUmpireBtn: document.getElementById('addUmpireBtn'),
+      fixtureDate: document.getElementById('fixtureDate'),
+      fixtureTime: document.getElementById('fixtureTime'),
+      fixtureTitle: document.getElementById('fixtureTitle'),
+      fixtureVenue: document.getElementById('fixtureVenue'),
+      fixtureLeague: document.getElementById('fixtureLeague'),
+      fixtureNeed: document.getElementById('fixtureNeed'),
+      fixtureStatus: document.getElementById('fixtureStatus'),
+      fixtureNotes: document.getElementById('fixtureNotes'),
+      addFixtureBtn: document.getElementById('addFixtureBtn'),
+      statsRow: document.getElementById('statsRow'),
+      fixtureList: document.getElementById('fixtureList'),
+      overviewBody: document.getElementById('overviewBody'),
+      clearBtn: document.getElementById('clearBtn'),
+      fixtureFilter: document.getElementById('fixtureFilter'),
+      dashboardText: document.getElementById('dashboardText'),
+      seedDemoBtn: document.getElementById('seedDemoBtn'),
+      exportBtn: document.getElementById('exportBtn'),
+      importFile: document.getElementById('importFile')
+    };
+
+    function uid(prefix='id'){
+      return prefix + '_' + Math.random().toString(36).slice(2,10);
+    }
+
+    function loadState(){
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if(saved && typeof saved === 'object') return saved;
+      } catch(e){}
+      return structuredClone(defaultData);
+    }
+
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function currentView(){
+      return els.viewMode.value;
+    }
+
+    function currentUmpireId(){
+      return els.umpireSelect.value || '';
+    }
+
+    function getUmpire(id){
+      return state.umpires.find(u => u.id === id);
+    }
+
+    function getAvailability(fixture, umpireId){
+      return fixture.responses?.find(r => r.umpireId === umpireId) || null;
+    }
+
+    function setAvailability(fixtureId, umpireId, status){
+      const fixture = state.fixtures.find(f => f.id === fixtureId);
+      if(!fixture || !umpireId) return;
+      fixture.responses = fixture.responses || [];
+      const existing = fixture.responses.find(r => r.umpireId === umpireId);
+      if(existing){
+        existing.status = status;
+        existing.updatedAt = new Date().toISOString();
+      } else {
+        fixture.responses.push({ umpireId, status, updatedAt: new Date().toISOString() });
+      }
+      if(status === 'Unavailable'){
+        fixture.assignedUmpireIds = (fixture.assignedUmpireIds || []).filter(id => id !== umpireId);
+      }
+      saveState();
+      render();
+    }
+
+    function toggleAssigned(fixtureId, umpireId){
+      const fixture = state.fixtures.find(f => f.id === fixtureId);
+      if(!fixture) return;
+      fixture.assignedUmpireIds = fixture.assignedUmpireIds || [];
+      const idx = fixture.assignedUmpireIds.indexOf(umpireId);
+      if(idx >= 0){
+        fixture.assignedUmpireIds.splice(idx,1);
+      } else {
+        fixture.assignedUmpireIds.push(umpireId);
+        fixture.responses = fixture.responses || [];
+        const existing = fixture.responses.find(r => r.umpireId === umpireId);
+        if(existing){
+          existing.status = 'Available';
+        } else {
+          fixture.responses.push({ umpireId, status:'Available', updatedAt: new Date().toISOString() });
+        }
+      }
+      fixture.status = fixture.assignedUmpireIds.length >= Number(fixture.umpiresNeeded || 1) ? 'Assigned' : 'Open';
+      saveState();
+      render();
+    }
+
+    function deleteFixture(fixtureId){
+      if(!confirm('Delete this fixture?')) return;
+      state.fixtures = state.fixtures.filter(f => f.id !== fixtureId);
+      saveState();
+      render();
+    }
+
+    function deleteUmpire(umpireId){
+      if(!confirm('Delete this umpire?')) return;
+      state.umpires = state.umpires.filter(u => u.id !== umpireId);
+      state.fixtures.forEach(f => {
+        f.responses = (f.responses || []).filter(r => r.umpireId !== umpireId);
+        f.assignedUmpireIds = (f.assignedUmpireIds || []).filter(id => id !== umpireId);
+      });
+      saveState();
+      render();
+    }
+
+    function addUmpire(){
+      const name = els.umpireName.value.trim();
+      const level = els.umpireLevel.value.trim();
+      const area = els.umpireArea.value.trim();
+      if(!name){ alert('Please enter an umpire name.'); return; }
+      state.umpires.push({ id: uid('ump'), name, level, area });
+      els.umpireName.value='';
+      els.umpireLevel.value='';
+      els.umpireArea.value='';
+      saveState();
+      render();
+    }
+
+    function addFixture(){
+      const date = els.fixtureDate.value;
+      const time = els.fixtureTime.value;
+      const title = els.fixtureTitle.value.trim();
+      if(!date || !time || !title){
+        alert('Please add date, time, and fixture title.');
+        return;
+      }
+      state.fixtures.push({
+        id: uid('fix'),
+        date,
+        time,
+        title,
+        venue: els.fixtureVenue.value.trim(),
+        league: els.fixtureLeague.value.trim(),
+        umpiresNeeded: Number(els.fixtureNeed.value || 1),
+        status: els.fixtureStatus.value,
+        notes: els.fixtureNotes.value.trim(),
+        responses: [],
+        assignedUmpireIds: []
+      });
+      ['fixtureDate','fixtureTime','fixtureTitle','fixtureVenue','fixtureLeague','fixtureNotes'].forEach(k => els[k].value='');
+      els.fixtureNeed.value=2;
+      els.fixtureStatus.value='Open';
+      saveState();
+      render();
+    }
+
+    function seedDemo(){
+      state = {
+        umpires: [
+          { id:'ump_amy', name:'Amy Clarke', level:'Level 2', area:'Reading' },
+          { id:'ump_james', name:'James Patel', level:'Level 1', area:'Henley' },
+          { id:'ump_sophie', name:'Sophie Reed', level:'Level 2', area:'Didcot' },
+          { id:'ump_luke', name:'Luke Miles', level:'Trainee', area:'Wallingford' }
+        ],
+        fixtures: [
+          {
+            id:'fix_1',
+            date:'2026-04-12',
+            time:'10:30',
+            title:'Henley Hawks vs Reading United',
+            venue:'Henley Sports Ground',
+            league:'County Division A',
+            umpiresNeeded:2,
+            status:'Open',
+            notes:'Arrival 45 mins before start.',
+            responses:[
+              { umpireId:'ump_amy', status:'Available', updatedAt:new Date().toISOString() },
+              { umpireId:'ump_james', status:'Maybe', updatedAt:new Date().toISOString() },
+              { umpireId:'ump_sophie', status:'Unavailable', updatedAt:new Date().toISOString() }
+            ],
+            assignedUmpireIds:['ump_amy']
+          },
+          {
+            id:'fix_2',
+            date:'2026-04-19',
+            time:'14:00',
+            title:'Wallingford Town vs Oxford City',
+            venue:'Wallingford College',
+            league:'Youth Premier',
+            umpiresNeeded:1,
+            status:'Assigned',
+            notes:'Parking at rear entrance.',
+            responses:[
+              { umpireId:'ump_luke', status:'Available', updatedAt:new Date().toISOString() },
+              { umpireId:'ump_james', status:'Available', updatedAt:new Date().toISOString() }
+            ],
+            assignedUmpireIds:['ump_james']
+          }
+        ]
+      };
+      saveState();
+      render();
+    }
+
+    function exportData(){
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'umpire-app-data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(file){
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if(!parsed.umpires || !parsed.fixtures) throw new Error('Invalid file');
+          state = parsed;
+          saveState();
+          render();
+          alert('Data imported.');
+        } catch(err){
+          alert('That file could not be imported.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function formatDate(date, time){
+      const dt = new Date(date + 'T' + (time || '00:00'));
+      return dt.toLocaleString([], { weekday:'short', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    }
+
+    function getCounts(fixture){
+      const responses = fixture.responses || [];
+      return {
+        available: responses.filter(r => r.status === 'Available').length,
+        maybe: responses.filter(r => r.status === 'Maybe').length,
+        unavailable: responses.filter(r => r.status === 'Unavailable').length,
+        assigned: (fixture.assignedUmpireIds || []).length
+      };
+    }
+
+    function renderStats(){
+      const totalFixtures = state.fixtures.length;
+      const openFixtures = state.fixtures.filter(f => f.status === 'Open').length;
+      const totalUmpires = state.umpires.length;
+      const assignedSlots = state.fixtures.reduce((sum, f) => sum + (f.assignedUmpireIds || []).length, 0);
+      els.statsRow.innerHTML = [
+        ['Fixtures', totalFixtures],
+        ['Open', openFixtures],
+        ['Umpires', totalUmpires],
+        ['Assignments', assignedSlots]
+      ].map(([label,value]) => `<div class="stat"><span class="muted">${label}</span><b>${value}</b></div>`).join('');
+    }
+
+    function renderUmpireSelect(){
+      const current = currentUmpireId();
+      els.umpireSelect.innerHTML = state.umpires.length
+        ? state.umpires.map(u => `<option value="${u.id}">${u.name}${u.level ? ' · ' + u.level : ''}</option>`).join('')
+        : '<option value="">No umpires yet</option>';
+      if(state.umpires.some(u => u.id === current)) els.umpireSelect.value = current;
+    }
+
+    function filteredFixtures(){
+      let fixtures = [...state.fixtures].sort((a,b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+      const filter = els.fixtureFilter.value;
+      const umpireId = currentUmpireId();
+      if(filter === 'open') fixtures = fixtures.filter(f => f.status === 'Open');
+      if(filter === 'assigned') fixtures = fixtures.filter(f => f.status === 'Assigned');
+      if(filter === 'mine' && umpireId) fixtures = fixtures.filter(f => (f.responses || []).some(r => r.umpireId === umpireId));
+      return fixtures;
+    }
+
+    function renderFixtures(){
+      const view = currentView();
+      const umpireId = currentUmpireId();
+      const fixtures = filteredFixtures();
+      if(!fixtures.length){
+        els.fixtureList.innerHTML = `<div class="notice">No fixtures to show yet.</div>`;
+        return;
+      }
+
+      els.fixtureList.innerHTML = fixtures.map(fixture => {
+        const counts = getCounts(fixture);
+        const myResponse = getAvailability(fixture, umpireId);
+        const assignedNames = (fixture.assignedUmpireIds || []).map(id => getUmpire(id)?.name).filter(Boolean);
+        const candidateRows = view === 'admin' ? state.umpires.map(u => {
+          const resp = getAvailability(fixture, u.id);
+          const assigned = (fixture.assignedUmpireIds || []).includes(u.id);
+          const style = resp?.status === 'Available' ? 'available' : resp?.status === 'Maybe' ? 'maybe' : resp?.status === 'Unavailable' ? 'unavailable' : '';
+          return `<tr>
+            <td>${u.name}<div class="small muted">${[u.level,u.area].filter(Boolean).join(' · ')}</div></td>
+            <td>${resp?.status ? `<span class="tag ${style}">${resp.status}</span>` : '<span class="muted small">No response</span>'}</td>
+            <td><button class="btn btn-secondary small" onclick="toggleAssigned('${fixture.id}','${u.id}')">${assigned ? 'Unassign' : 'Assign'}</button></td>
+          </tr>`;
+        }).join('') : '';
+
+        return `
+          <div class="fixture">
+            <div class="fixture-head">
+              <div>
+                <div class="fixture-title">${fixture.title}</div>
+                <div class="muted" style="margin-top:6px">${formatDate(fixture.date, fixture.time)}</div>
+              </div>
+              <span class="tag">${fixture.status}</span>
+            </div>
+
+            <div class="meta">
+              ${fixture.venue ? `<span class="tag">Venue: ${fixture.venue}</span>` : ''}
+              ${fixture.league ? `<span class="tag">League: ${fixture.league}</span>` : ''}
+              <span class="tag">Need: ${fixture.umpiresNeeded}</span>
+            </div>
+
+            ${fixture.notes ? `<div class="notice" style="margin-top:14px">${fixture.notes}</div>` : ''}
+
+            ${view === 'umpire' ? `
+              <div class="availability-row">
+                <button class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Available')">Available</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe')">Maybe</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable')">Unavailable</button>
+              </div>
+            ` : `
+              <div class="table-wrap" style="margin-top:14px">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Umpire</th>
+                      <th>Availability</th>
+                      <th>Assignment</th>
+                    </tr>
+                  </thead>
+                  <tbody>${candidateRows}</tbody>
+                </table>
+              </div>
+            `}
+
+            <div class="fixture-footer">
+              <div>
+                <div class="counts">
+                  <span class="tag">Available: ${counts.available}</span>
+                  <span class="tag">Maybe: ${counts.maybe}</span>
+                  <span class="tag">Unavailable: ${counts.unavailable}</span>
+                  <span class="tag">Assigned: ${counts.assigned}/${fixture.umpiresNeeded}</span>
+                </div>
+                ${assignedNames.length ? `<div class="assign-list">${assignedNames.map(n => `<span class="assign-chip">${n}</span>`).join('')}</div>` : ''}
+              </div>
+              ${view === 'admin' ? `<button class="btn btn-danger" onclick="deleteFixture('${fixture.id}')">Delete fixture</button>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderOverview(){
+      const rows = [...state.fixtures].sort((a,b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+      els.overviewBody.innerHTML = rows.length ? rows.map(f => {
+        const counts = getCounts(f);
+        const assignedNames = (f.assignedUmpireIds || []).map(id => getUmpire(id)?.name).filter(Boolean).join(', ') || '—';
+        return `<tr>
+          <td><strong>${f.title}</strong><div class="small muted">${formatDate(f.date, f.time)}</div></td>
+          <td>${counts.available}</td>
+          <td>${counts.maybe}</td>
+          <td>${counts.unavailable}</td>
+          <td>${assignedNames}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="5" class="muted">No fixtures yet.</td></tr>';
+    }
+
+    function renderAdminCards(){
+      const admin = currentView() === 'admin';
+      els.adminPanel.classList.toggle('hidden', !admin);
+      els.addUmpireCard.classList.toggle('hidden', !admin);
+      els.addFixtureCard.classList.toggle('hidden', !admin);
+      els.umpireLoginArea.classList.toggle('hidden', admin);
+      els.dashboardText.textContent = admin
+        ? 'Add fixtures, manage availability, and assign umpires.'
+        : 'Choose your name and update your availability for each fixture.';
+    }
+
+    function render(){
+      renderAdminCards();
+      renderUmpireSelect();
+      renderStats();
+      renderFixtures();
+      renderOverview();
+    }
+
+    window.setAvailability = setAvailability;
+    window.toggleAssigned = toggleAssigned;
+    window.deleteFixture = deleteFixture;
+
+    els.addUmpireBtn.addEventListener('click', addUmpire);
+    els.addFixtureBtn.addEventListener('click', addFixture);
+    els.viewMode.addEventListener('change', render);
+    els.umpireSelect.addEventListener('change', render);
+    els.fixtureFilter.addEventListener('change', render);
+    els.seedDemoBtn.addEventListener('click', seedDemo);
+    els.exportBtn.addEventListener('click', exportData);
+    els.importFile.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if(file) importData(file);
+      e.target.value = '';
+    });
+    els.clearBtn.addEventListener('click', () => {
+      if(!confirm('This will erase all saved data in this browser. Continue?')) return;
+      state = structuredClone(defaultData);
+      saveState();
+      render();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' && document.activeElement === els.umpireName) addUmpire();
+    });
+
+    render();
+  </script>
+</body>
+</html>
