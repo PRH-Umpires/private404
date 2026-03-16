@@ -844,11 +844,15 @@ async function initSupabaseApp() {
 }
 
 initSupabaseApp();
-  document.getElementById("addUmpireBtn").addEventListener("click", async () => {
+  document.getElementById("addUmpireBtn").addEventListener("click", async (e) => {
+  e.preventDefault();
+  console.log("Save umpire clicked");
 
   const name = document.getElementById("umpireName").value.trim();
   const level = document.getElementById("umpireLevel").value.trim();
   const area = document.getElementById("umpireArea").value.trim();
+
+  console.log({ name, level, area });
 
   if (!name) {
     alert("Please enter a name");
@@ -863,7 +867,8 @@ initSupabaseApp();
         level: level,
         email: ""
       }
-    ]);
+    ])
+    .select();
 
   if (error) {
     console.error("Error saving umpire:", error);
@@ -873,14 +878,12 @@ initSupabaseApp();
 
   console.log("Umpire saved:", data);
 
-  // clear form
   document.getElementById("umpireName").value = "";
   document.getElementById("umpireLevel").value = "";
   document.getElementById("umpireArea").value = "";
 
-  // reload dropdown
   await loadUmpiresFromSupabase();
-
+  alert("Umpire saved");
 });
 </script>
 </body>
