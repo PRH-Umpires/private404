@@ -752,7 +752,7 @@ async function loadUmpiresFromSupabase() {
   console.log("Umpires:", data);
 
   const selects = Array.from(document.querySelectorAll("select"));
-  const targetSelect = selects.find(select =>
+  const targetSelect = document.getElementById("umpireSelect");
     select.textContent.includes("No umpires yet")
   );
 
