@@ -896,10 +896,10 @@ const { error } = await supabaseClient.from("fixtures").insert([{
         return;
       }
 
-      const { error } = await supabaseClient.from("assignments").insert([{
-        fixture_id: Number(fixtureId),
-        umpire_id: Number(umpireId)
-      }]);
+     const { error } = await supabaseClient.from("assignments").insert([{
+  fixture_id: fixtureId,
+  umpire_id: umpireId
+}]);
 
       if (error) {
         console.error("Error saving assignment:", error);
