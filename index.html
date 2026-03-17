@@ -114,17 +114,8 @@
     .header-actions{
       display:flex;
       align-items:center;
-      justify-content:flex-end;
       gap:10px;
       margin-left:auto;
-      flex-wrap:wrap;
-    }
-    .header-user{
-      color:#fff;
-      font-size:14px;
-      font-weight:600;
-      opacity:.95;
-      white-space:nowrap;
     }
     .page-layout{
       display:grid;
@@ -132,14 +123,6 @@
       gap:22px;
       width:100%;
     }
-    #preLoginGrid{
-      align-items:start;
-    }
-    #preLoginGrid .sidebar{
-      width:100%;
-    }
-    #preLoginGrid .sidebar .card + .card{margin-top:16px}
-    #yourViewCard.hidden + .card{margin-top:0}
     .bottom-layout{
       display:grid;
       grid-template-columns:minmax(0, 1.2fr) minmax(280px, .8fr);
@@ -148,9 +131,8 @@
       width:100%;
     }
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .stat{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff;min-width:0}
-    .stat .muted{display:block;font-size:13px;line-height:1.2}
-    .stat b{display:block;font-size:26px;margin-top:4px;line-height:1.1}
+    .stat{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff}
+    .stat b{display:block;font-size:26px;margin-top:4px}
     .list{display:grid;gap:14px}
     .fixture{
       border:1px solid var(--line);
@@ -206,10 +188,9 @@
     @media (max-width: 560px){
       .wrap{max-width:100%;width:100%}
       .grid{grid-template-columns:1fr;gap:14px}
-      .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-      .stat{padding:8px 6px;min-width:0;border-radius:12px;text-align:center}
-      .stat .muted{font-size:10px;line-height:1.1}
-      .stat b{font-size:16px;margin-top:2px}
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .stat{padding:10px;min-width:0;border-radius:14px}
+      .stat b{font-size:20px;margin-top:2px}
       .auth-actions{grid-template-columns:1fr}
       header{padding:18px 12px}
       main{padding:12px 12px 24px}
@@ -221,15 +202,9 @@
       .header-actions{
         width:100%;
         margin-left:0;
-        justify-content:space-between;
-      }
-      .header-user{
-        font-size:12px;
-        white-space:normal;
       }
       .header-actions .btn{
-        width:auto;
-        min-width:96px;
+        width:100%;
       }
       .section-title{flex-direction:column;align-items:stretch}
       .section-title select{max-width:none !important;width:100%}
@@ -323,7 +298,6 @@
           <div class="pill">Single-file app · cloud synced</div>
         </div>
         <div class="header-actions">
-          <div class="header-user hidden" id="headerWelcome"></div>
           <button type="button" class="btn btn-ghost hidden" id="headerLogoutBtn">Log out</button>
         </div>
       </div>
@@ -332,9 +306,94 @@
 
   <main>
     <div class="wrap page-layout">
-      <div class="grid" id="preLoginGrid">
-        <aside class="sidebar">
+      <section>
+        <div class="topbar">
+          <div>
+            <h2>Dashboard</h2>
+            <p class="muted" id="dashboardText">See fixtures, availability, and assignments.</p>
+          </div>
+          <button class="btn btn-ghost" id="clearBtn">Refresh data</button>
+        </div>
 
+        <div class="stats" id="statsRow"></div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="section-title">
+            <h3>Upcoming Fixtures</h3>
+            <select id="fixtureFilter" style="max-width:220px">
+              <option value="all">All fixtures</option>
+              <option value="open">Open only</option>
+              <option value="assigned">Assigned only</option>
+              <option value="mine">Only where I responded</option>
+            </select>
+          </div>
+          <div id="fixtureList" class="list"></div>
+        </div>
+      </section>
+
+      <div class="bottom-layout">
+        <section>
+          <div class="card">
+            <div class="section-title">
+              <h3>Availability Overview</h3>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fixture</th>
+                    <th>Available</th>
+                    <th>Maybe</th>
+                    <th>Unavailable</th>
+                    <th>Assigned</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="footer-note">
+            This version is connected to Supabase, uses standard email/password authentication, and supports assigning up to the required number of umpires per fixture.
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <div class="card" id="authCard">
+            <div class="section-title">
+              <h3>Email / Password Login</h3>
+            </div>
+
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password" />
+
+            <div class="auth-actions" id="authButtons">
+              <button type="button" class="btn btn-primary" id="loginBtn">Log in</button>
+              <button type="button" class="btn btn-secondary" id="signupBtn">Create account</button>
+            </div>
+
+            <button type="button" class="btn btn-ghost" id="resetPasswordBtn" style="margin-top:10px;width:100%">Send password reset email</button>
+            <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="margin-top:10px;width:100%">Log out</button>
+
+            <div class="small muted auth-helper" id="authStatus">Sign in to manage your availability.</div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h3>Your View</h3>
+            </div>
+            <label>Role</label>
+            <div id="currentRole" style="padding:12px 13px;border:1px solid #d1d5db;border-radius:12px;background:#fff;text-transform:capitalize;">Not signed in</div>
+            <input id="viewMode" type="hidden" value="umpire" />
+
+            <div id="umpireLoginArea">
+              <label for="umpireSelect">Choose your name</label>
+              <select id="umpireSelect"></select>
+              <div class="small muted" style="margin-top:8px">Tip: users must create an account first. Admins can then mark them as umpire by email.</div>
+            </div>
           </div>
 
           <div class="card" id="adminPanel">
@@ -433,8 +492,6 @@
     const els = {
       viewMode: document.getElementById('viewMode'),
       currentRole: document.getElementById('currentRole'),
-      preLoginGrid: document.getElementById('preLoginGrid'),
-      yourViewCard: document.getElementById('yourViewCard'),
       umpireSelect: document.getElementById('umpireSelect'),
       umpireLoginArea: document.getElementById('umpireLoginArea'),
       adminPanel: document.getElementById('adminPanel'),
@@ -471,7 +528,6 @@
       resetPasswordBtn: document.getElementById('resetPasswordBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
       headerLogoutBtn: document.getElementById('headerLogoutBtn'),
-      headerWelcome: document.getElementById('headerWelcome'),
       authButtons: document.getElementById('authButtons'),
       authStatus: document.getElementById('authStatus')
     };
@@ -486,28 +542,6 @@
       if (!email) return 'Unnamed umpire';
       const local = email.split('@')[0] || email;
       return local.replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    }
-
-    function getCurrentUserDisplayName() {
-      if (currentProfile?.email) return displayNameFromProfile(currentProfile);
-      if (currentUser?.email) {
-        const local = currentUser.email.split('@')[0] || currentUser.email;
-        return local.replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-      }
-      return '';
-    }
-
-    function updateHeaderAuthUI() {
-      const loggedIn = !!currentUser;
-      const displayName = getCurrentUserDisplayName();
-
-      els.headerLogoutBtn.classList.toggle('hidden', !loggedIn);
-      els.headerWelcome.classList.toggle('hidden', !loggedIn);
-      els.headerWelcome.textContent = loggedIn && displayName ? `Hi ${displayName}` : '';
-
-      els.authCard.classList.toggle('hidden', loggedIn);
-      els.yourViewCard.classList.toggle('hidden', loggedIn);
-      els.preLoginGrid.classList.toggle('hidden', loggedIn);
     }
 
     async function ensureProfile(user) {
@@ -735,6 +769,7 @@
       currentUser = null;
       currentProfile = null;
       els.logoutBtn.classList.add('hidden');
+      els.headerLogoutBtn.classList.add('hidden');
       els.authButtons.classList.remove('hidden');
       els.resetPasswordBtn.classList.remove('hidden');
       els.authStatus.textContent = 'Signed out.';
@@ -742,7 +777,6 @@
       els.viewMode.value = 'umpire';
       els.loginPassword.value = '';
       els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
-      updateHeaderAuthUI();
       render();
     }
 
@@ -757,17 +791,18 @@
       if (!currentUser) {
         currentProfile = null;
         els.logoutBtn.classList.add('hidden');
+        els.headerLogoutBtn.classList.add('hidden');
         els.authButtons.classList.remove('hidden');
         els.resetPasswordBtn.classList.remove('hidden');
         els.authStatus.textContent = 'Sign in to manage your availability.';
         els.currentRole.textContent = 'Not signed in';
         els.viewMode.value = 'umpire';
         els.loginPassword.value = '';
-        updateHeaderAuthUI();
         return;
       }
 
-      els.logoutBtn.classList.add('hidden');
+      els.logoutBtn.classList.remove('hidden');
+      els.headerLogoutBtn.classList.remove('hidden');
       els.authButtons.classList.add('hidden');
       els.resetPasswordBtn.classList.add('hidden');
       els.authStatus.textContent = `Signed in as ${currentUser.email}`;
@@ -775,7 +810,6 @@
       els.loginPassword.value = '';
 
       await loadCurrentProfile();
-      updateHeaderAuthUI();
 
       const umpire = state.umpires.find(u => String(u.id) === String(currentUser.id));
       if (umpire) {
@@ -1246,7 +1280,6 @@
     }
 
     function render() {
-      updateHeaderAuthUI();
       renderAdminCards();
       renderUmpireSelect();
       renderStats();
