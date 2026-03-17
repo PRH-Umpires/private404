@@ -706,14 +706,14 @@ async function signUpWithPassword() {
         auth_user_id: row.auth_user_id || null
       }));
 
-      state.fixtures = fixtureRows.map(row => ({
+   state.fixtures = fixtureRows.map(row => ({
   id: String(row.id),
-  date: row.date || "",
-  time: row.time || "",
-  title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || row.title || "Fixture"),
-  venue: row.venue || "",
+  date: row.fixture_date || "",
+  time: row.fixture_time || "",
+  title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || "Fixture"),
+  venue: row.location || "",
   league: row.league || "",
-  umpiresNeeded: Number(row.umpires_needed ?? row.umpiresNeeded ?? 2),
+  umpiresNeeded: 2,
   status: row.status || "Open",
   notes: row.notes || ""
 }));
