@@ -682,7 +682,7 @@ async function signUpWithPassword() {
     async function syncStateFromSupabase() {
       const [umpireResult, fixtureResult, availabilityResult, assignmentResult] = await Promise.all([
         supabaseClient.from("Umpires").select("*").order("name", { ascending: true }),
-        supabaseClient.from("Fixtures").select("*").order("date", { ascending: true }),
+        supabaseClient.from("fixtures").select("*").order("date", { ascending: true }),
         supabaseClient.from("availability").select("*"),
         supabaseClient.from("assignments").select("*")
       ]);
