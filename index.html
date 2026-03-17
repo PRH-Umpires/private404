@@ -484,17 +484,11 @@ async function signUpWithPassword() {
       return;
     }
 
-    if (data?.user) {
-      els.authStatus.textContent = 'Account created successfully.';
-      alert('Account created successfully.');
-    } else {
-      els.authStatus.textContent = 'No user was returned from signup.';
-      alert('No user was returned from signup.');
-    }
+    els.authStatus.textContent = 'Account created. Now click Log in.';
+    alert('Account created. Now click Log in.');
 
-    await syncStateFromSupabase();
-    await syncLoggedInUmpire();
-    render();
+    els.loginPassword.value = '';
+    return;
 
   } catch (err) {
     console.error('SIGNUP CATCH ERROR:', err);
@@ -503,7 +497,6 @@ async function signUpWithPassword() {
     alert('Unexpected error: ' + err.message);
   }
 }
-
     async function sendPasswordReset() {
       const email = els.loginEmail.value.trim();
 
