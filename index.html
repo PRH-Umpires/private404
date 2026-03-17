@@ -523,19 +523,21 @@ async function signUpWithPassword() {
     }
 
     async function signOutUser() {
-      setAuthBusy(true);
-      await supabaseClient.auth.signOut();
-      setAuthBusy(false);
+  const { error } = await supabaseClient.auth.signOut();
 
-      currentUser = null;
-      els.logoutBtn.classList.add('hidden');
-      els.authButtons.classList.remove('hidden');
-      els.resetPasswordBtn.classList.remove('hidden');
-      els.authStatus.textContent = 'Signed out.';
-      els.loginPassword.value = '';
-      await syncLoggedInUmpire();
-      render();
-    }
+  if (error) {
+    alert(error.message || 'Could not sign out.');
+    return;
+  }
+
+  currentUser = null;
+  els.logoutBtn.classList.add('hidden');
+  els.authButtons.classList.remove('hidden');
+  els.resetPasswordBtn.classList.remove('hidden');
+  els.authStatus.textContent = 'Signed out.';
+  els.loginPassword.value = '';
+  render();
+}
 
     async function linkCurrentUserToUmpireIfNeeded() {
       if (!currentUser?.email) return;
