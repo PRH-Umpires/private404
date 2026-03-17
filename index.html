@@ -622,7 +622,7 @@
     function getEffectiveFixtureStatus(fixture) {
       if (isFixturePast(fixture)) return 'Closed';
       const assignedCount = getAssignmentsForFixture(fixture.id).length;
-      if (assignedCount >= Number(fixture.umpiresNeeded || 2)) return 'Assigned';
+      if (assignedCount >= Number(fixture.umpiresNeeded || 2)) return 'Confirmed';
       return fixture.status || 'Open';
     }
 
