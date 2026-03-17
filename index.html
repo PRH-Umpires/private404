@@ -318,7 +318,7 @@
         </div>
 
         <div class="footer-note">
-          This version is connected to Supabase and now uses standard email/password authentication instead of magic links.
+          This version is connected to Supabase, uses standard email/password authentication, and supports assigning up to the required number of umpires per fixture.
         </div>
       </section>
     </div>
@@ -333,7 +333,8 @@
     let state = {
       umpires: [],
       fixtures: [],
-      availability: []
+      availability: [],
+      assignments: []
     };
     let currentUser = null;
     let currentProfile = null;
@@ -450,13 +451,30 @@
       ) || null;
     }
 
+    function getAssignmentsForFixture(fixtureId) {
+      return state.assignments.filter(a => String(a.fixtureId) === String(fixtureId));
+    }
+
+    function isAssignedToFixture(fixtureId, umpireId) {
+      return state.assignments.some(
+        a => String(a.fixtureId) === String(fixtureId) && String(a.umpireId) === String(umpireId)
+      );
+    }
+
+    function getAssignedNames(fixtureId) {
+      return getAssignmentsForFixture(fixtureId)
+        .map(a => getUmpire(a.umpireId)?.name)
+        .filter(Boolean);
+    }
+
     function getCounts(fixture) {
       const rows = state.availability.filter(r => String(r.fixtureId) === String(fixture.id));
+      const assignedRows = getAssignmentsForFixture(fixture.id);
       return {
         available: rows.filter(r => r.status === 'Available').length,
         maybe: rows.filter(r => r.status === 'Maybe').length,
         unavailable: rows.filter(r => r.status === 'Unavailable').length,
-        assigned: 0
+        assigned: assignedRows.length
       };
     }
 
@@ -662,19 +680,22 @@ async function signUpWithPassword() {
 }
 
     async function syncStateFromSupabase() {
-      const [umpireResult, fixtureResult, availabilityResult] = await Promise.all([
+      const [umpireResult, fixtureResult, availabilityResult, assignmentResult] = await Promise.all([
         supabaseClient.from("Umpires").select("*").order("name", { ascending: true }),
         supabaseClient.from("Fixtures").select("*").order("date", { ascending: true }),
-        supabaseClient.from("availability").select("*")
+        supabaseClient.from("availability").select("*"),
+        supabaseClient.from("assignments").select("*")
       ]);
 
       if (umpireResult.error) console.error("Error loading umpires:", umpireResult.error);
       if (fixtureResult.error) console.error("Error loading fixtures:", fixtureResult.error);
       if (availabilityResult.error) console.error("Error loading availability:", availabilityResult.error);
+      if (assignmentResult.error) console.error("Error loading assignments:", assignmentResult.error);
 
       const umpireRows = umpireResult.data || [];
       const fixtureRows = fixtureResult.data || [];
       const availabilityRows = availabilityResult.data || [];
+      const assignmentRows = assignmentResult.data || [];
 
       state.umpires = umpireRows.map(row => ({
         id: String(row.id),
@@ -702,6 +723,12 @@ async function signUpWithPassword() {
         umpireId: String(row.umpire_id),
         fixtureId: String(row.fixture_id),
         status: row.status || ""
+      }));
+
+      state.assignments = assignmentRows.map(row => ({
+        id: String(row.id),
+        umpireId: String(row.umpire_id),
+        fixtureId: String(row.fixture_id)
       }));
 
       render();
@@ -843,6 +870,64 @@ async function signUpWithPassword() {
       await syncStateFromSupabase();
     }
 
+    async function assignUmpire(fixtureId, umpireId) {
+      if (!isAdmin()) {
+        alert('Only admins can assign umpires.');
+        return;
+      }
+
+      const fixture = state.fixtures.find(f => String(f.id) === String(fixtureId));
+      if (!fixture) return;
+
+      const alreadyAssigned = isAssignedToFixture(fixtureId, umpireId);
+      if (alreadyAssigned) {
+        alert('This umpire is already assigned to the fixture.');
+        return;
+      }
+
+      const existingAssignments = getAssignmentsForFixture(fixtureId);
+      const maxAssignments = Math.max(1, Number(fixture.umpiresNeeded || 2));
+
+      if (existingAssignments.length >= maxAssignments) {
+        alert(`This fixture already has ${maxAssignments} umpire${maxAssignments === 1 ? '' : 's'} assigned.`);
+        return;
+      }
+
+      const { error } = await supabaseClient.from("assignments").insert([{
+        fixture_id: Number(fixtureId),
+        umpire_id: Number(umpireId)
+      }]);
+
+      if (error) {
+        console.error("Error saving assignment:", error);
+        alert(error.message || "Error saving assignment");
+        return;
+      }
+
+      await syncStateFromSupabase();
+    }
+
+    async function unassignUmpire(fixtureId, umpireId) {
+      if (!isAdmin()) {
+        alert('Only admins can remove assignments.');
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from("assignments")
+        .delete()
+        .eq("fixture_id", Number(fixtureId))
+        .eq("umpire_id", Number(umpireId));
+
+      if (error) {
+        console.error("Error removing assignment:", error);
+        alert(error.message || "Error removing assignment");
+        return;
+      }
+
+      await syncStateFromSupabase();
+    }
+
     async function deleteFixture(fixtureId) {
       if (!isAdmin()) {
         alert('Only admins can delete fixtures.');
@@ -852,6 +937,7 @@ async function signUpWithPassword() {
       if (!confirm('Delete this fixture?')) return;
 
       await supabaseClient.from("availability").delete().eq("fixture_id", Number(fixtureId));
+      await supabaseClient.from("assignments").delete().eq("fixture_id", Number(fixtureId));
       const { error } = await supabaseClient.from("Fixtures").delete().eq("id", Number(fixtureId));
 
       if (error) {
@@ -865,9 +951,9 @@ async function signUpWithPassword() {
 
     function renderStats() {
       const totalFixtures = state.fixtures.length;
-      const openFixtures = state.fixtures.filter(f => f.status === 'Open').length;
+      const openFixtures = state.fixtures.filter(f => getCounts(f).assigned < Number(f.umpiresNeeded || 2)).length;
       const totalUmpires = state.umpires.length;
-      const assignedSlots = 0;
+      const assignedSlots = state.assignments.length;
 
       els.statsRow.innerHTML = [
         ['Fixtures', totalFixtures],
@@ -898,8 +984,8 @@ async function signUpWithPassword() {
       const filter = els.fixtureFilter.value;
       const umpireId = currentUmpireId();
 
-      if (filter === 'open') fixtures = fixtures.filter(f => f.status === 'Open');
-      if (filter === 'assigned') fixtures = fixtures.filter(f => f.status === 'Assigned');
+      if (filter === 'open') fixtures = fixtures.filter(f => getCounts(f).assigned < Number(f.umpiresNeeded || 2));
+      if (filter === 'assigned') fixtures = fixtures.filter(f => getCounts(f).assigned > 0);
       if (filter === 'mine' && umpireId) {
         fixtures = fixtures.filter(f =>
           state.availability.some(r => String(r.fixtureId) === String(f.id) && String(r.umpireId) === String(umpireId))
@@ -922,6 +1008,9 @@ async function signUpWithPassword() {
       els.fixtureList.innerHTML = fixtures.map(fixture => {
         const counts = getCounts(fixture);
         const myResponse = getAvailability(fixture, umpireId);
+        const assignedNames = getAssignedNames(fixture.id);
+        const effectiveStatus = counts.assigned >= Number(fixture.umpiresNeeded || 2) ? 'Assigned' : fixture.status;
+        const fixtureIsFull = counts.assigned >= Number(fixture.umpiresNeeded || 2);
 
         const candidateRows = view === 'admin'
           ? state.umpires.map(u => {
@@ -931,10 +1020,16 @@ async function signUpWithPassword() {
                 resp?.status === 'Maybe' ? 'maybe' :
                 resp?.status === 'Unavailable' ? 'unavailable' : '';
 
+              const assigned = isAssignedToFixture(fixture.id, u.id);
+              const assignButton = assigned
+                ? `<button class="btn btn-danger small" onclick="unassignUmpire('${fixture.id}','${u.id}')">Remove</button>`
+                : `<button class="btn btn-secondary small" onclick="assignUmpire('${fixture.id}','${u.id}')" ${fixtureIsFull ? 'disabled' : ''}>Assign</button>`;
+
               return `<tr>
                 <td>${u.name}<div class="small muted">${[u.level, u.area].filter(Boolean).join(' · ')}</div></td>
                 <td>${resp?.status ? `<span class="tag ${style}">${resp.status}</span>` : '<span class="muted small">No response</span>'}</td>
-                <td><span class="muted small">—</span></td>
+                <td>${assigned ? '<span class="tag available">Assigned</span>' : '<span class="muted small">Not assigned</span>'}</td>
+                <td>${assignButton}</td>
               </tr>`;
             }).join('')
           : '';
@@ -946,13 +1041,18 @@ async function signUpWithPassword() {
                 <div class="fixture-title">${fixture.title}</div>
                 <div class="muted" style="margin-top:6px">${formatDate(fixture.date, fixture.time)}</div>
               </div>
-              <span class="tag">${fixture.status}</span>
+              <span class="tag">${effectiveStatus}</span>
             </div>
 
             <div class="meta">
               ${fixture.venue ? `<span class="tag">Venue: ${fixture.venue}</span>` : ''}
               ${fixture.league ? `<span class="tag">League: ${fixture.league}</span>` : ''}
               <span class="tag">Need: ${fixture.umpiresNeeded}</span>
+              <span class="tag">Assigned: ${counts.assigned}/${fixture.umpiresNeeded}</span>
+            </div>
+
+            <div class="notice" style="margin-top:14px">
+              <strong>Assigned umpires:</strong> ${assignedNames.length ? assignedNames.join(' · ') : 'None yet'}
             </div>
 
             ${fixture.notes ? `<div class="notice" style="margin-top:14px">${fixture.notes}</div>` : ''}
@@ -971,6 +1071,7 @@ async function signUpWithPassword() {
                       <th>Umpire</th>
                       <th>Availability</th>
                       <th>Assignment</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>${candidateRows}</tbody>
@@ -1007,7 +1108,7 @@ async function signUpWithPassword() {
               <td>${counts.available}</td>
               <td>${counts.maybe}</td>
               <td>${counts.unavailable}</td>
-              <td>—</td>
+              <td>${counts.assigned}/${f.umpiresNeeded}</td>
             </tr>`;
           }).join('')
         : '<tr><td colspan="5" class="muted">No fixtures yet.</td></tr>';
@@ -1033,6 +1134,8 @@ async function signUpWithPassword() {
     }
 
     window.setAvailability = setAvailability;
+    window.assignUmpire = assignUmpire;
+    window.unassignUmpire = unassignUmpire;
     window.deleteFixture = deleteFixture;
 
     els.addUmpireBtn.addEventListener('click', addUmpire);
