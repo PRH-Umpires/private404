@@ -409,7 +409,7 @@
       const { error } = await supabaseClient.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: window.location.href
+          emailRedirectTo: "https://prh-umpires.github.io/4UMPS/"
         }
       });
 
