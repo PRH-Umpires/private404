@@ -557,35 +557,39 @@ async function signUpWithPassword() {
     }
 
     async function syncLoggedInUmpire() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      currentUser = session?.user || null;
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  currentUser = session?.user || null;
 
-      if (!currentUser) {
-        els.logoutBtn.classList.add('hidden');
-        els.authButtons.classList.remove('hidden');
-        els.resetPasswordBtn.classList.remove('hidden');
-        els.authStatus.textContent = 'Sign in to manage your availability.';
-        return;
-      }
+  if (!currentUser) {
+    els.logoutBtn.classList.add('hidden');
+    els.authButtons.classList.remove('hidden');
+    els.resetPasswordBtn.classList.remove('hidden');
+    els.authStatus.textContent = 'Sign in to manage your availability.';
+    els.loginPassword.value = '';
+    return;
+  }
 
-      els.logoutBtn.classList.remove('hidden');
-      els.authButtons.classList.add('hidden');
-      els.resetPasswordBtn.classList.add('hidden');
-      els.authStatus.textContent = `Signed in as ${currentUser.email}`;
-      els.loginEmail.value = currentUser.email || '';
-      els.loginPassword.value = '';
+  els.logoutBtn.classList.remove('hidden');
+  els.authButtons.classList.add('hidden');
+  els.resetPasswordBtn.classList.add('hidden');
+  els.authStatus.textContent = `Signed in as ${currentUser.email}`;
+  els.loginEmail.value = currentUser.email || '';
+  els.loginPassword.value = '';
 
-      await linkCurrentUserToUmpireIfNeeded();
+  await linkCurrentUserToUmpireIfNeeded();
 
-      let umpire = state.umpires.find(u => u.email && currentUser.email && u.email.toLowerCase() === currentUser.email.toLowerCase());
-      if (!umpire) {
-        umpire = state.umpires.find(u => String(u.auth_user_id || '') === String(currentUser.id));
-      }
+  let umpire = state.umpires.find(
+    u => u.email && currentUser.email && u.email.toLowerCase() === currentUser.email.toLowerCase()
+  );
 
-      if (umpire) {
-        els.umpireSelect.value = String(umpire.id);
-      }
-    }
+  if (!umpire) {
+    umpire = state.umpires.find(u => String(u.auth_user_id || '') === String(currentUser.id));
+  }
+
+  if (umpire) {
+    els.umpireSelect.value = String(umpire.id);
+  }
+}
 
     async function syncStateFromSupabase() {
       const [umpireResult, fixtureResult, availabilityResult] = await Promise.all([
