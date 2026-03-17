@@ -132,6 +132,14 @@
       gap:22px;
       width:100%;
     }
+    #preLoginGrid{
+      align-items:start;
+    }
+    #preLoginGrid .sidebar{
+      width:100%;
+    }
+    #preLoginGrid .sidebar .card + .card{margin-top:16px}
+    #yourViewCard.hidden + .card{margin-top:0}
     .bottom-layout{
       display:grid;
       grid-template-columns:minmax(0, 1.2fr) minmax(280px, .8fr);
@@ -324,94 +332,9 @@
 
   <main>
     <div class="wrap page-layout">
-      <section>
-        <div class="topbar">
-          <div>
-            <h2>Dashboard</h2>
-            <p class="muted" id="dashboardText">See fixtures, availability, and assignments.</p>
-          </div>
-          <button class="btn btn-ghost" id="clearBtn">Refresh data</button>
-        </div>
-
-        <div class="stats" id="statsRow"></div>
-
-        <div class="card" style="margin-top:18px">
-          <div class="section-title">
-            <h3>Upcoming Fixtures</h3>
-            <select id="fixtureFilter" style="max-width:220px">
-              <option value="all">All fixtures</option>
-              <option value="open">Open only</option>
-              <option value="assigned">Assigned only</option>
-              <option value="mine">Only where I responded</option>
-            </select>
-          </div>
-          <div id="fixtureList" class="list"></div>
-        </div>
-      </section>
-
-      <div class="bottom-layout">
-        <section>
-          <div class="card">
-            <div class="section-title">
-              <h3>Availability Overview</h3>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Fixture</th>
-                    <th>Available</th>
-                    <th>Maybe</th>
-                    <th>Unavailable</th>
-                    <th>Assigned</th>
-                  </tr>
-                </thead>
-                <tbody id="overviewBody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="footer-note">
-            This version is connected to Supabase, uses standard email/password authentication, and supports assigning up to the required number of umpires per fixture.
-          </div>
-        </section>
-
+      <div class="grid" id="preLoginGrid">
         <aside class="sidebar">
-          <div class="card" id="authCard">
-            <div class="section-title">
-              <h3>Email / Password Login</h3>
-            </div>
 
-            <label for="loginEmail">Email</label>
-            <input id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email" />
-
-            <label for="loginPassword">Password</label>
-            <input id="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password" />
-
-            <div class="auth-actions" id="authButtons">
-              <button type="button" class="btn btn-primary" id="loginBtn">Log in</button>
-              <button type="button" class="btn btn-secondary" id="signupBtn">Create account</button>
-            </div>
-
-            <button type="button" class="btn btn-ghost" id="resetPasswordBtn" style="margin-top:10px;width:100%">Send password reset email</button>
-            <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="margin-top:10px;width:100%">Log out</button>
-
-            <div class="small muted auth-helper" id="authStatus">Sign in to manage your availability.</div>
-          </div>
-
-          <div class="card">
-            <div class="section-title">
-              <h3>Your View</h3>
-            </div>
-            <label>Role</label>
-            <div id="currentRole" style="padding:12px 13px;border:1px solid #d1d5db;border-radius:12px;background:#fff;text-transform:capitalize;">Not signed in</div>
-            <input id="viewMode" type="hidden" value="umpire" />
-
-            <div id="umpireLoginArea">
-              <label for="umpireSelect">Choose your name</label>
-              <select id="umpireSelect"></select>
-              <div class="small muted" style="margin-top:8px">Tip: users must create an account first. Admins can then mark them as umpire by email.</div>
-            </div>
           </div>
 
           <div class="card" id="adminPanel">
@@ -510,6 +433,8 @@
     const els = {
       viewMode: document.getElementById('viewMode'),
       currentRole: document.getElementById('currentRole'),
+      preLoginGrid: document.getElementById('preLoginGrid'),
+      yourViewCard: document.getElementById('yourViewCard'),
       umpireSelect: document.getElementById('umpireSelect'),
       umpireLoginArea: document.getElementById('umpireLoginArea'),
       adminPanel: document.getElementById('adminPanel'),
@@ -581,6 +506,8 @@
       els.headerWelcome.textContent = loggedIn && displayName ? `Hi ${displayName}` : '';
 
       els.authCard.classList.toggle('hidden', loggedIn);
+      els.yourViewCard.classList.toggle('hidden', loggedIn);
+      els.preLoginGrid.classList.toggle('hidden', loggedIn);
     }
 
     async function ensureProfile(user) {
