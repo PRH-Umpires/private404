@@ -48,30 +48,6 @@
       font-size:14px;
       white-space:nowrap;
     }
-    .hero-right{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;justify-content:flex-end}
-    .session-box{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 10px;
-      border-radius:16px;
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);
-    }
-    .session-meta{display:flex;flex-direction:column;line-height:1.15}
-    .session-name{font-size:14px;font-weight:800;color:#fff}
-    .session-role{font-size:12px;opacity:.9;text-transform:capitalize;color:#eef2ff}
-    .header-logout{
-      background:#fff;
-      color:var(--brand2);
-      border:none;
-      border-radius:999px;
-      padding:10px 14px;
-      font:inherit;
-      font-weight:800;
-      cursor:pointer;
-      white-space:nowrap;
-    }
     main{padding:22px 20px 48px}
     .grid{
       display:grid;
@@ -219,11 +195,6 @@
         font-size:13px;
         max-width:100%;
       }
-      .hero-right{width:100%;justify-content:space-between;align-items:center}
-      .session-box{width:100%;justify-content:space-between;gap:8px;padding:8px 10px}
-      .session-name{font-size:13px}
-      .session-role{font-size:11px}
-      .header-logout{padding:8px 12px;font-size:12px}
 
       /* Login card: no zoom, no overflow */
       #authCard{
@@ -286,16 +257,7 @@
         <h1>Umpire Availability Manager</h1>
         <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       </div>
-      <div class="hero-right">
-        <div class="pill">Single-file app · cloud synced</div>
-        <div class="session-box hidden" id="headerSessionBox">
-          <div class="session-meta">
-            <span class="session-name" id="headerUserName">Signed out</span>
-            <span class="session-role" id="headerUserRole">Role: guest</span>
-          </div>
-          <button type="button" class="header-logout" id="headerLogoutBtn">Log out</button>
-        </div>
-      </div>
+      <div class="pill">Single-file app · cloud synced</div>
     </div>
   </header>
 
@@ -319,12 +281,12 @@
   </div>
 
   <button type="button" class="btn btn-ghost" id="resetPasswordBtn" style="margin-top:10px;width:100%">Send password reset email</button>
-  <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="display:none !important;margin-top:10px;width:100%">Log out</button>
+  <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="margin-top:10px;width:100%">Log out</button>
 
   <div class="small muted auth-helper" id="authStatus">Sign in to manage your availability.</div>
 </div>
 
-        <div class="card" id="viewCard">
+        <div class="card">
           <div class="section-title">
             <h3>Your View</h3>
           </div>
@@ -519,12 +481,7 @@
       resetPasswordBtn: document.getElementById('resetPasswordBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
       authButtons: document.getElementById('authButtons'),
-      authStatus: document.getElementById('authStatus'),
-      viewCard: document.getElementById('viewCard'),
-      headerSessionBox: document.getElementById('headerSessionBox'),
-      headerUserName: document.getElementById('headerUserName'),
-      headerUserRole: document.getElementById('headerUserRole'),
-      headerLogoutBtn: document.getElementById('headerLogoutBtn')
+      authStatus: document.getElementById('authStatus')
     };
 
     function isAdmin() {
@@ -646,7 +603,7 @@
     }
 
     function setAuthBusy(isBusy) {
-      [els.loginBtn, els.signupBtn, els.resetPasswordBtn, els.logoutBtn, els.headerLogoutBtn].forEach(btn => {
+      [els.loginBtn, els.signupBtn, els.resetPasswordBtn, els.logoutBtn].forEach(btn => {
         if (btn) btn.disabled = isBusy;
       });
     }
@@ -771,7 +728,6 @@
       els.viewMode.value = 'umpire';
       els.loginPassword.value = '';
       els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
-      updateHeaderSession();
       render();
     }
 
@@ -792,7 +748,6 @@
         els.currentRole.textContent = 'Not signed in';
         els.viewMode.value = 'umpire';
         els.loginPassword.value = '';
-        updateHeaderSession();
         return;
       }
 
@@ -804,7 +759,6 @@
       els.loginPassword.value = '';
 
       await loadCurrentProfile();
-      updateHeaderSession();
 
       const umpire = state.umpires.find(u => String(u.id) === String(currentUser.id));
       if (umpire) {
@@ -1316,7 +1270,6 @@
     els.signupBtn.addEventListener('click', signUpWithPassword);
     els.resetPasswordBtn.addEventListener('click', sendPasswordReset);
     els.logoutBtn.addEventListener('click', signOutUser);
-    els.headerLogoutBtn.addEventListener('click', signOutUser);
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && document.activeElement === els.umpireEmail && isAdmin()) {
