@@ -939,8 +939,8 @@ const { error } = await supabaseClient.from("fixtures").insert([{
 
       if (!confirm('Delete this fixture?')) return;
 
-      await supabaseClient.from("availability").delete().eq("fixture_id", Number(fixtureId));
-      await supabaseClient.from("assignments").delete().eq("fixture_id", Number(fixtureId));
+      await supabaseClient.from("availability").delete().eq("fixture_id", fixtureId);
+      await supabaseClient.from("assignments").delete().eq("fixture_id", fixtureId);
       const { error } = await supabaseClient.from("fixtures").delete().eq("id", fixtureId);
 
       if (error) {
