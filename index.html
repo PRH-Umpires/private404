@@ -450,44 +450,59 @@
       render();
     }
 
-    async function signUpWithPassword() {
-      const email = els.loginEmail.value.trim();
-      const password = els.loginPassword.value;
+async function signUpWithPassword() {
+  const email = els.loginEmail.value.trim();
+  const password = els.loginPassword.value;
 
-      if (!email || !password) {
-        alert('Please enter both email and password.');
-        return;
-      }
+  if (!email || !password) {
+    alert('Please enter both email and password.');
+    return;
+  }
 
-      if (password.length < 6) {
-        alert('Use a password with at least 6 characters.');
-        return;
-      }
+  if (password.length < 6) {
+    alert('Use a password with at least 6 characters.');
+    return;
+  }
 
-      setAuthBusy(true);
-      const { data, error } = await supabaseClient.auth.signUp({
-        email,
-        password
-      });
-      setAuthBusy(false);
+  els.authStatus.textContent = 'Creating account...';
+  setAuthBusy(true);
 
-     if (error) {
-  console.error('Signup error full:', error);
-  alert(JSON.stringify(error, null, 2));
-  return;
-}
-      const needsEmailConfirmation = !data.session;
-      els.authStatus.textContent = needsEmailConfirmation
-        ? 'Account created. Check your email to confirm your account before logging in.'
-        : 'Account created and logged in.';
-      alert(needsEmailConfirmation
-        ? 'Account created. Check your email to confirm it.'
-        : 'Account created successfully.');
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password
+    });
 
-      await syncStateFromSupabase();
-      await syncLoggedInUmpire();
-      render();
+    console.log('SIGNUP DATA:', data);
+    console.log('SIGNUP ERROR:', error);
+
+    setAuthBusy(false);
+
+    if (error) {
+      els.authStatus.textContent = 'Signup failed: ' + error.message;
+      alert('Signup failed: ' + error.message);
+      return;
     }
+
+    if (data?.user) {
+      els.authStatus.textContent = 'Account created successfully.';
+      alert('Account created successfully.');
+    } else {
+      els.authStatus.textContent = 'No user was returned from signup.';
+      alert('No user was returned from signup.');
+    }
+
+    await syncStateFromSupabase();
+    await syncLoggedInUmpire();
+    render();
+
+  } catch (err) {
+    console.error('SIGNUP CATCH ERROR:', err);
+    setAuthBusy(false);
+    els.authStatus.textContent = 'Unexpected error: ' + err.message;
+    alert('Unexpected error: ' + err.message);
+  }
+}
 
     async function sendPasswordReset() {
       const email = els.loginEmail.value.trim();
