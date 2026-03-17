@@ -40,54 +40,12 @@
     h1,h2,h3,p{margin:0}
     .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
     .hero p{max-width:720px;opacity:.92;margin-top:8px;line-height:1.5}
-    .hero-actions{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
     .pill{
       background:rgba(255,255,255,.15);
       border:1px solid rgba(255,255,255,.18);
       padding:10px 14px;
       border-radius:999px;
       font-size:14px;
-      white-space:nowrap;
-    }
-    .header-user{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:14px;
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);
-      min-height:44px;
-    }
-    .header-user-text{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      min-width:0;
-    }
-    .header-user-name{
-      font-size:14px;
-      font-weight:800;
-      color:#fff;
-      line-height:1.15;
-    }
-    .header-user-role{
-      font-size:12px;
-      color:rgba(255,255,255,.82);
-      text-transform:capitalize;
-      line-height:1.15;
-    }
-    .header-logout-btn{
-      background:#fff;
-      color:var(--brand2);
-      border:none;
-      border-radius:12px;
-      padding:10px 14px;
-      font:inherit;
-      font-size:14px;
-      font-weight:800;
-      cursor:pointer;
-      box-shadow:var(--shadow);
       white-space:nowrap;
     }
     main{padding:22px 20px 48px}
@@ -237,26 +195,6 @@
         font-size:13px;
         max-width:100%;
       }
-      .hero-actions{
-        width:100%;
-        justify-content:space-between;
-        align-items:center;
-        gap:10px;
-      }
-      .header-user{
-        flex:1 1 auto;
-        min-width:0;
-      }
-      .header-user-name{
-        font-size:13px;
-      }
-      .header-user-role{
-        font-size:11px;
-      }
-      .header-logout-btn{
-        padding:9px 12px;
-        font-size:13px;
-      }
 
       /* Login card: no zoom, no overflow */
       #authCard{
@@ -319,16 +257,7 @@
         <h1>Umpire Availability Manager</h1>
         <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       </div>
-      <div class="hero-actions">
-        <div class="pill">Single-file app · cloud synced</div>
-        <div class="header-user hidden" id="headerUserBox">
-          <div class="header-user-text">
-            <span class="header-user-name" id="headerUserName">Signed in user</span>
-            <span class="header-user-role" id="headerUserRole">Role</span>
-          </div>
-        </div>
-        <button type="button" class="header-logout-btn hidden" id="headerLogoutBtn">Log out</button>
-      </div>
+      <div class="pill">Single-file app · cloud synced</div>
     </div>
   </header>
 
@@ -357,7 +286,7 @@
   <div class="small muted auth-helper" id="authStatus">Sign in to manage your availability.</div>
 </div>
 
-        <div class="card" id="userViewCard">
+        <div class="card">
           <div class="section-title">
             <h3>Your View</h3>
           </div>
@@ -552,12 +481,7 @@
       resetPasswordBtn: document.getElementById('resetPasswordBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
       authButtons: document.getElementById('authButtons'),
-      authStatus: document.getElementById('authStatus'),
-      userViewCard: document.getElementById('userViewCard'),
-      headerUserBox: document.getElementById('headerUserBox'),
-      headerUserName: document.getElementById('headerUserName'),
-      headerUserRole: document.getElementById('headerUserRole'),
-      headerLogoutBtn: document.getElementById('headerLogoutBtn')
+      authStatus: document.getElementById('authStatus')
     };
 
     function isAdmin() {
@@ -665,40 +589,21 @@
       };
     }
 
-    function getSignedInDisplayName() {
-      if (currentProfile) {
-        return displayNameFromProfile(currentProfile);
-      }
-      if (currentUser?.email) {
-        return displayNameFromProfile({ email: currentUser.email });
-      }
-      return 'Signed in user';
-    }
-
-    function updateHeaderUserUI() {
-      const loggedIn = !!currentUser;
-      if (!loggedIn) {
-        els.headerUserBox.classList.add('hidden');
-        els.headerLogoutBtn.classList.add('hidden');
-        return;
-      }
-
-      const role = currentProfile?.role === 'admin' ? 'Admin' : 'Umpire';
-      els.headerUserName.textContent = getSignedInDisplayName();
-      els.headerUserRole.textContent = role;
-      els.headerUserBox.classList.remove('hidden');
-      els.headerLogoutBtn.classList.remove('hidden');
-    }
-
-    function updateSignedInLayout() {
-      const loggedIn = !!currentUser;
-      els.authCard.classList.toggle('hidden', loggedIn);
-      els.userViewCard.classList.toggle('hidden', loggedIn);
-      updateHeaderUserUI();
+    function formatDate(date, time) {
+      if (!date) return '';
+      const dt = new Date(date + 'T' + (time || '00:00'));
+      return dt.toLocaleString([], {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
     }
 
     function setAuthBusy(isBusy) {
-      [els.loginBtn, els.signupBtn, els.resetPasswordBtn, els.logoutBtn, els.headerLogoutBtn].forEach(btn => {
+      [els.loginBtn, els.signupBtn, els.resetPasswordBtn, els.logoutBtn].forEach(btn => {
         if (btn) btn.disabled = isBusy;
       });
     }
@@ -816,7 +721,6 @@
       currentUser = null;
       currentProfile = null;
       els.logoutBtn.classList.add('hidden');
-      els.headerLogoutBtn.classList.add('hidden');
       els.authButtons.classList.remove('hidden');
       els.resetPasswordBtn.classList.remove('hidden');
       els.authStatus.textContent = 'Signed out.';
@@ -824,7 +728,6 @@
       els.viewMode.value = 'umpire';
       els.loginPassword.value = '';
       els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
-      updateSignedInLayout();
       render();
     }
 
@@ -845,12 +748,10 @@
         els.currentRole.textContent = 'Not signed in';
         els.viewMode.value = 'umpire';
         els.loginPassword.value = '';
-        updateSignedInLayout();
         return;
       }
 
       els.logoutBtn.classList.remove('hidden');
-      els.headerLogoutBtn.classList.remove('hidden');
       els.authButtons.classList.add('hidden');
       els.resetPasswordBtn.classList.add('hidden');
       els.authStatus.textContent = `Signed in as ${currentUser.email}`;
@@ -858,7 +759,6 @@
       els.loginPassword.value = '';
 
       await loadCurrentProfile();
-      updateSignedInLayout();
 
       const umpire = state.umpires.find(u => String(u.id) === String(currentUser.id));
       if (umpire) {
@@ -1329,7 +1229,6 @@
     }
 
     function render() {
-      updateSignedInLayout();
       renderAdminCards();
       renderUmpireSelect();
       renderStats();
@@ -1371,7 +1270,6 @@
     els.signupBtn.addEventListener('click', signUpWithPassword);
     els.resetPasswordBtn.addEventListener('click', sendPasswordReset);
     els.logoutBtn.addEventListener('click', signOutUser);
-    els.headerLogoutBtn.addEventListener('click', signOutUser);
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && document.activeElement === els.umpireEmail && isAdmin()) {
