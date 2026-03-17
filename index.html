@@ -140,7 +140,22 @@
       .two-col{grid-template-columns:1fr}
     }
     @media (max-width: 560px){
-      .stats{grid-template-columns:1fr}
+      .stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+      }
+      .stat{
+        padding:12px;
+        border-radius:14px;
+      }
+      .stat b{
+        font-size:22px;
+        margin-top:2px;
+      }
+      .topbar{
+        margin-bottom:14px;
+        gap:10px;
+      }
       .auth-actions{grid-template-columns:1fr}
       header{padding:24px 16px}
       main{padding:18px 16px 34px}
