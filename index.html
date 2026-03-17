@@ -189,11 +189,9 @@
           <div class="section-title">
             <h3>Your View</h3>
           </div>
-          <label for="viewMode">Role</label>
-          <select id="viewMode">
-            <option value="umpire">Umpire</option>
-            <option value="admin">Admin</option>
-          </select>
+          <label>Role</label>
+          <div id="currentRole" style="padding:12px 13px;border:1px solid #d1d5db;border-radius:12px;background:#fff;text-transform:capitalize;">Not signed in</div>
+          <input id="viewMode" type="hidden" value="umpire" />
 
           <div id="umpireLoginArea">
             <label for="umpireSelect">Choose your name</label>
@@ -338,9 +336,11 @@
       availability: []
     };
     let currentUser = null;
+    let currentProfile = null;
 
     const els = {
       viewMode: document.getElementById('viewMode'),
+      currentRole: document.getElementById('currentRole'),
       umpireSelect: document.getElementById('umpireSelect'),
       umpireLoginArea: document.getElementById('umpireLoginArea'),
       adminPanel: document.getElementById('adminPanel'),
@@ -379,6 +379,58 @@
       authButtons: document.getElementById('authButtons'),
       authStatus: document.getElementById('authStatus')
     };
+
+    function isAdmin() {
+      return currentProfile?.role === 'admin';
+    }
+
+    async function ensureProfile(user) {
+      if (!user) return null;
+
+      const { data: existing, error: existingError } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (existingError) {
+        console.error('Error checking profile:', existingError);
+        return null;
+      }
+
+      if (existing) return existing;
+
+      const { data: inserted, error: insertError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          email: user.email,
+          role: 'umpire'
+        }, { onConflict: 'id' })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Error creating profile:', insertError);
+        return null;
+      }
+
+      return inserted;
+    }
+
+    async function loadCurrentProfile() {
+      if (!currentUser) {
+        currentProfile = null;
+        els.currentRole.textContent = 'Not signed in';
+        els.viewMode.value = 'umpire';
+        return;
+      }
+
+      currentProfile = await ensureProfile(currentUser);
+      const role = currentProfile?.role === 'admin' ? 'admin' : 'umpire';
+      els.viewMode.value = role;
+      els.currentRole.textContent = role;
+    }
 
     function currentView() {
       return els.viewMode.value;
@@ -474,23 +526,32 @@ async function signUpWithPassword() {
       password
     });
 
-    console.log('SIGNUP DATA:', data);
-    console.log('SIGNUP ERROR:', error);
-
-    setAuthBusy(false);
-
     if (error) {
+      setAuthBusy(false);
       els.authStatus.textContent = 'Signup failed: ' + error.message;
       alert('Signup failed: ' + error.message);
       return;
     }
 
-    els.authStatus.textContent = 'Account created. Now click Log in.';
-    alert('Account created. Now click Log in.');
+    if (data.user) {
+      const { error: profileError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: data.user.id,
+          email: data.user.email,
+          role: 'umpire'
+        }, { onConflict: 'id' });
+
+      if (profileError) {
+        console.error('Profile creation error:', profileError);
+      }
+    }
+
+    setAuthBusy(false);
+    els.authStatus.textContent = 'Account created. New users are added as umpires by default. If this should be an admin, change the role in Supabase → profiles.';
+    alert('Account created. New users are added as umpires by default. If this should be an admin, change the role in Supabase → profiles.');
 
     els.loginPassword.value = '';
-    return;
-
   } catch (err) {
     console.error('SIGNUP CATCH ERROR:', err);
     setAuthBusy(false);
@@ -531,10 +592,13 @@ async function signUpWithPassword() {
   }
 
   currentUser = null;
+  currentProfile = null;
   els.logoutBtn.classList.add('hidden');
   els.authButtons.classList.remove('hidden');
   els.resetPasswordBtn.classList.remove('hidden');
   els.authStatus.textContent = 'Signed out.';
+  els.currentRole.textContent = 'Not signed in';
+  els.viewMode.value = 'umpire';
   els.loginPassword.value = '';
   render();
 }
@@ -563,10 +627,13 @@ async function signUpWithPassword() {
   currentUser = session?.user || null;
 
   if (!currentUser) {
+    currentProfile = null;
     els.logoutBtn.classList.add('hidden');
     els.authButtons.classList.remove('hidden');
     els.resetPasswordBtn.classList.remove('hidden');
     els.authStatus.textContent = 'Sign in to manage your availability.';
+    els.currentRole.textContent = 'Not signed in';
+    els.viewMode.value = 'umpire';
     els.loginPassword.value = '';
     return;
   }
@@ -578,6 +645,7 @@ async function signUpWithPassword() {
   els.loginEmail.value = currentUser.email || '';
   els.loginPassword.value = '';
 
+  await loadCurrentProfile();
   await linkCurrentUserToUmpireIfNeeded();
 
   let umpire = state.umpires.find(
@@ -640,6 +708,11 @@ async function signUpWithPassword() {
     }
 
     async function addUmpire() {
+      if (!isAdmin()) {
+        alert('Only admins can add umpires.');
+        return;
+      }
+
       const name = els.umpireName.value.trim();
       const email = els.umpireEmail.value.trim();
       const level = els.umpireLevel.value.trim();
@@ -676,6 +749,11 @@ async function signUpWithPassword() {
     }
 
     async function addFixture() {
+      if (!isAdmin()) {
+        alert('Only admins can add fixtures.');
+        return;
+      }
+
       const date = els.fixtureDate.value;
       const time = els.fixtureTime.value;
       const title = els.fixtureTitle.value.trim();
@@ -721,13 +799,13 @@ async function signUpWithPassword() {
     async function setAvailability(fixtureId, umpireId, status) {
       if (!fixtureId || !umpireId) return;
 
-      if (currentUser) {
+      if (currentUser && !isAdmin()) {
         const selected = getUmpire(umpireId);
         const isOwnRecord = selected && (
           (selected.email && currentUser.email && selected.email.toLowerCase() === currentUser.email.toLowerCase()) ||
           String(selected.auth_user_id || '') === String(currentUser.id)
         );
-        if (!isOwnRecord && currentView() === 'umpire') {
+        if (!isOwnRecord) {
           alert('You can only update your own availability.');
           return;
         }
@@ -766,6 +844,11 @@ async function signUpWithPassword() {
     }
 
     async function deleteFixture(fixtureId) {
+      if (!isAdmin()) {
+        alert('Only admins can delete fixtures.');
+        return;
+      }
+
       if (!confirm('Delete this fixture?')) return;
 
       await supabaseClient.from("availability").delete().eq("fixture_id", Number(fixtureId));
@@ -931,7 +1014,7 @@ async function signUpWithPassword() {
     }
 
     function renderAdminCards() {
-      const admin = currentView() === 'admin';
+      const admin = isAdmin();
       els.adminPanel.classList.toggle('hidden', !admin);
       els.addUmpireCard.classList.toggle('hidden', !admin);
       els.addFixtureCard.classList.toggle('hidden', !admin);
