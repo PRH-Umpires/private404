@@ -423,75 +423,79 @@
       render();
     }
 
-    async function addUmpire() {
-      const name = els.umpireName.value.trim();
-      const level = els.umpireLevel.value.trim();
+   async function addUmpire() {
+  const name = els.umpireName.value.trim();
+  const level = els.umpireLevel.value.trim();
+  const area = els.umpireArea.value.trim();
 
-      if (!name) {
-        alert('Please enter an umpire name.');
-        return;
-      }
+  if (!name) {
+    alert('Please enter an umpire name.');
+    return;
+  }
 
-      const { error } = await supabaseClient.from("Umpires").insert([{
-        name,
-        level,
-        email: ""
-      }]);
+  const { error } = await supabaseClient.from("Umpires").insert([{
+    name,
+    level,
+    area,
+    email: ""
+  }]);
 
-      if (error) {
-        console.error("Error saving umpire:", error);
-        alert("Error saving umpire");
-        return;
-      }
+  if (error) {
+    console.error("Error saving umpire:", error);
+    alert("Error saving umpire");
+    return;
+  }
 
-      els.umpireName.value = '';
-      els.umpireLevel.value = '';
-      els.umpireArea.value = '';
+  els.umpireName.value = '';
+  els.umpireLevel.value = '';
+  els.umpireArea.value = '';
 
-      await syncStateFromSupabase();
-      alert("Umpire saved");
-    }
+  await syncStateFromSupabase();
+  alert("Umpire saved");
+}
 
-    async function addFixture() {
-      const date = els.fixtureDate.value;
-      const time = els.fixtureTime.value;
-      const title = els.fixtureTitle.value.trim();
-      const venue = els.fixtureVenue.value.trim();
-      const umpiresNeeded = Number(els.fixtureNeed.value || 2);
+async function addFixture() {
+  const date = els.fixtureDate.value;
+  const time = els.fixtureTime.value;
+  const title = els.fixtureTitle.value.trim();
+  const venue = els.fixtureVenue.value.trim();
+  const league = els.fixtureLeague.value.trim();
+  const umpiresNeeded = Number(els.fixtureNeed.value || 2);
 
-      if (!date || !time || !title) {
-        alert('Please add date, time, and fixture title.');
-        return;
-      }
+  if (!date || !time || !title) {
+    alert('Please add date, time, and fixture title.');
+    return;
+  }
 
-      const { error } = await supabaseClient.from("Fixtures").insert([{
-        date,
-        time,
-        home_team: title,
-        venue,
-        umpires_needed: umpiresNeeded,
-        status: els.fixtureStatus.value || 'Open',
-        notes: els.fixtureNotes.value.trim()
-      }]);
+  const { error } = await supabaseClient.from("Fixtures").insert([{
+    date,
+    time,
+    home_team: title,
+    venue,
+    league,
+    umpires_needed: umpiresNeeded,
+    status: els.fixtureStatus.value || 'Open',
+    notes: els.fixtureNotes.value.trim()
+  }]);
 
-      if (error) {
-        console.error("Error saving fixture:", error);
-        alert("Error saving fixture");
-        return;
-      }
+  if (error) {
+    console.error("Error saving fixture:", error);
+    alert("Error saving fixture");
+    return;
+  }
 
-      els.fixtureDate.value = '';
-      els.fixtureTime.value = '';
-      els.fixtureTitle.value = '';
-      els.fixtureVenue.value = '';
-      els.fixtureLeague.value = '';
-      els.fixtureNotes.value = '';
-      els.fixtureNeed.value = 2;
-      els.fixtureStatus.value = 'Open';
+  els.fixtureDate.value = '';
+  els.fixtureTime.value = '';
+  els.fixtureTitle.value = '';
+  els.fixtureVenue.value = '';
+  els.fixtureLeague.value = '';
+  els.fixtureNotes.value = '';
+  els.fixtureNeed.value = 2;
+  els.fixtureStatus.value = 'Open';
 
-      await syncStateFromSupabase();
-      alert("Fixture saved");
-    }
+  await syncStateFromSupabase();
+  alert("Fixture saved");
+}
 
     async function setAvailability(fixtureId, umpireId, status) {
       if (!fixtureId || !umpireId) return;
