@@ -114,8 +114,17 @@
     .header-actions{
       display:flex;
       align-items:center;
+      justify-content:flex-end;
       gap:10px;
       margin-left:auto;
+      flex-wrap:wrap;
+    }
+    .header-user{
+      color:#fff;
+      font-size:14px;
+      font-weight:600;
+      opacity:.95;
+      white-space:nowrap;
     }
     .page-layout{
       display:grid;
@@ -131,8 +140,9 @@
       width:100%;
     }
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .stat{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff}
-    .stat b{display:block;font-size:26px;margin-top:4px}
+    .stat{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff;min-width:0}
+    .stat .muted{display:block;font-size:13px;line-height:1.2}
+    .stat b{display:block;font-size:26px;margin-top:4px;line-height:1.1}
     .list{display:grid;gap:14px}
     .fixture{
       border:1px solid var(--line);
@@ -188,9 +198,10 @@
     @media (max-width: 560px){
       .wrap{max-width:100%;width:100%}
       .grid{grid-template-columns:1fr;gap:14px}
-      .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-      .stat{padding:10px;min-width:0;border-radius:14px}
-      .stat b{font-size:20px;margin-top:2px}
+      .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+      .stat{padding:8px 6px;min-width:0;border-radius:12px;text-align:center}
+      .stat .muted{font-size:10px;line-height:1.1}
+      .stat b{font-size:16px;margin-top:2px}
       .auth-actions{grid-template-columns:1fr}
       header{padding:18px 12px}
       main{padding:12px 12px 24px}
@@ -202,9 +213,15 @@
       .header-actions{
         width:100%;
         margin-left:0;
+        justify-content:space-between;
+      }
+      .header-user{
+        font-size:12px;
+        white-space:normal;
       }
       .header-actions .btn{
-        width:100%;
+        width:auto;
+        min-width:96px;
       }
       .section-title{flex-direction:column;align-items:stretch}
       .section-title select{max-width:none !important;width:100%}
@@ -298,6 +315,7 @@
           <div class="pill">Single-file app · cloud synced</div>
         </div>
         <div class="header-actions">
+          <div class="header-user hidden" id="headerWelcome"></div>
           <button type="button" class="btn btn-ghost hidden" id="headerLogoutBtn">Log out</button>
         </div>
       </div>
@@ -528,6 +546,7 @@
       resetPasswordBtn: document.getElementById('resetPasswordBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
       headerLogoutBtn: document.getElementById('headerLogoutBtn'),
+      headerWelcome: document.getElementById('headerWelcome'),
       authButtons: document.getElementById('authButtons'),
       authStatus: document.getElementById('authStatus')
     };
@@ -542,6 +561,26 @@
       if (!email) return 'Unnamed umpire';
       const local = email.split('@')[0] || email;
       return local.replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function getCurrentUserDisplayName() {
+      if (currentProfile?.email) return displayNameFromProfile(currentProfile);
+      if (currentUser?.email) {
+        const local = currentUser.email.split('@')[0] || currentUser.email;
+        return local.replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      }
+      return '';
+    }
+
+    function updateHeaderAuthUI() {
+      const loggedIn = !!currentUser;
+      const displayName = getCurrentUserDisplayName();
+
+      els.headerLogoutBtn.classList.toggle('hidden', !loggedIn);
+      els.headerWelcome.classList.toggle('hidden', !loggedIn);
+      els.headerWelcome.textContent = loggedIn && displayName ? `Hi ${displayName}` : '';
+
+      els.authCard.classList.toggle('hidden', loggedIn);
     }
 
     async function ensureProfile(user) {
@@ -769,7 +808,6 @@
       currentUser = null;
       currentProfile = null;
       els.logoutBtn.classList.add('hidden');
-      els.headerLogoutBtn.classList.add('hidden');
       els.authButtons.classList.remove('hidden');
       els.resetPasswordBtn.classList.remove('hidden');
       els.authStatus.textContent = 'Signed out.';
@@ -777,6 +815,7 @@
       els.viewMode.value = 'umpire';
       els.loginPassword.value = '';
       els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
+      updateHeaderAuthUI();
       render();
     }
 
@@ -791,18 +830,17 @@
       if (!currentUser) {
         currentProfile = null;
         els.logoutBtn.classList.add('hidden');
-        els.headerLogoutBtn.classList.add('hidden');
         els.authButtons.classList.remove('hidden');
         els.resetPasswordBtn.classList.remove('hidden');
         els.authStatus.textContent = 'Sign in to manage your availability.';
         els.currentRole.textContent = 'Not signed in';
         els.viewMode.value = 'umpire';
         els.loginPassword.value = '';
+        updateHeaderAuthUI();
         return;
       }
 
-      els.logoutBtn.classList.remove('hidden');
-      els.headerLogoutBtn.classList.remove('hidden');
+      els.logoutBtn.classList.add('hidden');
       els.authButtons.classList.add('hidden');
       els.resetPasswordBtn.classList.add('hidden');
       els.authStatus.textContent = `Signed in as ${currentUser.email}`;
@@ -810,6 +848,7 @@
       els.loginPassword.value = '';
 
       await loadCurrentProfile();
+      updateHeaderAuthUI();
 
       const umpire = state.umpires.find(u => String(u.id) === String(currentUser.id));
       if (umpire) {
@@ -1280,6 +1319,7 @@
     }
 
     function render() {
+      updateHeaderAuthUI();
       renderAdminCards();
       renderUmpireSelect();
       renderStats();
