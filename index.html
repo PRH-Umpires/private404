@@ -707,16 +707,16 @@ async function signUpWithPassword() {
       }));
 
       state.fixtures = fixtureRows.map(row => ({
-        id: String(row.id),
-        date: row.date || "",
-        time: row.time || "",
-        title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || row.title || "Fixture"),
-        venue: row.venue || "",
-        league: row.league || "",
-        umpiresNeeded: Number(row.umpires_needed ?? row.umpiresNeeded ?? 2),
-        status: row.status || "Open",
-        notes: row.notes || ""
-      }));
+  id: String(row.id),
+  date: row.date || "",
+  time: row.time || "",
+  title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || row.title || "Fixture"),
+  venue: row.venue || "",
+  league: row.league || "",
+  umpiresNeeded: Number(row.umpires_needed ?? row.umpiresNeeded ?? 2),
+  status: row.status || "Open",
+  notes: row.notes || ""
+}));
 
       state.availability = availabilityRows.map(row => ({
         id: String(row.id),
