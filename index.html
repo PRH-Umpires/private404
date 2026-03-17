@@ -78,6 +78,10 @@
       font-weight:700;
       cursor:pointer;
       transition:.18s ease;
+      white-space:normal;
+      word-break:break-word;
+      overflow-wrap:anywhere;
+      text-align:center;
     }
     .btn:hover{transform:translateY(-1px)}
     .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
@@ -145,9 +149,9 @@
       .stat{padding:12px;min-width:0}
       .stat b{font-size:22px}
       .auth-actions{grid-template-columns:1fr}
-      header{padding:24px 16px}
-      main{padding:18px 16px 34px}
-      .card{padding:15px}
+      header{padding:22px 14px}
+      main{padding:16px 14px 30px}
+      .card{padding:14px}
       .fixture{padding:14px}
       .topbar{align-items:flex-start;margin-bottom:14px}
       .topbar .btn{width:100%}
@@ -163,13 +167,57 @@
       .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
       .table-wrap table{min-width:640px}
 
-      /* Prevent iPhone zoom/jump on login focus */
+      /* Mobile login card: prevent zoom and fit cleanly */
+      #authCard{
+        overflow:hidden;
+        padding:14px;
+      }
+      #authCard .section-title{
+        margin-bottom:8px;
+        gap:8px;
+      }
+      #authCard .section-title h3{
+        font-size:17px;
+        line-height:1.2;
+      }
+      #authCard label{
+        margin:10px 0 5px;
+        font-size:12px;
+      }
       #authCard input,
       #authCard select,
-      #authCard textarea,
-      #authCard button{
+      #authCard textarea{
         font-size:16px;
+        min-height:46px;
+        padding:10px 12px;
       }
+      #authCard .auth-actions{
+        gap:8px;
+        margin-top:12px;
+      }
+      #authCard .btn{
+        width:100%;
+        min-height:44px;
+        padding:10px 12px;
+        font-size:14px;
+        line-height:1.2;
+      }
+      #resetPasswordBtn,
+      #logoutBtn{
+        margin-top:8px !important;
+        font-size:13px !important;
+        line-height:1.2 !important;
+        min-height:44px;
+        padding:10px 12px !important;
+      }
+      #authStatus{
+        margin-top:8px;
+        font-size:12px;
+        line-height:1.35;
+        word-break:break-word;
+        overflow-wrap:anywhere;
+      }
+    }
       #authCard{
         overflow:hidden;
       }
