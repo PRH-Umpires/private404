@@ -156,6 +156,17 @@
   <main>
     <div class="wrap grid">
       <aside class="sidebar">
+        <div class="card" id="authCard">
+          <div class="section-title">
+            <h3>Login</h3>
+          </div>
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" placeholder="you@example.com" />
+          <button type="button" class="btn btn-primary" id="sendMagicLinkBtn" style="margin-top:14px;width:100%">Send login link</button>
+          <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="margin-top:10px;width:100%">Log out</button>
+          <div class="small muted" id="authStatus" style="margin-top:10px">Sign in to manage your availability.</div>
+        </div>
+
         <div class="card">
           <div class="section-title">
             <h3>Your View</h3>
@@ -191,6 +202,8 @@
           </div>
           <label for="umpireName">Name</label>
           <input id="umpireName" placeholder="e.g. Sarah Jones" />
+          <label for="umpireEmail">Email</label>
+          <input id="umpireEmail" type="email" placeholder="e.g. sarah@example.com" />
           <label for="umpireLevel">Grade / Level</label>
           <input id="umpireLevel" placeholder="e.g. Level 2" />
           <label for="umpireArea">Area / Base</label>
@@ -307,6 +320,7 @@
       fixtures: [],
       availability: []
     };
+    let currentUser = null;
 
     const els = {
       viewMode: document.getElementById('viewMode'),
@@ -316,6 +330,7 @@
       addUmpireCard: document.getElementById('addUmpireCard'),
       addFixtureCard: document.getElementById('addFixtureCard'),
       umpireName: document.getElementById('umpireName'),
+      umpireEmail: document.getElementById('umpireEmail'),
       umpireLevel: document.getElementById('umpireLevel'),
       umpireArea: document.getElementById('umpireArea'),
       addUmpireBtn: document.getElementById('saveUmpireSupabaseBtn'),
@@ -336,7 +351,12 @@
       dashboardText: document.getElementById('dashboardText'),
       seedDemoBtn: document.getElementById('seedDemoBtn'),
       exportBtn: document.getElementById('exportBtn'),
-      importFile: document.getElementById('importFile')
+      importFile: document.getElementById('importFile'),
+      authCard: document.getElementById('authCard'),
+      loginEmail: document.getElementById('loginEmail'),
+      sendMagicLinkBtn: document.getElementById('sendMagicLinkBtn'),
+      logoutBtn: document.getElementById('logoutBtn'),
+      authStatus: document.getElementById('authStatus')
     };
 
     function currentView() {
@@ -379,6 +399,66 @@
       });
     }
 
+    async function sendMagicLink() {
+      const email = els.loginEmail.value.trim();
+      if (!email) {
+        alert('Please enter your email.');
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: window.location.href
+        }
+      });
+
+      if (error) {
+        console.error('Error sending magic link:', error);
+        alert('Could not send login link.');
+        return;
+      }
+
+      els.authStatus.textContent = 'Check your email for the login link.';
+    }
+
+    async function signOutUser() {
+      await supabaseClient.auth.signOut();
+      currentUser = null;
+      els.logoutBtn.classList.add('hidden');
+      els.sendMagicLinkBtn.classList.remove('hidden');
+      els.authStatus.textContent = 'Signed out.';
+      els.loginEmail.value = '';
+      render();
+    }
+
+    async function syncLoggedInUmpire() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      currentUser = session?.user || null;
+
+      if (!currentUser) {
+        els.logoutBtn.classList.add('hidden');
+        els.sendMagicLinkBtn.classList.remove('hidden');
+        els.authStatus.textContent = 'Sign in to manage your availability.';
+        return;
+      }
+
+      els.logoutBtn.classList.remove('hidden');
+      els.sendMagicLinkBtn.classList.add('hidden');
+      els.authStatus.textContent = `Signed in as ${currentUser.email}`;
+      els.loginEmail.value = currentUser.email || '';
+
+      let umpire = state.umpires.find(u => u.email && currentUser.email && u.email.toLowerCase() === currentUser.email.toLowerCase());
+
+      if (!umpire) {
+        umpire = state.umpires.find(u => String(u.auth_user_id || '') === String(currentUser.id));
+      }
+
+      if (umpire) {
+        els.umpireSelect.value = String(umpire.id);
+      }
+    }
+
     async function syncStateFromSupabase() {
       const [umpireResult, fixtureResult, availabilityResult] = await Promise.all([
         supabaseClient.from("Umpires").select("*").order("name", { ascending: true }),
@@ -398,7 +478,9 @@
         id: String(row.id),
         name: row.name || "",
         level: row.level || "",
-        area: row.area || ""
+        area: row.area || "",
+        email: row.email || "",
+        auth_user_id: row.auth_user_id || null
       }));
 
       state.fixtures = fixtureRows.map(row => ({
@@ -420,82 +502,79 @@
         status: row.status || ""
       }));
 
+      await syncLoggedInUmpire();
       render();
     }
 
-   async function addUmpire() {
-  const name = els.umpireName.value.trim();
-  const level = els.umpireLevel.value.trim();
-  const area = els.umpireArea.value.trim();
+    async function addUmpire() {
+      const name = els.umpireName.value.trim();
+      const level = els.umpireLevel.value.trim();
 
-  if (!name) {
-    alert('Please enter an umpire name.');
-    return;
-  }
+      if (!name) {
+        alert('Please enter an umpire name.');
+        return;
+      }
 
-  const { error } = await supabaseClient.from("Umpires").insert([{
-    name,
-    level,
-    area,
-    email: ""
-  }]);
+      const { error } = await supabaseClient.from("Umpires").insert([{
+        name,
+        level,
+        email: ""
+      }]);
 
-  if (error) {
-    console.error("Error saving umpire:", error);
-    alert("Error saving umpire");
-    return;
-  }
+      if (error) {
+        console.error("Error saving umpire:", error);
+        alert("Error saving umpire");
+        return;
+      }
 
-  els.umpireName.value = '';
-  els.umpireLevel.value = '';
-  els.umpireArea.value = '';
+      els.umpireName.value = '';
+      els.umpireLevel.value = '';
+      els.umpireArea.value = '';
 
-  await syncStateFromSupabase();
-  alert("Umpire saved");
-}
+      await syncStateFromSupabase();
+      alert("Umpire saved");
+    }
 
-async function addFixture() {
-  const date = els.fixtureDate.value;
-  const time = els.fixtureTime.value;
-  const title = els.fixtureTitle.value.trim();
-  const venue = els.fixtureVenue.value.trim();
-  const league = els.fixtureLeague.value.trim();
-  const umpiresNeeded = Number(els.fixtureNeed.value || 2);
+    async function addFixture() {
+      const date = els.fixtureDate.value;
+      const time = els.fixtureTime.value;
+      const title = els.fixtureTitle.value.trim();
+      const venue = els.fixtureVenue.value.trim();
+      const umpiresNeeded = Number(els.fixtureNeed.value || 2);
 
-  if (!date || !time || !title) {
-    alert('Please add date, time, and fixture title.');
-    return;
-  }
+      if (!date || !time || !title) {
+        alert('Please add date, time, and fixture title.');
+        return;
+      }
 
-  const { error } = await supabaseClient.from("Fixtures").insert([{
-    date,
-    time,
-    home_team: title,
-    venue,
-    league,
-    umpires_needed: umpiresNeeded,
-    status: els.fixtureStatus.value || 'Open',
-    notes: els.fixtureNotes.value.trim()
-  }]);
+      const { error } = await supabaseClient.from("Fixtures").insert([{
+        date,
+        time,
+        home_team: title,
+        venue,
+        umpires_needed: umpiresNeeded,
+        status: els.fixtureStatus.value || 'Open',
+        notes: els.fixtureNotes.value.trim()
+      }]);
 
-  if (error) {
-    console.error("Error saving fixture:", error);
-    alert("Error saving fixture");
-    return;
-  }
+      if (error) {
+        console.error("Error saving fixture:", error);
+        alert("Error saving fixture");
+        return;
+      }
 
-  els.fixtureDate.value = '';
-  els.fixtureTime.value = '';
-  els.fixtureTitle.value = '';
-  els.fixtureVenue.value = '';
-  els.fixtureLeague.value = '';
-  els.fixtureNotes.value = '';
-  els.fixtureNeed.value = 2;
-  els.fixtureStatus.value = 'Open';
+      els.fixtureDate.value = '';
+      els.fixtureTime.value = '';
+      els.fixtureTitle.value = '';
+      els.fixtureVenue.value = '';
+      els.fixtureLeague.value = '';
+      els.fixtureNotes.value = '';
+      els.fixtureNeed.value = 2;
+      els.fixtureStatus.value = 'Open';
 
-  await syncStateFromSupabase();
-  alert("Fixture saved");
-}
+      await syncStateFromSupabase();
+      alert("Fixture saved");
+    }
 
     async function setAvailability(fixtureId, umpireId, status) {
       if (!fixtureId || !umpireId) return;
@@ -742,10 +821,20 @@ async function addFixture() {
       await syncStateFromSupabase();
     });
 
+    els.sendMagicLinkBtn.addEventListener('click', sendMagicLink);
+    els.logoutBtn.addEventListener('click', signOutUser);
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && document.activeElement === els.umpireName) {
         els.addUmpireBtn.click();
       }
+      if (e.key === 'Enter' && document.activeElement === els.loginEmail) {
+        els.sendMagicLinkBtn.click();
+      }
+    });
+
+    supabaseClient.auth.onAuthStateChange(async () => {
+      await syncStateFromSupabase();
     });
 
     syncStateFromSupabase();
