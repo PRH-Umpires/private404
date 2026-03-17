@@ -919,8 +919,8 @@ const { error } = await supabaseClient.from("fixtures").insert([{
       const { error } = await supabaseClient
         .from("assignments")
         .delete()
-        .eq("fixture_id", Number(fixtureId))
-        .eq("umpire_id", Number(umpireId));
+        .eq("fixture_id", fixtureId)
+.eq("umpire_id", umpireId);
 
       if (error) {
         console.error("Error removing assignment:", error);
