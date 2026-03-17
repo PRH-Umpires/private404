@@ -1170,7 +1170,7 @@
               return `<tr>
                 <td>${u.name}<div class="small muted">${u.email || ''}</div></td>
                 <td>${resp?.status ? `<span class="tag ${style}">${resp.status}</span>` : '<span class="muted small">No response</span>'}</td>
-                <td>${assigned ? '<span class="tag available">Assigned</span>' : '<span class="muted small">Not assigned</span>'}</td>
+                <td>${assigned ? '<span class="tag available">Confirmed</span>' : '<span class="muted small">Not assigned</span>'}</td>
                 <td>${assignButton}</td>
               </tr>`;
             }).join('')
