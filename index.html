@@ -472,12 +472,11 @@
       });
       setAuthBusy(false);
 
-      if (error) {
-        console.error('Signup error:', error);
-        alert(error.message || 'Could not create account.');
-        return;
-      }
-
+     if (error) {
+  console.error('Signup error full:', error);
+  alert(JSON.stringify(error, null, 2));
+  return;
+}
       const needsEmailConfirmation = !data.session;
       els.authStatus.textContent = needsEmailConfirmation
         ? 'Account created. Check your email to confirm your account before logging in.'
