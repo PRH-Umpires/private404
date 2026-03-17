@@ -941,7 +941,7 @@ const { error } = await supabaseClient.from("fixtures").insert([{
 
       await supabaseClient.from("availability").delete().eq("fixture_id", Number(fixtureId));
       await supabaseClient.from("assignments").delete().eq("fixture_id", Number(fixtureId));
-      const { error } = await supabaseClient.from("Fixtures").delete().eq("id", Number(fixtureId));
+      const { error } = await supabaseClient.from("fixtures").delete().eq("id", fixtureId);
 
       if (error) {
         console.error("Error deleting fixture:", error);
