@@ -1126,7 +1126,7 @@
       const umpireId = currentUmpireId();
 
       if (filter === 'open') fixtures = fixtures.filter(f => getEffectiveFixtureStatus(f) === 'Open');
-      if (filter === 'assigned') fixtures = fixtures.filter(f => getEffectiveFixtureStatus(f) === 'Assigned');
+      if (filter === 'assigned') fixtures = fixtures.filter(f => getEffectiveFixtureStatus(f) === 'Confirmed');
       if (filter === 'mine' && umpireId) {
         fixtures = fixtures.filter(f =>
           state.availability.some(r => String(r.fixtureId) === String(f.id) && String(r.umpireId) === String(umpireId))
