@@ -113,6 +113,10 @@
       padding:16px;
       background:#fff;
     }
+    .closed-fixture{
+      opacity:.82;
+      background:#fafafa;
+    }
     .fixture-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
     .fixture-title{font-size:18px;font-weight:800}
     .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
@@ -602,6 +606,30 @@
       });
     }
 
+
+    function getFixtureDateTime(fixture) {
+      if (!fixture?.date) return null;
+      const dt = new Date(`${fixture.date}T${fixture.time || '00:00'}`);
+      return Number.isNaN(dt.getTime()) ? null : dt;
+    }
+
+    function isFixturePast(fixture) {
+      const fixtureDateTime = getFixtureDateTime(fixture);
+      if (!fixtureDateTime) return false;
+      return fixtureDateTime.getTime() < Date.now();
+    }
+
+    function getEffectiveFixtureStatus(fixture) {
+      if (isFixturePast(fixture)) return 'Closed';
+      const assignedCount = getAssignmentsForFixture(fixture.id).length;
+      if (assignedCount >= Number(fixture.umpiresNeeded || 2)) return 'Assigned';
+      return fixture.status || 'Open';
+    }
+
+    function isFixtureClosed(fixture) {
+      return getEffectiveFixtureStatus(fixture) === 'Closed';
+    }
+
     function setAuthBusy(isBusy) {
       [els.loginBtn, els.signupBtn, els.resetPasswordBtn, els.logoutBtn].forEach(btn => {
         if (btn) btn.disabled = isBusy;
@@ -934,6 +962,12 @@
     async function setAvailability(fixtureId, umpireId, status) {
       if (!fixtureId || !umpireId) return;
 
+      const fixture = state.fixtures.find(f => String(f.id) === String(fixtureId));
+      if (fixture && isFixtureClosed(fixture)) {
+        alert('This fixture is closed because the fixture date and time have passed.');
+        return;
+      }
+
       if (currentUser && !isAdmin() && String(currentUser.id) !== String(umpireId)) {
         alert('You can only update your own availability.');
         return;
@@ -979,6 +1013,10 @@
 
       const fixture = state.fixtures.find(f => String(f.id) === String(fixtureId));
       if (!fixture) return;
+      if (isFixtureClosed(fixture)) {
+        alert('This fixture is closed because the fixture date and time have passed.');
+        return;
+      }
 
       const alreadyAssigned = isAssignedToFixture(fixtureId, umpireId);
       if (alreadyAssigned) {
@@ -1052,7 +1090,7 @@
 
     function renderStats() {
       const totalFixtures = state.fixtures.length;
-      const openFixtures = state.fixtures.filter(f => getCounts(f).assigned < Number(f.umpiresNeeded || 2)).length;
+      const openFixtures = state.fixtures.filter(f => !isFixtureClosed(f) && getEffectiveFixtureStatus(f) !== 'Assigned').length;
       const totalUmpires = state.umpires.length;
       const assignedSlots = state.assignments.length;
 
@@ -1087,8 +1125,8 @@
       const filter = els.fixtureFilter.value;
       const umpireId = currentUmpireId();
 
-      if (filter === 'open') fixtures = fixtures.filter(f => getCounts(f).assigned < Number(f.umpiresNeeded || 2));
-      if (filter === 'assigned') fixtures = fixtures.filter(f => getCounts(f).assigned > 0);
+      if (filter === 'open') fixtures = fixtures.filter(f => getEffectiveFixtureStatus(f) === 'Open');
+      if (filter === 'assigned') fixtures = fixtures.filter(f => getEffectiveFixtureStatus(f) === 'Assigned');
       if (filter === 'mine' && umpireId) {
         fixtures = fixtures.filter(f =>
           state.availability.some(r => String(r.fixtureId) === String(f.id) && String(r.umpireId) === String(umpireId))
@@ -1112,7 +1150,8 @@
         const counts = getCounts(fixture);
         const myResponse = getAvailability(fixture, umpireId);
         const assignedNames = getAssignedNames(fixture.id);
-        const effectiveStatus = counts.assigned >= Number(fixture.umpiresNeeded || 2) ? 'Assigned' : fixture.status;
+        const effectiveStatus = getEffectiveFixtureStatus(fixture);
+        const fixtureIsClosed = effectiveStatus === 'Closed';
         const fixtureIsFull = counts.assigned >= Number(fixture.umpiresNeeded || 2);
 
         const candidateRows = view === 'admin'
@@ -1125,8 +1164,8 @@
 
               const assigned = isAssignedToFixture(fixture.id, u.id);
               const assignButton = assigned
-                ? `<button class="btn btn-danger small" onclick="unassignUmpire('${fixture.id}','${u.id}')">Remove</button>`
-                : `<button class="btn btn-secondary small" onclick="assignUmpire('${fixture.id}','${u.id}')" ${fixtureIsFull ? 'disabled' : ''}>Assign</button>`;
+                ? `<button class="btn btn-danger small" onclick="unassignUmpire('${fixture.id}','${u.id}')" ${fixtureIsClosed ? 'disabled' : ''}>Remove</button>`
+                : `<button class="btn btn-secondary small" onclick="assignUmpire('${fixture.id}','${u.id}')" ${(fixtureIsFull || fixtureIsClosed) ? 'disabled' : ''}>Assign</button>`;
 
               return `<tr>
                 <td>${u.name}<div class="small muted">${u.email || ''}</div></td>
@@ -1138,13 +1177,13 @@
           : '';
 
         return `
-          <div class="fixture">
+          <div class="fixture ${fixtureIsClosed ? 'closed-fixture' : ''}">
             <div class="fixture-head">
               <div>
                 <div class="fixture-title">${fixture.title}</div>
                 <div class="muted" style="margin-top:6px">${formatDate(fixture.date, fixture.time)}</div>
               </div>
-              <span class="tag">${effectiveStatus}</span>
+              <span class="tag ${effectiveStatus === 'Closed' ? 'unavailable' : ''}">${effectiveStatus}</span>
             </div>
 
             <div class="meta">
@@ -1162,10 +1201,11 @@
 
             ${view === 'umpire' ? `
               <div class="availability-row">
-                <button class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Available')">Available</button>
-                <button class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe')">Maybe</button>
-                <button class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable')">Unavailable</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Available')" ${fixtureIsClosed ? 'disabled' : ''}>Available</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe')" ${fixtureIsClosed ? 'disabled' : ''}>Maybe</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable')" ${fixtureIsClosed ? 'disabled' : ''}>Unavailable</button>
               </div>
+              ${fixtureIsClosed ? `<div class="notice danger-note" style="margin-top:14px">This fixture is closed because the fixture date and time have passed.</div>` : ''}
             ` : `
               <div class="table-wrap" style="margin-top:14px">
                 <table>
@@ -1235,6 +1275,10 @@
       renderFixtures();
       renderOverview();
     }
+
+    setInterval(() => {
+      render();
+    }, 30000);
 
     window.setAvailability = setAvailability;
     window.assignUmpire = assignUmpire;
