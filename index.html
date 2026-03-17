@@ -149,7 +149,7 @@
         <h1>Umpire Availability Manager</h1>
         <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       </div>
-      <div class="pill">Single-file app · saves in your browser</div>
+      <div class="pill">Single-file app · cloud synced</div>
     </div>
   </header>
 
@@ -263,7 +263,7 @@
             <h2>Dashboard</h2>
             <p class="muted" id="dashboardText">See fixtures, availability, and assignments.</p>
           </div>
-          <button class="btn btn-ghost" id="clearBtn">Reset all data</button>
+          <button class="btn btn-ghost" id="clearBtn">Refresh data</button>
         </div>
 
         <div class="stats" id="statsRow"></div>
@@ -302,7 +302,7 @@
         </div>
 
         <div class="footer-note">
-          This MVP stores data in your browser using localStorage. For a real shared app across multiple people, the next step would be moving this to Supabase or Firebase so every umpire can log in from their own phone.
+          This version is connected to Supabase. Add umpires and fixtures from the front end, and let umpires sign in from their phones with a magic link.
         </div>
       </section>
     </div>
@@ -429,7 +429,28 @@
       els.sendMagicLinkBtn.classList.remove('hidden');
       els.authStatus.textContent = 'Signed out.';
       els.loginEmail.value = '';
+      els.umpireSelect.value = '';
+      await syncLoggedInUmpire();
       render();
+    }
+
+    async function linkCurrentUserToUmpireIfNeeded() {
+      if (!currentUser?.email) return;
+
+      const umpire = state.umpires.find(u => u.email && u.email.toLowerCase() === currentUser.email.toLowerCase());
+      if (!umpire || umpire.auth_user_id) return;
+
+      const { error } = await supabaseClient
+        .from('Umpires')
+        .update({ auth_user_id: currentUser.id })
+        .eq('id', Number(umpire.id));
+
+      if (error) {
+        console.error('Error linking auth user:', error);
+        return;
+      }
+
+      umpire.auth_user_id = currentUser.id;
     }
 
     async function syncLoggedInUmpire() {
@@ -448,8 +469,9 @@
       els.authStatus.textContent = `Signed in as ${currentUser.email}`;
       els.loginEmail.value = currentUser.email || '';
 
-      let umpire = state.umpires.find(u => u.email && currentUser.email && u.email.toLowerCase() === currentUser.email.toLowerCase());
+      await linkCurrentUserToUmpireIfNeeded();
 
+      let umpire = state.umpires.find(u => u.email && currentUser.email && u.email.toLowerCase() === currentUser.email.toLowerCase());
       if (!umpire) {
         umpire = state.umpires.find(u => String(u.auth_user_id || '') === String(currentUser.id));
       }
@@ -502,7 +524,6 @@
         status: row.status || ""
       }));
 
-      await syncLoggedInUmpire();
       render();
     }
 
@@ -540,6 +561,7 @@
       const time = els.fixtureTime.value;
       const title = els.fixtureTitle.value.trim();
       const venue = els.fixtureVenue.value.trim();
+      const league = els.fixtureLeague.value.trim();
       const umpiresNeeded = Number(els.fixtureNeed.value || 2);
 
       if (!date || !time || !title) {
@@ -552,6 +574,7 @@
         time,
         home_team: title,
         venue,
+        league,
         umpires_needed: umpiresNeeded,
         status: els.fixtureStatus.value || 'Open',
         notes: els.fixtureNotes.value.trim()
@@ -578,6 +601,18 @@
 
     async function setAvailability(fixtureId, umpireId, status) {
       if (!fixtureId || !umpireId) return;
+
+      if (currentUser) {
+        const selected = getUmpire(umpireId);
+        const isOwnRecord = selected && (
+          (selected.email && currentUser.email && selected.email.toLowerCase() === currentUser.email.toLowerCase()) ||
+          String(selected.auth_user_id || '') === String(currentUser.id)
+        );
+        if (!isOwnRecord && currentView() === 'umpire') {
+          alert('You can only update your own availability.');
+          return;
+        }
+      }
 
       const existing = state.availability.find(
         r => String(r.fixtureId) === String(fixtureId) && String(r.umpireId) === String(umpireId)
