@@ -66,7 +66,6 @@
       border:1px solid #d1d5db;
       border-radius:12px;
       font:inherit;
-      font-size:16px;
       background:#fff;
     }
     textarea{min-height:90px;resize:vertical}
@@ -78,6 +77,9 @@
       font-weight:700;
       cursor:pointer;
       transition:.18s ease;
+      white-space:normal;
+      word-break:break-word;
+      text-align:center;
     }
     .btn:hover{transform:translateY(-1px)}
     .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
@@ -162,35 +164,6 @@
       .fixture-footer .btn{width:100%}
       .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
       .table-wrap table{min-width:640px}
-
-      /* Prevent iPhone zoom/jump on login focus */
-      #authCard input,
-      #authCard select,
-      #authCard textarea,
-      #authCard button{
-        font-size:16px;
-      }
-      #authCard{
-        overflow:hidden;
-      }
-      #authCard .section-title{
-        margin-bottom:10px;
-      }
-      #authCard label{
-        margin:12px 0 6px;
-      }
-      #authCard input{
-        min-height:48px;
-      }
-      #authCard .auth-actions{
-        gap:8px;
-      }
-      #authCard .btn{
-        min-height:48px;
-      }
-      #authStatus{
-        word-break:break-word;
-      }
     }
   </style>
 </head>
