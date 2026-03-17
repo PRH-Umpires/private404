@@ -440,10 +440,10 @@
       setAuthBusy(false);
 
       if (error) {
-        console.error('Login error:', error);
-        alert(error.message || 'Could not log in.');
-        return;
-      }
+  console.error('Login error full:', error);
+  alert(JSON.stringify(error, null, 2));
+  return;
+}
 
       els.authStatus.textContent = 'Logged in successfully.';
       await syncStateFromSupabase();
