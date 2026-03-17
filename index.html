@@ -196,7 +196,7 @@
           <div id="umpireLoginArea">
             <label for="umpireSelect">Choose your name</label>
             <select id="umpireSelect"></select>
-            <div class="small muted" style="margin-top:8px">Tip: users must create an account first. Admins can then mark them as umpire by email.</div>
+            <div class="small muted" style="margin-top:8px">Tip: add umpire names in the admin panel first.</div>
           </div>
         </div>
 
@@ -214,17 +214,17 @@
 
         <div class="card" id="addUmpireCard">
           <div class="section-title">
-            <h3>Enable Umpire</h3>
+            <h3>Add Umpire</h3>
           </div>
-          <label for="umpireName">Display name (optional)</label>
+          <label for="umpireName">Name</label>
           <input id="umpireName" placeholder="e.g. Sarah Jones" />
-          <label for="umpireEmail">User email</label>
+          <label for="umpireEmail">Email</label>
           <input id="umpireEmail" type="email" placeholder="e.g. sarah@example.com" />
           <label for="umpireLevel">Grade / Level</label>
           <input id="umpireLevel" placeholder="e.g. Level 2" />
           <label for="umpireArea">Area / Base</label>
           <input id="umpireArea" placeholder="e.g. Reading" />
-          <button type="button" class="btn btn-primary" id="saveUmpireSupabaseBtn" style="margin-top:14px;width:100%">Enable umpire</button>
+          <button type="button" class="btn btn-primary" id="saveUmpireSupabaseBtn" style="margin-top:14px;width:100%">Save umpire</button>
         </div>
 
         <div class="card" id="addFixtureCard">
@@ -326,13 +326,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-
     const SUPABASE_URL = "https://xhuijmuqzlysufaegfgb.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhodWlqbXVxemx5c3VmYWVnZmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODE3NTMsImV4cCI6MjA4OTI1Nzc1M30.6OQXMwLdE0OfEmstDmqC0JZvR71zOzs3yx6MryXD-xE";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let state = {
-      profiles: [],
       umpires: [],
       fixtures: [],
       availability: [],
@@ -385,14 +383,6 @@
 
     function isAdmin() {
       return currentProfile?.role === 'admin';
-    }
-
-    function displayNameFromProfile(profile) {
-      if (!profile) return 'Unknown umpire';
-      const email = (profile.email || '').trim();
-      if (!email) return 'Unnamed umpire';
-      const local = email.split('@')[0] || email;
-      return local.replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 
     async function ensureProfile(user) {
@@ -473,7 +463,7 @@
 
     function getAssignedNames(fixtureId) {
       return getAssignmentsForFixture(fixtureId)
-        .map(a => getUmpire(a.umpireId)?.name || getUmpire(a.umpireId)?.email)
+        .map(a => getUmpire(a.umpireId)?.name)
         .filter(Boolean);
     }
 
@@ -489,7 +479,6 @@
     }
 
     function formatDate(date, time) {
-      if (!date) return '';
       const dt = new Date(date + 'T' + (time || '00:00'));
       return dt.toLocaleString([], {
         weekday: 'short',
@@ -503,7 +492,7 @@
 
     function setAuthBusy(isBusy) {
       [els.loginBtn, els.signupBtn, els.resetPasswordBtn, els.logoutBtn].forEach(btn => {
-        if (btn) btn.disabled = isBusy;
+        btn.disabled = isBusy;
       });
     }
 
@@ -521,10 +510,10 @@
       setAuthBusy(false);
 
       if (error) {
-        console.error('Login error full:', error);
-        alert(error.message || 'Login failed.');
-        return;
-      }
+  console.error('Login error full:', error);
+  alert(JSON.stringify(error, null, 2));
+  return;
+}
 
       els.authStatus.textContent = 'Logged in successfully.';
       await syncStateFromSupabase();
@@ -532,59 +521,62 @@
       render();
     }
 
-    async function signUpWithPassword() {
-      const email = els.loginEmail.value.trim();
-      const password = els.loginPassword.value;
+async function signUpWithPassword() {
+  const email = els.loginEmail.value.trim();
+  const password = els.loginPassword.value;
 
-      if (!email || !password) {
-        alert('Please enter both email and password.');
-        return;
-      }
+  if (!email || !password) {
+    alert('Please enter both email and password.');
+    return;
+  }
 
-      if (password.length < 6) {
-        alert('Use a password with at least 6 characters.');
-        return;
-      }
+  if (password.length < 6) {
+    alert('Use a password with at least 6 characters.');
+    return;
+  }
 
-      els.authStatus.textContent = 'Creating account...';
-      setAuthBusy(true);
+  els.authStatus.textContent = 'Creating account...';
+  setAuthBusy(true);
 
-      try {
-        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password
+    });
 
-        if (error) {
-          setAuthBusy(false);
-          els.authStatus.textContent = 'Signup failed: ' + error.message;
-          alert('Signup failed: ' + error.message);
-          return;
-        }
+    if (error) {
+      setAuthBusy(false);
+      els.authStatus.textContent = 'Signup failed: ' + error.message;
+      alert('Signup failed: ' + error.message);
+      return;
+    }
 
-        if (data.user) {
-          const { error: profileError } = await supabaseClient
-            .from('profiles')
-            .upsert({
-              id: data.user.id,
-              email: data.user.email,
-              role: 'umpire'
-            }, { onConflict: 'id' });
+    if (data.user) {
+      const { error: profileError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: data.user.id,
+          email: data.user.email,
+          role: 'umpire'
+        }, { onConflict: 'id' });
 
-          if (profileError) {
-            console.error('Profile creation error:', profileError);
-          }
-        }
-
-        setAuthBusy(false);
-        els.authStatus.textContent = 'Account created. New users are added as umpires by default. Change the role in Supabase profiles if needed.';
-        alert('Account created. New users are added as umpires by default. Change the role in Supabase profiles if needed.');
-        els.loginPassword.value = '';
-      } catch (err) {
-        console.error('SIGNUP CATCH ERROR:', err);
-        setAuthBusy(false);
-        els.authStatus.textContent = 'Unexpected error: ' + err.message;
-        alert('Unexpected error: ' + err.message);
+      if (profileError) {
+        console.error('Profile creation error:', profileError);
       }
     }
 
+    setAuthBusy(false);
+    els.authStatus.textContent = 'Account created. New users are added as umpires by default. If this should be an admin, change the role in Supabase → profiles.';
+    alert('Account created. New users are added as umpires by default. If this should be an admin, change the role in Supabase → profiles.');
+
+    els.loginPassword.value = '';
+  } catch (err) {
+    console.error('SIGNUP CATCH ERROR:', err);
+    setAuthBusy(false);
+    els.authStatus.textContent = 'Unexpected error: ' + err.message;
+    alert('Unexpected error: ' + err.message);
+  }
+}
     async function sendPasswordReset() {
       const email = els.loginEmail.value.trim();
 
@@ -610,107 +602,121 @@
     }
 
     async function signOutUser() {
-      const { error } = await supabaseClient.auth.signOut();
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    alert(error.message || 'Could not sign out.');
+    return;
+  }
+
+  currentUser = null;
+  currentProfile = null;
+  els.logoutBtn.classList.add('hidden');
+  els.authButtons.classList.remove('hidden');
+  els.resetPasswordBtn.classList.remove('hidden');
+  els.authStatus.textContent = 'Signed out.';
+  els.currentRole.textContent = 'Not signed in';
+  els.viewMode.value = 'umpire';
+  els.loginPassword.value = '';
+  render();
+}
+
+    async function linkCurrentUserToUmpireIfNeeded() {
+      if (!currentUser?.email) return;
+
+      const umpire = state.umpires.find(u => u.email && u.email.toLowerCase() === currentUser.email.toLowerCase());
+      if (!umpire || umpire.auth_user_id) return;
+
+      const { error } = await supabaseClient
+        .from('Umpires')
+        .update({ auth_user_id: currentUser.id })
+        .eq('id', Number(umpire.id));
 
       if (error) {
-        alert(error.message || 'Could not sign out.');
+        console.error('Error linking auth user:', error);
         return;
       }
 
-      currentUser = null;
-      currentProfile = null;
-      els.logoutBtn.classList.add('hidden');
-      els.authButtons.classList.remove('hidden');
-      els.resetPasswordBtn.classList.remove('hidden');
-      els.authStatus.textContent = 'Signed out.';
-      els.currentRole.textContent = 'Not signed in';
-      els.viewMode.value = 'umpire';
-      els.loginPassword.value = '';
-      els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
-      render();
-    }
-
-    async function linkCurrentUserToUmpireIfNeeded() {
-      return;
+      umpire.auth_user_id = currentUser.id;
     }
 
     async function syncLoggedInUmpire() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      currentUser = session?.user || null;
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  currentUser = session?.user || null;
 
-      if (!currentUser) {
-        currentProfile = null;
-        els.logoutBtn.classList.add('hidden');
-        els.authButtons.classList.remove('hidden');
-        els.resetPasswordBtn.classList.remove('hidden');
-        els.authStatus.textContent = 'Sign in to manage your availability.';
-        els.currentRole.textContent = 'Not signed in';
-        els.viewMode.value = 'umpire';
-        els.loginPassword.value = '';
-        return;
-      }
+  if (!currentUser) {
+    currentProfile = null;
+    els.logoutBtn.classList.add('hidden');
+    els.authButtons.classList.remove('hidden');
+    els.resetPasswordBtn.classList.remove('hidden');
+    els.authStatus.textContent = 'Sign in to manage your availability.';
+    els.currentRole.textContent = 'Not signed in';
+    els.viewMode.value = 'umpire';
+    els.loginPassword.value = '';
+    return;
+  }
 
-      els.logoutBtn.classList.remove('hidden');
-      els.authButtons.classList.add('hidden');
-      els.resetPasswordBtn.classList.add('hidden');
-      els.authStatus.textContent = `Signed in as ${currentUser.email}`;
-      els.loginEmail.value = currentUser.email || '';
-      els.loginPassword.value = '';
+  els.logoutBtn.classList.remove('hidden');
+  els.authButtons.classList.add('hidden');
+  els.resetPasswordBtn.classList.add('hidden');
+  els.authStatus.textContent = `Signed in as ${currentUser.email}`;
+  els.loginEmail.value = currentUser.email || '';
+  els.loginPassword.value = '';
 
-      await loadCurrentProfile();
+  await loadCurrentProfile();
+  await linkCurrentUserToUmpireIfNeeded();
 
-      const umpire = state.umpires.find(u => String(u.id) === String(currentUser.id));
-      if (umpire) {
-        els.umpireSelect.value = String(umpire.id);
-      }
-    }
+  let umpire = state.umpires.find(
+    u => u.email && currentUser.email && u.email.toLowerCase() === currentUser.email.toLowerCase()
+  );
+
+  if (!umpire) {
+    umpire = state.umpires.find(u => String(u.auth_user_id || '') === String(currentUser.id));
+  }
+
+  if (umpire) {
+    els.umpireSelect.value = String(umpire.id);
+  }
+}
 
     async function syncStateFromSupabase() {
-      const [profileResult, fixtureResult, availabilityResult, assignmentResult] = await Promise.all([
-        supabaseClient.from("profiles").select("*").order("email", { ascending: true }),
+      const [umpireResult, fixtureResult, availabilityResult, assignmentResult] = await Promise.all([
+        supabaseClient.from("Umpires").select("*").order("name", { ascending: true }),
         supabaseClient.from("fixtures").select("*").order("fixture_date", { ascending: true }),
         supabaseClient.from("availability").select("*"),
         supabaseClient.from("assignments").select("*")
       ]);
 
-      if (profileResult.error) console.error("Error loading profiles:", profileResult.error);
+      if (umpireResult.error) console.error("Error loading umpires:", umpireResult.error);
       if (fixtureResult.error) console.error("Error loading fixtures:", fixtureResult.error);
       if (availabilityResult.error) console.error("Error loading availability:", availabilityResult.error);
       if (assignmentResult.error) console.error("Error loading assignments:", assignmentResult.error);
 
-      const profileRows = profileResult.data || [];
+      const umpireRows = umpireResult.data || [];
       const fixtureRows = fixtureResult.data || [];
       const availabilityRows = availabilityResult.data || [];
       const assignmentRows = assignmentResult.data || [];
 
-      state.profiles = profileRows.map(row => ({
+      state.umpires = umpireRows.map(row => ({
         id: String(row.id),
+        name: row.name || "",
+        level: row.level || "",
+        area: row.area || "",
         email: row.email || "",
-        role: row.role || "umpire"
+        auth_user_id: row.auth_user_id || null
       }));
 
-      state.umpires = state.profiles
-        .filter(row => row.role === 'umpire')
-        .map(row => ({
-          id: String(row.id),
-          name: displayNameFromProfile(row),
-          level: "",
-          area: "",
-          email: row.email || "",
-          auth_user_id: String(row.id)
-        }));
-
-      state.fixtures = fixtureRows.map(row => ({
-        id: String(row.id),
-        date: row.fixture_date || "",
-        time: row.fixture_time || "",
-        title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || "Fixture"),
-        venue: row.location || "",
-        league: row.league || "",
-        umpiresNeeded: 2,
-        status: row.status || "Open",
-        notes: row.notes || ""
-      }));
+   state.fixtures = fixtureRows.map(row => ({
+  id: String(row.id),
+  date: row.fixture_date || "",
+  time: row.fixture_time || "",
+  title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || "Fixture"),
+  venue: row.location || "",
+  league: row.league || "",
+  umpiresNeeded: 2,
+  status: row.status || "Open",
+  notes: row.notes || ""
+}));
 
       state.availability = availabilityRows.map(row => ({
         id: String(row.id),
@@ -730,42 +736,32 @@
 
     async function addUmpire() {
       if (!isAdmin()) {
-        alert('Only admins can enable umpires.');
+        alert('Only admins can add umpires.');
         return;
       }
 
-      const email = els.umpireEmail.value.trim().toLowerCase();
+      const name = els.umpireName.value.trim();
+      const email = els.umpireEmail.value.trim();
+      const level = els.umpireLevel.value.trim();
+      const area = els.umpireArea.value.trim();
 
-      if (!email) {
-        alert('Please enter the user email.');
+      if (!name) {
+        alert('Please enter an umpire name.');
         return;
       }
 
-      const { data: profile, error: profileError } = await supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('email', email)
-        .maybeSingle();
+      const payload = {
+        name,
+        email,
+        level,
+        area
+      };
 
-      if (profileError) {
-        console.error('Error finding profile:', profileError);
-        alert(profileError.message || 'Could not check profile.');
-        return;
-      }
-
-      if (!profile) {
-        alert('That user needs to create an account first. Once they sign up, enter the same email here to enable umpire access.');
-        return;
-      }
-
-      const { error } = await supabaseClient
-        .from('profiles')
-        .update({ role: 'umpire' })
-        .eq('id', profile.id);
+      const { error } = await supabaseClient.from("Umpires").insert([payload]);
 
       if (error) {
-        console.error("Error enabling umpire:", error);
-        alert(error.message || "Error enabling umpire");
+        console.error("Error saving umpire:", error);
+        alert(error.message || "Error saving umpire");
         return;
       }
 
@@ -776,7 +772,7 @@
 
       await syncStateFromSupabase();
       await syncLoggedInUmpire();
-      alert("Umpire enabled");
+      alert("Umpire saved");
     }
 
     async function addFixture() {
@@ -790,26 +786,26 @@
       const title = els.fixtureTitle.value.trim();
       const venue = els.fixtureVenue.value.trim();
       const league = els.fixtureLeague.value.trim();
+      const umpiresNeeded = Number(els.fixtureNeed.value || 2);
 
       if (!date || !time || !title) {
         alert('Please add date, time, and fixture title.');
         return;
       }
+const parts = title.split(' vs ');
+const homeTeam = parts[0]?.trim() || title;
+const awayTeam = parts[1]?.trim() || '';
 
-      const parts = title.split(' vs ');
-      const homeTeam = parts[0]?.trim() || title;
-      const awayTeam = parts[1]?.trim() || '';
-
-      const { error } = await supabaseClient.from("fixtures").insert([{
-        fixture_date: date,
-        fixture_time: time,
-        home_team: homeTeam,
-        away_team: awayTeam,
-        location: venue,
-        league,
-        status: els.fixtureStatus.value || 'Open',
-        notes: els.fixtureNotes.value.trim()
-      }]);
+const { error } = await supabaseClient.from("fixtures").insert([{
+  fixture_date: date,
+  fixture_time: time,
+  home_team: homeTeam,
+  away_team: awayTeam,
+  location: venue,
+  league,
+  status: els.fixtureStatus.value || 'Open',
+  notes: els.fixtureNotes.value.trim()
+}]);
 
       if (error) {
         console.error("Error saving fixture:", error);
@@ -833,9 +829,16 @@
     async function setAvailability(fixtureId, umpireId, status) {
       if (!fixtureId || !umpireId) return;
 
-      if (currentUser && !isAdmin() && String(currentUser.id) !== String(umpireId)) {
-        alert('You can only update your own availability.');
-        return;
+      if (currentUser && !isAdmin()) {
+        const selected = getUmpire(umpireId);
+        const isOwnRecord = selected && (
+          (selected.email && currentUser.email && selected.email.toLowerCase() === currentUser.email.toLowerCase()) ||
+          String(selected.auth_user_id || '') === String(currentUser.id)
+        );
+        if (!isOwnRecord) {
+          alert('You can only update your own availability.');
+          return;
+        }
       }
 
       const existing = state.availability.find(
@@ -854,10 +857,10 @@
         const result = await supabaseClient
           .from("availability")
           .insert([{
-            umpire_id: umpireId,
-            fixture_id: fixtureId,
-            status
-          }]);
+  umpire_id: umpireId,
+  fixture_id: fixtureId,
+  status
+}]);
         error = result.error;
       }
 
@@ -893,10 +896,10 @@
         return;
       }
 
-      const { error } = await supabaseClient.from("assignments").insert([{
-        fixture_id: fixtureId,
-        umpire_id: umpireId
-      }]);
+     const { error } = await supabaseClient.from("assignments").insert([{
+  fixture_id: fixtureId,
+  umpire_id: umpireId
+}]);
 
       if (error) {
         console.error("Error saving assignment:", error);
@@ -917,7 +920,7 @@
         .from("assignments")
         .delete()
         .eq("fixture_id", fixtureId)
-        .eq("umpire_id", umpireId);
+.eq("umpire_id", umpireId);
 
       if (error) {
         console.error("Error removing assignment:", error);
@@ -936,8 +939,8 @@
 
       if (!confirm('Delete this fixture?')) return;
 
-      await supabaseClient.from("availability").delete().eq("fixture_id", fixtureId);
-      await supabaseClient.from("assignments").delete().eq("fixture_id", fixtureId);
+      await supabaseClient.from("availability").delete().eq("fixture_id", Number(fixtureId));
+      await supabaseClient.from("assignments").delete().eq("fixture_id", Number(fixtureId));
       const { error } = await supabaseClient.from("fixtures").delete().eq("id", fixtureId);
 
       if (error) {
@@ -968,13 +971,11 @@
     function renderUmpireSelect() {
       const current = currentUmpireId();
       els.umpireSelect.innerHTML = state.umpires.length
-        ? state.umpires.map(u => `<option value="${u.id}">${u.name}${u.email ? ' · ' + u.email : ''}</option>`).join('')
+        ? state.umpires.map(u => `<option value="${u.id}">${u.name}${u.level ? ' · ' + u.level : ''}</option>`).join('')
         : '<option value="">No umpires yet</option>';
 
       if (state.umpires.some(u => String(u.id) === String(current))) {
         els.umpireSelect.value = current;
-      } else if (currentUser && state.umpires.some(u => String(u.id) === String(currentUser.id))) {
-        els.umpireSelect.value = String(currentUser.id);
       }
     }
 
@@ -1028,7 +1029,7 @@
                 : `<button class="btn btn-secondary small" onclick="assignUmpire('${fixture.id}','${u.id}')" ${fixtureIsFull ? 'disabled' : ''}>Assign</button>`;
 
               return `<tr>
-                <td>${u.name}<div class="small muted">${u.email || ''}</div></td>
+                <td>${u.name}<div class="small muted">${[u.level, u.area].filter(Boolean).join(' · ')}</div></td>
                 <td>${resp?.status ? `<span class="tag ${style}">${resp.status}</span>` : '<span class="muted small">No response</span>'}</td>
                 <td>${assigned ? '<span class="tag available">Assigned</span>' : '<span class="muted small">Not assigned</span>'}</td>
                 <td>${assignButton}</td>
@@ -1171,7 +1172,7 @@
     els.logoutBtn.addEventListener('click', signOutUser);
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && document.activeElement === els.umpireEmail && isAdmin()) {
+      if (e.key === 'Enter' && document.activeElement === els.umpireName) {
         els.addUmpireBtn.click();
       }
       if (e.key === 'Enter' && (document.activeElement === els.loginEmail || document.activeElement === els.loginPassword)) {
@@ -1179,28 +1180,27 @@
       }
     });
 
-    supabaseClient.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        els.authStatus.textContent = 'Password recovery link opened.';
-      }
+   supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    els.authStatus.textContent = 'Password recovery link opened.';
+  }
 
-      setTimeout(async () => {
-        try {
-          await syncStateFromSupabase();
-          await syncLoggedInUmpire();
-          render();
-        } catch (err) {
-          console.error('Auth state change error:', err);
-        }
-      }, 0);
-    });
-
+  setTimeout(async () => {
+    try {
+      await syncStateFromSupabase();
+      await syncLoggedInUmpire();
+      render();
+    } catch (err) {
+      console.error('Auth state change error:', err);
+    }
+  }, 0);
+});
+    
     (async function initApp() {
       await syncStateFromSupabase();
       await syncLoggedInUmpire();
       render();
     })();
-
   </script>
 </body>
 </html>
