@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Umpire Availability Manager</title>
-
   <style>
     :root{
       --bg:#f5f6f8;
@@ -20,53 +19,23 @@
       --shadow:0 10px 28px rgba(15,23,42,.08);
       --radius:18px;
     }
-
     *{box-sizing:border-box}
-
-    /* 🔒 MOBILE LOCK FIX */
-    html, body{
-      overflow-x: hidden;
-      max-width: 100%;
-    }
-
     body{
       margin:0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:var(--bg);
       color:var(--text);
     }
-
     header{
       background:linear-gradient(135deg, var(--brand2), var(--brand));
       color:#fff;
       padding:28px 20px;
       box-shadow:var(--shadow);
     }
-
-    .wrap{
-      max-width:1180px;
-      margin:0 auto;
-      width:100%;
-      overflow-x:hidden; /* 🔒 prevent overflow */
-    }
-
+    .wrap{max-width:1180px;margin:0 auto}
     h1,h2,h3,p{margin:0}
-
-    .hero{
-      display:flex;
-      justify-content:space-between;
-      gap:18px;
-      align-items:flex-start;
-      flex-wrap:wrap;
-    }
-
-    .hero p{
-      max-width:720px;
-      opacity:.92;
-      margin-top:8px;
-      line-height:1.5;
-    }
-
+    .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
+    .hero p{max-width:720px;opacity:.92;margin-top:8px;line-height:1.5}
     .pill{
       background:rgba(255,255,255,.15);
       border:1px solid rgba(255,255,255,.18);
@@ -75,16 +44,13 @@
       font-size:14px;
       white-space:nowrap;
     }
-
     main{padding:22px 20px 48px}
-
     .grid{
       display:grid;
       grid-template-columns: 300px 1fr;
       gap:22px;
       align-items:start;
     }
-
     .card{
       background:var(--card);
       border:1px solid var(--line);
@@ -92,11 +58,8 @@
       box-shadow:var(--shadow);
       padding:18px;
     }
-
     .sidebar .card + .card{margin-top:16px}
-
     label{display:block;font-size:13px;font-weight:600;margin:14px 0 7px}
-
     input, select, textarea{
       width:100%;
       padding:12px 13px;
@@ -105,9 +68,7 @@
       font:inherit;
       background:#fff;
     }
-
     textarea{min-height:90px;resize:vertical}
-
     .btn{
       border:none;
       border-radius:12px;
@@ -117,150 +78,1144 @@
       cursor:pointer;
       transition:.18s ease;
     }
-
     .btn:hover{transform:translateY(-1px)}
-    .btn:disabled{opacity:.6}
-
+    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
     .btn-primary{background:var(--brand);color:#fff}
     .btn-secondary{background:#eef2ff;color:var(--brand)}
     .btn-danger{background:#fee2e2;color:var(--bad)}
     .btn-ghost{background:#f3f4f6;color:var(--text)}
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:14px;
-    }
-
-    .stat{
-      padding:16px;
+    .stack > * + *{margin-top:10px}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px}
+    .muted{color:var(--muted)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .stat{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff}
+    .stat b{display:block;font-size:26px;margin-top:4px}
+    .list{display:grid;gap:14px}
+    .fixture{
       border:1px solid var(--line);
-      border-radius:16px;
+      border-radius:18px;
+      padding:16px;
       background:#fff;
     }
-
-    .stat b{
-      display:block;
-      font-size:26px;
-      margin-top:4px;
+    .fixture-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+    .fixture-title{font-size:18px;font-weight:800}
+    .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .tag{
+      background:#f3f4f6;
+      color:#374151;
+      border-radius:999px;
+      padding:8px 10px;
+      font-size:12px;
+      font-weight:700;
     }
-
-    .table-wrap{
-      overflow-x:auto;
-      width:100%;
+    .availability-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .availability-btn{flex:1 1 140px}
+    .available{background:#dcfce7;color:var(--good)}
+    .maybe{background:#fef3c7;color:var(--warn)}
+    .unavailable{background:#fee2e2;color:var(--bad)}
+    .fixture-footer{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:14px}
+    .counts{display:flex;gap:8px;flex-wrap:wrap}
+    .counts .tag{font-size:11px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .hidden{display:none !important}
+    .small{font-size:12px}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;vertical-align:top}
+    th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+    .notice{padding:12px 14px;border-radius:14px;background:#eff6ff;color:#1e3a8a;font-size:14px;line-height:1.45}
+    .danger-note{background:#fef2f2;color:#991b1b}
+    .footer-note{margin-top:18px;font-size:12px;color:var(--muted)}
+    .auth-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
     }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:600px; /* 👈 keeps table inside scroll only */
-    }
-
-    th,td{
-      padding:10px 8px;
-      border-bottom:1px solid var(--line);
-      text-align:left;
-      font-size:14px;
-    }
-
+    .auth-helper{margin-top:8px;line-height:1.45}
     @media (max-width: 980px){
       .grid{grid-template-columns:1fr}
       .stats{grid-template-columns:repeat(2,1fr)}
+      .two-col{grid-template-columns:1fr}
     }
-
     @media (max-width: 560px){
-      .stats{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:10px;
-      }
-
-      .stat{
-        padding:12px;
-      }
-
-      .stat b{
-        font-size:22px;
-      }
-
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .stat{padding:12px;min-width:0}
+      .stat b{font-size:22px}
+      .auth-actions{grid-template-columns:1fr}
       header{padding:24px 16px}
       main{padding:18px 16px 34px}
+      .card{padding:15px}
+      .fixture{padding:14px}
+      .topbar{align-items:flex-start;margin-bottom:14px}
+      .topbar .btn{width:100%}
+      .section-title{flex-direction:column;align-items:stretch}
+      .section-title select{max-width:none !important;width:100%}
+      .fixture-head{flex-direction:column;align-items:flex-start}
+      .fixture-title{font-size:16px;line-height:1.25}
+      .meta{gap:6px}
+      .tag{font-size:11px;padding:7px 9px}
+      .notice{padding:11px 12px;font-size:13px}
+      .fixture-footer{align-items:stretch}
+      .fixture-footer .btn{width:100%}
+      .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+      .table-wrap table{min-width:640px}
     }
   </style>
 </head>
-
 <body>
-
-<header>
-  <div class="wrap hero">
-    <div>
-      <h1>Umpire Availability Manager</h1>
-      <p>Fixtures, availability, and assignments.</p>
+  <header>
+    <div class="wrap hero">
+      <div>
+        <h1>Umpire Availability Manager</h1>
+        <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
+      </div>
+      <div class="pill">Single-file app · cloud synced</div>
     </div>
-    <div class="pill">Mobile optimised</div>
+  </header>
+
+  <main>
+    <div class="wrap grid">
+      <aside class="sidebar">
+       <div class="card" id="authCard">
+  <div class="section-title">
+    <h3>Email / Password Login</h3>
   </div>
-</header>
 
-<main>
-  <div class="wrap grid">
+  <label for="loginEmail">Email</label>
+  <input id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email" />
 
-    <aside class="sidebar">
-      <div class="card">
-        <h3>Menu</h3>
-        <p class="muted">Sidebar content here</p>
-      </div>
-    </aside>
+  <label for="loginPassword">Password</label>
+  <input id="loginPassword" type="password" placeholder="Enter password" autocomplete="current-password" />
 
-    <section>
-      <div class="topbar">
-        <h2>Dashboard</h2>
-      </div>
+  <div class="auth-actions" id="authButtons">
+    <button type="button" class="btn btn-primary" id="loginBtn">Log in</button>
+    <button type="button" class="btn btn-secondary" id="signupBtn">Create account</button>
+  </div>
 
-      <div class="stats">
-        <div class="stat"><span>Fixtures</span><b>12</b></div>
-        <div class="stat"><span>Open</span><b>4</b></div>
-        <div class="stat"><span>Umpires</span><b>8</b></div>
-        <div class="stat"><span>Assignments</span><b>10</b></div>
-      </div>
+  <button type="button" class="btn btn-ghost" id="resetPasswordBtn" style="margin-top:10px;width:100%">Send password reset email</button>
+  <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="margin-top:10px;width:100%">Log out</button>
 
-      <div class="card" style="margin-top:18px">
-        <h3>Availability Overview</h3>
+  <div class="small muted auth-helper" id="authStatus">Sign in to manage your availability.</div>
+</div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Fixture</th>
-                <th>Available</th>
-                <th>Maybe</th>
-                <th>Unavailable</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Match 1</td>
-                <td>3</td>
-                <td>1</td>
-                <td>0</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="card">
+          <div class="section-title">
+            <h3>Your View</h3>
+          </div>
+          <label>Role</label>
+          <div id="currentRole" style="padding:12px 13px;border:1px solid #d1d5db;border-radius:12px;background:#fff;text-transform:capitalize;">Not signed in</div>
+          <input id="viewMode" type="hidden" value="umpire" />
+
+          <div id="umpireLoginArea">
+            <label for="umpireSelect">Choose your name</label>
+            <select id="umpireSelect"></select>
+            <div class="small muted" style="margin-top:8px">Tip: users must create an account first. Admins can then mark them as umpire by email.</div>
+          </div>
         </div>
 
-      </div>
+        <div class="card" id="adminPanel">
+          <div class="section-title">
+            <h3>Admin Panel</h3>
+          </div>
+          <div class="stack">
+            <button class="btn btn-secondary" id="seedDemoBtn">Load demo data</button>
+            <button class="btn btn-ghost" id="exportBtn">Export data</button>
+            <label for="importFile">Import data</label>
+            <input type="file" id="importFile" accept="application/json" />
+          </div>
+        </div>
 
-    </section>
+        <div class="card" id="addUmpireCard">
+          <div class="section-title">
+            <h3>Enable Umpire</h3>
+          </div>
+          <label for="umpireName">Display name (optional)</label>
+          <input id="umpireName" placeholder="e.g. Sarah Jones" />
+          <label for="umpireEmail">User email</label>
+          <input id="umpireEmail" type="email" placeholder="e.g. sarah@example.com" />
+          <label for="umpireLevel">Grade / Level</label>
+          <input id="umpireLevel" placeholder="e.g. Level 2" />
+          <label for="umpireArea">Area / Base</label>
+          <input id="umpireArea" placeholder="e.g. Reading" />
+          <button type="button" class="btn btn-primary" id="saveUmpireSupabaseBtn" style="margin-top:14px;width:100%">Enable umpire</button>
+        </div>
 
-  </div>
-</main>
+        <div class="card" id="addFixtureCard">
+          <div class="section-title">
+            <h3>Add Fixture</h3>
+          </div>
+          <div class="two-col">
+            <div>
+              <label for="fixtureDate">Date</label>
+              <input id="fixtureDate" type="date" />
+            </div>
+            <div>
+              <label for="fixtureTime">Time</label>
+              <input id="fixtureTime" type="time" />
+            </div>
+          </div>
+          <label for="fixtureTitle">Fixture</label>
+          <input id="fixtureTitle" placeholder="e.g. Henley vs Reading" />
+          <div class="two-col">
+            <div>
+              <label for="fixtureVenue">Venue</label>
+              <input id="fixtureVenue" placeholder="e.g. Henley Sports Park" />
+            </div>
+            <div>
+              <label for="fixtureLeague">League</label>
+              <input id="fixtureLeague" placeholder="e.g. County League" />
+            </div>
+          </div>
+          <div class="two-col">
+            <div>
+              <label for="fixtureNeed">Umpires needed</label>
+              <input id="fixtureNeed" type="number" min="1" value="2" />
+            </div>
+            <div>
+              <label for="fixtureStatus">Status</label>
+              <select id="fixtureStatus">
+                <option value="Open">Open</option>
+                <option value="Assigned">Assigned</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+          </div>
+          <label for="fixtureNotes">Notes</label>
+          <textarea id="fixtureNotes" placeholder="Optional match notes"></textarea>
+          <button class="btn btn-primary" id="addFixtureBtn" style="margin-top:14px;width:100%">Save fixture</button>
+        </div>
+      </aside>
 
+      <section>
+        <div class="topbar">
+          <div>
+            <h2>Dashboard</h2>
+            <p class="muted" id="dashboardText">See fixtures, availability, and assignments.</p>
+          </div>
+          <button class="btn btn-ghost" id="clearBtn">Refresh data</button>
+        </div>
+
+        <div class="stats" id="statsRow"></div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="section-title">
+            <h3>Upcoming Fixtures</h3>
+            <select id="fixtureFilter" style="max-width:220px">
+              <option value="all">All fixtures</option>
+              <option value="open">Open only</option>
+              <option value="assigned">Assigned only</option>
+              <option value="mine">Only where I responded</option>
+            </select>
+          </div>
+          <div id="fixtureList" class="list"></div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="section-title">
+            <h3>Availability Overview</h3>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fixture</th>
+                  <th>Available</th>
+                  <th>Maybe</th>
+                  <th>Unavailable</th>
+                  <th>Assigned</th>
+                </tr>
+              </thead>
+              <tbody id="overviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="footer-note">
+          This version is connected to Supabase, uses standard email/password authentication, and supports assigning up to the required number of umpires per fixture.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+
+    const SUPABASE_URL = "https://xhuijmuqzlysufaegfgb.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhodWlqbXVxemx5c3VmYWVnZmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODE3NTMsImV4cCI6MjA4OTI1Nzc1M30.6OQXMwLdE0OfEmstDmqC0JZvR71zOzs3yx6MryXD-xE";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let state = {
+      profiles: [],
+      umpires: [],
+      fixtures: [],
+      availability: [],
+      assignments: []
+    };
+    let currentUser = null;
+    let currentProfile = null;
+
+    const els = {
+      viewMode: document.getElementById('viewMode'),
+      currentRole: document.getElementById('currentRole'),
+      umpireSelect: document.getElementById('umpireSelect'),
+      umpireLoginArea: document.getElementById('umpireLoginArea'),
+      adminPanel: document.getElementById('adminPanel'),
+      addUmpireCard: document.getElementById('addUmpireCard'),
+      addFixtureCard: document.getElementById('addFixtureCard'),
+      umpireName: document.getElementById('umpireName'),
+      umpireEmail: document.getElementById('umpireEmail'),
+      umpireLevel: document.getElementById('umpireLevel'),
+      umpireArea: document.getElementById('umpireArea'),
+      addUmpireBtn: document.getElementById('saveUmpireSupabaseBtn'),
+      fixtureDate: document.getElementById('fixtureDate'),
+      fixtureTime: document.getElementById('fixtureTime'),
+      fixtureTitle: document.getElementById('fixtureTitle'),
+      fixtureVenue: document.getElementById('fixtureVenue'),
+      fixtureLeague: document.getElementById('fixtureLeague'),
+      fixtureNeed: document.getElementById('fixtureNeed'),
+      fixtureStatus: document.getElementById('fixtureStatus'),
+      fixtureNotes: document.getElementById('fixtureNotes'),
+      addFixtureBtn: document.getElementById('addFixtureBtn'),
+      statsRow: document.getElementById('statsRow'),
+      fixtureList: document.getElementById('fixtureList'),
+      overviewBody: document.getElementById('overviewBody'),
+      clearBtn: document.getElementById('clearBtn'),
+      fixtureFilter: document.getElementById('fixtureFilter'),
+      dashboardText: document.getElementById('dashboardText'),
+      seedDemoBtn: document.getElementById('seedDemoBtn'),
+      exportBtn: document.getElementById('exportBtn'),
+      importFile: document.getElementById('importFile'),
+      authCard: document.getElementById('authCard'),
+      loginEmail: document.getElementById('loginEmail'),
+      loginPassword: document.getElementById('loginPassword'),
+      loginBtn: document.getElementById('loginBtn'),
+      signupBtn: document.getElementById('signupBtn'),
+      resetPasswordBtn: document.getElementById('resetPasswordBtn'),
+      logoutBtn: document.getElementById('logoutBtn'),
+      authButtons: document.getElementById('authButtons'),
+      authStatus: document.getElementById('authStatus')
+    };
+
+    function isAdmin() {
+      return currentProfile?.role === 'admin';
+    }
+
+    function displayNameFromProfile(profile) {
+      if (!profile) return 'Unknown umpire';
+      const email = (profile.email || '').trim();
+      if (!email) return 'Unnamed umpire';
+      const local = email.split('@')[0] || email;
+      return local.replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    async function ensureProfile(user) {
+      if (!user) return null;
+
+      const { data: existing, error: existingError } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (existingError) {
+        console.error('Error checking profile:', existingError);
+        return null;
+      }
+
+      if (existing) return existing;
+
+      const { data: inserted, error: insertError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          email: user.email,
+          role: 'umpire'
+        }, { onConflict: 'id' })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Error creating profile:', insertError);
+        return null;
+      }
+
+      return inserted;
+    }
+
+    async function loadCurrentProfile() {
+      if (!currentUser) {
+        currentProfile = null;
+        els.currentRole.textContent = 'Not signed in';
+        els.viewMode.value = 'umpire';
+        return;
+      }
+
+      currentProfile = await ensureProfile(currentUser);
+      const role = currentProfile?.role === 'admin' ? 'admin' : 'umpire';
+      els.viewMode.value = role;
+      els.currentRole.textContent = role;
+    }
+
+    function currentView() {
+      return els.viewMode.value;
+    }
+
+    function currentUmpireId() {
+      return els.umpireSelect.value || '';
+    }
+
+    function getUmpire(id) {
+      return state.umpires.find(u => String(u.id) === String(id));
+    }
+
+    function getAvailability(fixture, umpireId) {
+      return state.availability.find(
+        r => String(r.fixtureId) === String(fixture.id) && String(r.umpireId) === String(umpireId)
+      ) || null;
+    }
+
+    function getAssignmentsForFixture(fixtureId) {
+      return state.assignments.filter(a => String(a.fixtureId) === String(fixtureId));
+    }
+
+    function isAssignedToFixture(fixtureId, umpireId) {
+      return state.assignments.some(
+        a => String(a.fixtureId) === String(fixtureId) && String(a.umpireId) === String(umpireId)
+      );
+    }
+
+    function getAssignedNames(fixtureId) {
+      return getAssignmentsForFixture(fixtureId)
+        .map(a => getUmpire(a.umpireId)?.name || getUmpire(a.umpireId)?.email)
+        .filter(Boolean);
+    }
+
+    function getCounts(fixture) {
+      const rows = state.availability.filter(r => String(r.fixtureId) === String(fixture.id));
+      const assignedRows = getAssignmentsForFixture(fixture.id);
+      return {
+        available: rows.filter(r => r.status === 'Available').length,
+        maybe: rows.filter(r => r.status === 'Maybe').length,
+        unavailable: rows.filter(r => r.status === 'Unavailable').length,
+        assigned: assignedRows.length
+      };
+    }
+
+    function formatDate(date, time) {
+      if (!date) return '';
+      const dt = new Date(date + 'T' + (time || '00:00'));
+      return dt.toLocaleString([], {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function setAuthBusy(isBusy) {
+      [els.loginBtn, els.signupBtn, els.resetPasswordBtn, els.logoutBtn].forEach(btn => {
+        if (btn) btn.disabled = isBusy;
+      });
+    }
+
+    async function logInWithPassword() {
+      const email = els.loginEmail.value.trim();
+      const password = els.loginPassword.value;
+
+      if (!email || !password) {
+        alert('Please enter both email and password.');
+        return;
+      }
+
+      setAuthBusy(true);
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      setAuthBusy(false);
+
+      if (error) {
+        console.error('Login error full:', error);
+        alert(error.message || 'Login failed.');
+        return;
+      }
+
+      els.authStatus.textContent = 'Logged in successfully.';
+      await syncStateFromSupabase();
+      await syncLoggedInUmpire();
+      render();
+    }
+
+    async function signUpWithPassword() {
+      const email = els.loginEmail.value.trim();
+      const password = els.loginPassword.value;
+
+      if (!email || !password) {
+        alert('Please enter both email and password.');
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('Use a password with at least 6 characters.');
+        return;
+      }
+
+      els.authStatus.textContent = 'Creating account...';
+      setAuthBusy(true);
+
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+
+        if (error) {
+          setAuthBusy(false);
+          els.authStatus.textContent = 'Signup failed: ' + error.message;
+          alert('Signup failed: ' + error.message);
+          return;
+        }
+
+        if (data.user) {
+          const { error: profileError } = await supabaseClient
+            .from('profiles')
+            .upsert({
+              id: data.user.id,
+              email: data.user.email,
+              role: 'umpire'
+            }, { onConflict: 'id' });
+
+          if (profileError) {
+            console.error('Profile creation error:', profileError);
+          }
+        }
+
+        setAuthBusy(false);
+        els.authStatus.textContent = 'Account created. New users are added as umpires by default. Change the role in Supabase profiles if needed.';
+        alert('Account created. New users are added as umpires by default. Change the role in Supabase profiles if needed.');
+        els.loginPassword.value = '';
+      } catch (err) {
+        console.error('SIGNUP CATCH ERROR:', err);
+        setAuthBusy(false);
+        els.authStatus.textContent = 'Unexpected error: ' + err.message;
+        alert('Unexpected error: ' + err.message);
+      }
+    }
+
+    async function sendPasswordReset() {
+      const email = els.loginEmail.value.trim();
+
+      if (!email) {
+        alert('Please enter your email first.');
+        return;
+      }
+
+      setAuthBusy(true);
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.href
+      });
+      setAuthBusy(false);
+
+      if (error) {
+        console.error('Reset password error:', error);
+        alert(error.message || 'Could not send reset email.');
+        return;
+      }
+
+      els.authStatus.textContent = 'Password reset email sent.';
+      alert('Password reset email sent.');
+    }
+
+    async function signOutUser() {
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        alert(error.message || 'Could not sign out.');
+        return;
+      }
+
+      currentUser = null;
+      currentProfile = null;
+      els.logoutBtn.classList.add('hidden');
+      els.authButtons.classList.remove('hidden');
+      els.resetPasswordBtn.classList.remove('hidden');
+      els.authStatus.textContent = 'Signed out.';
+      els.currentRole.textContent = 'Not signed in';
+      els.viewMode.value = 'umpire';
+      els.loginPassword.value = '';
+      els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
+      render();
+    }
+
+    async function linkCurrentUserToUmpireIfNeeded() {
+      return;
+    }
+
+    async function syncLoggedInUmpire() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      currentUser = session?.user || null;
+
+      if (!currentUser) {
+        currentProfile = null;
+        els.logoutBtn.classList.add('hidden');
+        els.authButtons.classList.remove('hidden');
+        els.resetPasswordBtn.classList.remove('hidden');
+        els.authStatus.textContent = 'Sign in to manage your availability.';
+        els.currentRole.textContent = 'Not signed in';
+        els.viewMode.value = 'umpire';
+        els.loginPassword.value = '';
+        return;
+      }
+
+      els.logoutBtn.classList.remove('hidden');
+      els.authButtons.classList.add('hidden');
+      els.resetPasswordBtn.classList.add('hidden');
+      els.authStatus.textContent = `Signed in as ${currentUser.email}`;
+      els.loginEmail.value = currentUser.email || '';
+      els.loginPassword.value = '';
+
+      await loadCurrentProfile();
+
+      const umpire = state.umpires.find(u => String(u.id) === String(currentUser.id));
+      if (umpire) {
+        els.umpireSelect.value = String(umpire.id);
+      }
+    }
+
+    async function syncStateFromSupabase() {
+      const [profileResult, fixtureResult, availabilityResult, assignmentResult] = await Promise.all([
+        supabaseClient.from("profiles").select("*").order("email", { ascending: true }),
+        supabaseClient.from("fixtures").select("*").order("fixture_date", { ascending: true }),
+        supabaseClient.from("availability").select("*"),
+        supabaseClient.from("assignments").select("*")
+      ]);
+
+      if (profileResult.error) console.error("Error loading profiles:", profileResult.error);
+      if (fixtureResult.error) console.error("Error loading fixtures:", fixtureResult.error);
+      if (availabilityResult.error) console.error("Error loading availability:", availabilityResult.error);
+      if (assignmentResult.error) console.error("Error loading assignments:", assignmentResult.error);
+
+      const profileRows = profileResult.data || [];
+      const fixtureRows = fixtureResult.data || [];
+      const availabilityRows = availabilityResult.data || [];
+      const assignmentRows = assignmentResult.data || [];
+
+      state.profiles = profileRows.map(row => ({
+        id: String(row.id),
+        email: row.email || "",
+        role: row.role || "umpire"
+      }));
+
+      state.umpires = state.profiles
+        .filter(row => row.role === 'umpire')
+        .map(row => ({
+          id: String(row.id),
+          name: displayNameFromProfile(row),
+          level: "",
+          area: "",
+          email: row.email || "",
+          auth_user_id: String(row.id)
+        }));
+
+      state.fixtures = fixtureRows.map(row => ({
+        id: String(row.id),
+        date: row.fixture_date || "",
+        time: row.fixture_time || "",
+        title: row.away_team ? `${row.home_team} vs ${row.away_team}` : (row.home_team || "Fixture"),
+        venue: row.location || "",
+        league: row.league || "",
+        umpiresNeeded: 2,
+        status: row.status || "Open",
+        notes: row.notes || ""
+      }));
+
+      state.availability = availabilityRows.map(row => ({
+        id: String(row.id),
+        umpireId: String(row.umpire_id),
+        fixtureId: String(row.fixture_id),
+        status: row.status || ""
+      }));
+
+      state.assignments = assignmentRows.map(row => ({
+        id: String(row.id),
+        umpireId: String(row.umpire_id),
+        fixtureId: String(row.fixture_id)
+      }));
+
+      render();
+    }
+
+    async function addUmpire() {
+      if (!isAdmin()) {
+        alert('Only admins can enable umpires.');
+        return;
+      }
+
+      const email = els.umpireEmail.value.trim().toLowerCase();
+
+      if (!email) {
+        alert('Please enter the user email.');
+        return;
+      }
+
+      const { data: profile, error: profileError } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error('Error finding profile:', profileError);
+        alert(profileError.message || 'Could not check profile.');
+        return;
+      }
+
+      if (!profile) {
+        alert('That user needs to create an account first. Once they sign up, enter the same email here to enable umpire access.');
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from('profiles')
+        .update({ role: 'umpire' })
+        .eq('id', profile.id);
+
+      if (error) {
+        console.error("Error enabling umpire:", error);
+        alert(error.message || "Error enabling umpire");
+        return;
+      }
+
+      els.umpireName.value = '';
+      els.umpireEmail.value = '';
+      els.umpireLevel.value = '';
+      els.umpireArea.value = '';
+
+      await syncStateFromSupabase();
+      await syncLoggedInUmpire();
+      alert("Umpire enabled");
+    }
+
+    async function addFixture() {
+      if (!isAdmin()) {
+        alert('Only admins can add fixtures.');
+        return;
+      }
+
+      const date = els.fixtureDate.value;
+      const time = els.fixtureTime.value;
+      const title = els.fixtureTitle.value.trim();
+      const venue = els.fixtureVenue.value.trim();
+      const league = els.fixtureLeague.value.trim();
+
+      if (!date || !time || !title) {
+        alert('Please add date, time, and fixture title.');
+        return;
+      }
+
+      const parts = title.split(' vs ');
+      const homeTeam = parts[0]?.trim() || title;
+      const awayTeam = parts[1]?.trim() || '';
+
+      const { error } = await supabaseClient.from("fixtures").insert([{
+        fixture_date: date,
+        fixture_time: time,
+        home_team: homeTeam,
+        away_team: awayTeam,
+        location: venue,
+        league,
+        status: els.fixtureStatus.value || 'Open',
+        notes: els.fixtureNotes.value.trim()
+      }]);
+
+      if (error) {
+        console.error("Error saving fixture:", error);
+        alert(error.message || "Error saving fixture");
+        return;
+      }
+
+      els.fixtureDate.value = '';
+      els.fixtureTime.value = '';
+      els.fixtureTitle.value = '';
+      els.fixtureVenue.value = '';
+      els.fixtureLeague.value = '';
+      els.fixtureNotes.value = '';
+      els.fixtureNeed.value = 2;
+      els.fixtureStatus.value = 'Open';
+
+      await syncStateFromSupabase();
+      alert("Fixture saved");
+    }
+
+    async function setAvailability(fixtureId, umpireId, status) {
+      if (!fixtureId || !umpireId) return;
+
+      if (currentUser && !isAdmin() && String(currentUser.id) !== String(umpireId)) {
+        alert('You can only update your own availability.');
+        return;
+      }
+
+      const existing = state.availability.find(
+        r => String(r.fixtureId) === String(fixtureId) && String(r.umpireId) === String(umpireId)
+      );
+
+      let error = null;
+
+      if (existing) {
+        const result = await supabaseClient
+          .from("availability")
+          .update({ status })
+          .eq("id", existing.id);
+        error = result.error;
+      } else {
+        const result = await supabaseClient
+          .from("availability")
+          .insert([{
+            umpire_id: umpireId,
+            fixture_id: fixtureId,
+            status
+          }]);
+        error = result.error;
+      }
+
+      if (error) {
+        console.error("Error saving availability:", error);
+        alert(error.message || "Error saving availability");
+        return;
+      }
+
+      await syncStateFromSupabase();
+    }
+
+    async function assignUmpire(fixtureId, umpireId) {
+      if (!isAdmin()) {
+        alert('Only admins can assign umpires.');
+        return;
+      }
+
+      const fixture = state.fixtures.find(f => String(f.id) === String(fixtureId));
+      if (!fixture) return;
+
+      const alreadyAssigned = isAssignedToFixture(fixtureId, umpireId);
+      if (alreadyAssigned) {
+        alert('This umpire is already assigned to the fixture.');
+        return;
+      }
+
+      const existingAssignments = getAssignmentsForFixture(fixtureId);
+      const maxAssignments = Math.max(1, Number(fixture.umpiresNeeded || 2));
+
+      if (existingAssignments.length >= maxAssignments) {
+        alert(`This fixture already has ${maxAssignments} umpire${maxAssignments === 1 ? '' : 's'} assigned.`);
+        return;
+      }
+
+      const { error } = await supabaseClient.from("assignments").insert([{
+        fixture_id: fixtureId,
+        umpire_id: umpireId
+      }]);
+
+      if (error) {
+        console.error("Error saving assignment:", error);
+        alert(error.message || "Error saving assignment");
+        return;
+      }
+
+      await syncStateFromSupabase();
+    }
+
+    async function unassignUmpire(fixtureId, umpireId) {
+      if (!isAdmin()) {
+        alert('Only admins can remove assignments.');
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from("assignments")
+        .delete()
+        .eq("fixture_id", fixtureId)
+        .eq("umpire_id", umpireId);
+
+      if (error) {
+        console.error("Error removing assignment:", error);
+        alert(error.message || "Error removing assignment");
+        return;
+      }
+
+      await syncStateFromSupabase();
+    }
+
+    async function deleteFixture(fixtureId) {
+      if (!isAdmin()) {
+        alert('Only admins can delete fixtures.');
+        return;
+      }
+
+      if (!confirm('Delete this fixture?')) return;
+
+      await supabaseClient.from("availability").delete().eq("fixture_id", fixtureId);
+      await supabaseClient.from("assignments").delete().eq("fixture_id", fixtureId);
+      const { error } = await supabaseClient.from("fixtures").delete().eq("id", fixtureId);
+
+      if (error) {
+        console.error("Error deleting fixture:", error);
+        alert(error.message || "Error deleting fixture");
+        return;
+      }
+
+      await syncStateFromSupabase();
+    }
+
+    function renderStats() {
+      const totalFixtures = state.fixtures.length;
+      const openFixtures = state.fixtures.filter(f => getCounts(f).assigned < Number(f.umpiresNeeded || 2)).length;
+      const totalUmpires = state.umpires.length;
+      const assignedSlots = state.assignments.length;
+
+      els.statsRow.innerHTML = [
+        ['Fixtures', totalFixtures],
+        ['Open', openFixtures],
+        ['Umpires', totalUmpires],
+        ['Assignments', assignedSlots]
+      ].map(([label, value]) =>
+        `<div class="stat"><span class="muted">${label}</span><b>${value}</b></div>`
+      ).join('');
+    }
+
+    function renderUmpireSelect() {
+      const current = currentUmpireId();
+      els.umpireSelect.innerHTML = state.umpires.length
+        ? state.umpires.map(u => `<option value="${u.id}">${u.name}${u.email ? ' · ' + u.email : ''}</option>`).join('')
+        : '<option value="">No umpires yet</option>';
+
+      if (state.umpires.some(u => String(u.id) === String(current))) {
+        els.umpireSelect.value = current;
+      } else if (currentUser && state.umpires.some(u => String(u.id) === String(currentUser.id))) {
+        els.umpireSelect.value = String(currentUser.id);
+      }
+    }
+
+    function filteredFixtures() {
+      let fixtures = [...state.fixtures].sort(
+        (a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time)
+      );
+
+      const filter = els.fixtureFilter.value;
+      const umpireId = currentUmpireId();
+
+      if (filter === 'open') fixtures = fixtures.filter(f => getCounts(f).assigned < Number(f.umpiresNeeded || 2));
+      if (filter === 'assigned') fixtures = fixtures.filter(f => getCounts(f).assigned > 0);
+      if (filter === 'mine' && umpireId) {
+        fixtures = fixtures.filter(f =>
+          state.availability.some(r => String(r.fixtureId) === String(f.id) && String(r.umpireId) === String(umpireId))
+        );
+      }
+
+      return fixtures;
+    }
+
+    function renderFixtures() {
+      const view = currentView();
+      const umpireId = currentUmpireId();
+      const fixtures = filteredFixtures();
+
+      if (!fixtures.length) {
+        els.fixtureList.innerHTML = `<div class="notice">No fixtures to show yet.</div>`;
+        return;
+      }
+
+      els.fixtureList.innerHTML = fixtures.map(fixture => {
+        const counts = getCounts(fixture);
+        const myResponse = getAvailability(fixture, umpireId);
+        const assignedNames = getAssignedNames(fixture.id);
+        const effectiveStatus = counts.assigned >= Number(fixture.umpiresNeeded || 2) ? 'Assigned' : fixture.status;
+        const fixtureIsFull = counts.assigned >= Number(fixture.umpiresNeeded || 2);
+
+        const candidateRows = view === 'admin'
+          ? state.umpires.map(u => {
+              const resp = getAvailability(fixture, u.id);
+              const style =
+                resp?.status === 'Available' ? 'available' :
+                resp?.status === 'Maybe' ? 'maybe' :
+                resp?.status === 'Unavailable' ? 'unavailable' : '';
+
+              const assigned = isAssignedToFixture(fixture.id, u.id);
+              const assignButton = assigned
+                ? `<button class="btn btn-danger small" onclick="unassignUmpire('${fixture.id}','${u.id}')">Remove</button>`
+                : `<button class="btn btn-secondary small" onclick="assignUmpire('${fixture.id}','${u.id}')" ${fixtureIsFull ? 'disabled' : ''}>Assign</button>`;
+
+              return `<tr>
+                <td>${u.name}<div class="small muted">${u.email || ''}</div></td>
+                <td>${resp?.status ? `<span class="tag ${style}">${resp.status}</span>` : '<span class="muted small">No response</span>'}</td>
+                <td>${assigned ? '<span class="tag available">Assigned</span>' : '<span class="muted small">Not assigned</span>'}</td>
+                <td>${assignButton}</td>
+              </tr>`;
+            }).join('')
+          : '';
+
+        return `
+          <div class="fixture">
+            <div class="fixture-head">
+              <div>
+                <div class="fixture-title">${fixture.title}</div>
+                <div class="muted" style="margin-top:6px">${formatDate(fixture.date, fixture.time)}</div>
+              </div>
+              <span class="tag">${effectiveStatus}</span>
+            </div>
+
+            <div class="meta">
+              ${fixture.venue ? `<span class="tag">Venue: ${fixture.venue}</span>` : ''}
+              ${fixture.league ? `<span class="tag">League: ${fixture.league}</span>` : ''}
+              <span class="tag">Need: ${fixture.umpiresNeeded}</span>
+              <span class="tag">Assigned: ${counts.assigned}/${fixture.umpiresNeeded}</span>
+            </div>
+
+            <div class="notice" style="margin-top:14px">
+              <strong>Assigned umpires:</strong> ${assignedNames.length ? assignedNames.join(' · ') : 'None yet'}
+            </div>
+
+            ${fixture.notes ? `<div class="notice" style="margin-top:14px">${fixture.notes}</div>` : ''}
+
+            ${view === 'umpire' ? `
+              <div class="availability-row">
+                <button class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Available')">Available</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe')">Maybe</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable')">Unavailable</button>
+              </div>
+            ` : `
+              <div class="table-wrap" style="margin-top:14px">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Umpire</th>
+                      <th>Availability</th>
+                      <th>Assignment</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>${candidateRows}</tbody>
+                </table>
+              </div>
+            `}
+
+            <div class="fixture-footer">
+              <div>
+                <div class="counts">
+                  <span class="tag">Available: ${counts.available}</span>
+                  <span class="tag">Maybe: ${counts.maybe}</span>
+                  <span class="tag">Unavailable: ${counts.unavailable}</span>
+                  <span class="tag">Assigned: ${counts.assigned}/${fixture.umpiresNeeded}</span>
+                </div>
+              </div>
+              ${view === 'admin' ? `<button class="btn btn-danger" onclick="deleteFixture('${fixture.id}')">Delete fixture</button>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderOverview() {
+      const rows = [...state.fixtures].sort(
+        (a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time)
+      );
+
+      els.overviewBody.innerHTML = rows.length
+        ? rows.map(f => {
+            const counts = getCounts(f);
+            return `<tr>
+              <td><strong>${f.title}</strong><div class="small muted">${formatDate(f.date, f.time)}</div></td>
+              <td>${counts.available}</td>
+              <td>${counts.maybe}</td>
+              <td>${counts.unavailable}</td>
+              <td>${counts.assigned}/${f.umpiresNeeded}</td>
+            </tr>`;
+          }).join('')
+        : '<tr><td colspan="5" class="muted">No fixtures yet.</td></tr>';
+    }
+
+    function renderAdminCards() {
+      const admin = isAdmin();
+      els.adminPanel.classList.toggle('hidden', !admin);
+      els.addUmpireCard.classList.toggle('hidden', !admin);
+      els.addFixtureCard.classList.toggle('hidden', !admin);
+      els.umpireLoginArea.classList.toggle('hidden', admin);
+      els.dashboardText.textContent = admin
+        ? 'Add fixtures, manage availability, and assign umpires.'
+        : 'Choose your name and update your availability for each fixture.';
+    }
+
+    function render() {
+      renderAdminCards();
+      renderUmpireSelect();
+      renderStats();
+      renderFixtures();
+      renderOverview();
+    }
+
+    window.setAvailability = setAvailability;
+    window.assignUmpire = assignUmpire;
+    window.unassignUmpire = unassignUmpire;
+    window.deleteFixture = deleteFixture;
+
+    els.addUmpireBtn.addEventListener('click', addUmpire);
+    els.addFixtureBtn.addEventListener('click', addFixture);
+    els.viewMode.addEventListener('change', render);
+    els.umpireSelect.addEventListener('change', render);
+    els.fixtureFilter.addEventListener('change', render);
+
+    els.seedDemoBtn.addEventListener('click', () => {
+      alert('Demo data is disabled in database mode.');
+    });
+
+    els.exportBtn.addEventListener('click', () => {
+      alert('Export is disabled in database mode.');
+    });
+
+    els.importFile.addEventListener('change', () => {
+      alert('Import is disabled in database mode.');
+      els.importFile.value = '';
+    });
+
+    els.clearBtn.addEventListener('click', async () => {
+      await syncStateFromSupabase();
+      await syncLoggedInUmpire();
+      render();
+    });
+
+    els.loginBtn.addEventListener('click', logInWithPassword);
+    els.signupBtn.addEventListener('click', signUpWithPassword);
+    els.resetPasswordBtn.addEventListener('click', sendPasswordReset);
+    els.logoutBtn.addEventListener('click', signOutUser);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.activeElement === els.umpireEmail && isAdmin()) {
+        els.addUmpireBtn.click();
+      }
+      if (e.key === 'Enter' && (document.activeElement === els.loginEmail || document.activeElement === els.loginPassword)) {
+        els.loginBtn.click();
+      }
+    });
+
+    supabaseClient.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        els.authStatus.textContent = 'Password recovery link opened.';
+      }
+
+      setTimeout(async () => {
+        try {
+          await syncStateFromSupabase();
+          await syncLoggedInUmpire();
+          render();
+        } catch (err) {
+          console.error('Auth state change error:', err);
+        }
+      }, 0);
+    });
+
+    (async function initApp() {
+      await syncStateFromSupabase();
+      await syncLoggedInUmpire();
+      render();
+    })();
+
+  </script>
 </body>
 </html>
