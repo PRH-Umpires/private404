@@ -985,14 +985,14 @@ async function signUpWithPassword() {
     });
 
     supabaseClient.auth.onAuthStateChange(async (event) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        els.authStatus.textContent = 'Password recovery link opened. Set a new password in Supabase if prompted.';
-      }
-      await syncStateFromSupabase();
-      await syncLoggedInUmpire();
-      render();
-    });
-
+  if (event === 'PASSWORD_RECOVERY') {
+    els.authStatus.textContent = 'Password recovery link opened. Set a new password in Supabase if prompted.';
+  }
+  await syncStateFromSupabase();
+  await syncLoggedInUmpire();
+  render();
+});
+    
     (async function initApp() {
       await syncStateFromSupabase();
       await syncLoggedInUmpire();
