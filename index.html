@@ -857,10 +857,10 @@ const { error } = await supabaseClient.from("fixtures").insert([{
         const result = await supabaseClient
           .from("availability")
           .insert([{
-            umpire_id: Number(umpireId),
-            fixture_id: Number(fixtureId),
-            status
-          }]);
+  umpire_id: umpireId,
+  fixture_id: fixtureId,
+  status
+}]);
         error = result.error;
       }
 
