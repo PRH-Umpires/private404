@@ -851,7 +851,7 @@ const { error } = await supabaseClient.from("fixtures").insert([{
         const result = await supabaseClient
           .from("availability")
           .update({ status })
-          .eq("id", Number(existing.id));
+          .eq("id", existing.id);
         error = result.error;
       } else {
         const result = await supabaseClient
