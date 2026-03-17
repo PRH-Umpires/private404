@@ -20,6 +20,10 @@
       --radius:18px;
     }
     *{box-sizing:border-box}
+    html, body{
+      max-width:100%;
+      overflow-x:hidden;
+    }
     body{
       margin:0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -32,7 +36,7 @@
       padding:28px 20px;
       box-shadow:var(--shadow);
     }
-    .wrap{max-width:1180px;margin:0 auto}
+    .wrap{max-width:1180px;margin:0 auto;width:100%}
     h1,h2,h3,p{margin:0}
     .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
     .hero p{max-width:720px;opacity:.92;margin-top:8px;line-height:1.5}
@@ -50,6 +54,10 @@
       grid-template-columns: 300px 1fr;
       gap:22px;
       align-items:start;
+      width:100%;
+    }
+    .grid > *{
+      min-width:0;
     }
     .card{
       background:var(--card);
@@ -57,6 +65,8 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:18px;
+      min-width:0;
+      width:100%;
     }
     .sidebar .card + .card{margin-top:16px}
     label{display:block;font-size:13px;font-weight:600;margin:14px 0 7px}
@@ -66,7 +76,6 @@
       border:1px solid #d1d5db;
       border-radius:12px;
       font:inherit;
-      font-size:16px;
       background:#fff;
     }
     textarea{min-height:90px;resize:vertical}
@@ -82,6 +91,7 @@
       word-break:break-word;
       overflow-wrap:anywhere;
       text-align:center;
+      max-width:100%;
     }
     .btn:hover{transform:translateY(-1px)}
     .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
@@ -139,19 +149,24 @@
       margin-top:14px;
     }
     .auth-helper{margin-top:8px;line-height:1.45}
+    input, select, textarea, button{
+      max-width:100%;
+    }
     @media (max-width: 980px){
       .grid{grid-template-columns:1fr}
       .stats{grid-template-columns:repeat(2,1fr)}
       .two-col{grid-template-columns:1fr}
     }
     @media (max-width: 560px){
+      .wrap{max-width:100%;width:100%}
+      .grid{grid-template-columns:1fr;gap:14px}
       .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
       .stat{padding:10px;min-width:0;border-radius:14px}
       .stat b{font-size:20px;margin-top:2px}
       .auth-actions{grid-template-columns:1fr}
       header{padding:18px 12px}
       main{padding:12px 12px 24px}
-      .card{padding:12px;border-radius:16px}
+      .card{padding:10px;border-radius:16px}
       .fixture{padding:12px}
       .topbar{align-items:flex-start;margin-bottom:12px}
       .topbar .btn{width:100%}
@@ -164,16 +179,24 @@
       .notice{padding:10px 11px;font-size:13px}
       .fixture-footer{align-items:stretch}
       .fixture-footer .btn{width:100%}
-      .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+      .table-wrap{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        max-width:100%;
+      }
       .table-wrap table{min-width:640px}
 
-      /* Hero tighter on mobile */
+      /* Hero tighter */
       .hero{gap:12px}
       .hero h1{font-size:24px;line-height:1.15}
       .hero p{font-size:14px;line-height:1.45;margin-top:6px}
-      .pill{padding:8px 12px;font-size:13px}
+      .pill{
+        padding:8px 12px;
+        font-size:13px;
+        max-width:100%;
+      }
 
-      /* Login card tighter and still no iPhone zoom */
+      /* Login card: no zoom, no overflow */
       #authCard{
         overflow:hidden;
         padding:10px;
@@ -193,6 +216,8 @@
       #authCard input,
       #authCard select,
       #authCard textarea{
+        width:100%;
+        max-width:100%;
         font-size:16px;
         min-height:42px;
         padding:8px 10px;
@@ -202,21 +227,18 @@
         gap:6px;
         margin-top:10px;
       }
-      #authCard .btn{
-        width:100%;
-        min-height:40px;
-        padding:8px 10px;
-        font-size:13px;
-        line-height:1.15;
-        border-radius:10px;
-      }
+      #authCard .btn,
       #resetPasswordBtn,
       #logoutBtn{
-        margin-top:6px !important;
+        display:block;
+        width:100%;
+        max-width:100%;
+        min-width:0;
         min-height:40px;
         padding:8px 10px !important;
         font-size:12px !important;
         line-height:1.15 !important;
+        border-radius:10px;
       }
       #authStatus{
         margin-top:6px;
@@ -224,28 +246,6 @@
         line-height:1.3;
         word-break:break-word;
         overflow-wrap:anywhere;
-      }
-    }
-      #authCard{
-        overflow:hidden;
-      }
-      #authCard .section-title{
-        margin-bottom:10px;
-      }
-      #authCard label{
-        margin:12px 0 6px;
-      }
-      #authCard input{
-        min-height:48px;
-      }
-      #authCard .auth-actions{
-        gap:8px;
-      }
-      #authCard .btn{
-        min-height:48px;
-      }
-      #authStatus{
-        word-break:break-word;
       }
     }
   </style>
