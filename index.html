@@ -524,11 +524,17 @@
 
         <div class="card" id="addUmpireCard">
           <div class="section-title">
-            <h3>Enable Umpire</h3>
+            <h3>Enable Umpire | Admin</h3>
           </div>
           <label for="umpireName">Display name (optional)</label>
           <input id="umpireName" placeholder="e.g. Sarah Jones" />
-          <label for="umpireEmail">User email</label>
+          <label for="umpireEmail">User email
+<label>Role</label>
+<select id="roleSelect">
+  <option value="umpire">Umpire</option>
+  <option value="admin">Admin</option>
+</select>
+</label>
           <input id="umpireEmail" type="email" placeholder="e.g. sarah@example.com" />
           <label for="umpireLevel">Grade / Level</label>
           <input id="umpireLevel" placeholder="e.g. Level 2" />
