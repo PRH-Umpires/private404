@@ -468,6 +468,42 @@
       object-fit:contain;
     }
 
+
+@media (max-width: 560px){
+  #addFixtureCard{
+    overflow:hidden;
+  }
+  #addFixtureCard .two-col{
+    display:grid !important;
+    grid-template-columns:minmax(0, 1fr) !important;
+    gap:10px !important;
+    padding-right:0 !important;
+  }
+  #addFixtureCard .two-col > div{
+    min-width:0 !important;
+    width:100% !important;
+    padding-right:0 !important;
+  }
+  #addFixtureCard input,
+  #addFixtureCard select,
+  #addFixtureCard textarea{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+  #addFixtureCard input[type="date"],
+  #addFixtureCard input[type="time"]{
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    padding-right:40px !important;
+  }
+}
+
 </style>
 </head>
 <body>
