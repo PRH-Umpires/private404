@@ -741,15 +741,16 @@ function isUmpire() {
 
       if (existing) return existing;
 
-      const { data: inserted, error: insertError } = await supabaseClient
-        .from('profiles')
-        .upsert({
-          id: user.id,
-          email: user.email,
-          role: 'umpire'
-        }, { onConflict: 'id' })
-        .select()
-        .single();
+const { data: inserted, error: insertError } = await supabaseClient
+  .from('profiles')
+  .upsert({
+    id: user.id,
+    email: user.email,
+    role: 'umpire',
+    roles: ['umpire']
+  }, { onConflict: 'id' })
+  .select()
+  .single();
 
       if (insertError) {
         console.error('Error creating profile:', insertError);
