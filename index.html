@@ -355,7 +355,7 @@
       #availabilityCard{order:4 !important;}
       #fixturesCard{order:5 !important;}
       #adminPanel{order:6 !important;}
-      #addUmpireCard{display:none !important;}
+      #addUmpireCard{order:7 !important;}
       #addFixtureCard{order:8 !important;}
 
       /* Keep stats under Dashboard on mobile */
@@ -468,6 +468,7 @@
       <div class="brand-lockup">
         <div class="brand-icon"><img src="Phoenix logo.png" alt="Phoenix Logo"></div>
         <div class="brand-text">
+          <span class="brand-badge">PRH Umply</span>
           <h1 class="brand-title">PRH Umply App</h1>
           <p class="brand-subtitle">Umpire Availability Manager</p>
         </div>
@@ -521,7 +522,11 @@
           </div>
         </div>
 
-        <label for="umpireName">Display name (optional)</label>
+        <div class="card" id="addUmpireCard">
+          <div class="section-title">
+            <h3>Enable Umpire</h3>
+          </div>
+          <label for="umpireName">Display name (optional)</label>
           <input id="umpireName" placeholder="e.g. Sarah Jones" />
           <label for="umpireEmail">User email</label>
           <input id="umpireEmail" type="email" placeholder="e.g. sarah@example.com" />
@@ -651,7 +656,7 @@
       currentRole: document.getElementById('currentRole'),
       umpireSelect: document.getElementById('umpireSelect'),
       adminPanel: document.getElementById('adminPanel'),
-      
+      addUmpireCard: document.getElementById('addUmpireCard'),
       addFixtureCard: document.getElementById('addFixtureCard'),
       umpireName: document.getElementById('umpireName'),
       umpireEmail: document.getElementById('umpireEmail'),
@@ -1553,7 +1558,7 @@
     function renderAdminCards() {
       const admin = isAdmin();
       els.adminPanel.classList.toggle('hidden', !admin);
-      
+      els.addUmpireCard.classList.toggle('hidden', !admin);
       els.addFixtureCard.classList.toggle('hidden', !admin);
       els.dashboardText.textContent = admin
         ? 'Add fixtures, manage availability, and assign umpires.'
