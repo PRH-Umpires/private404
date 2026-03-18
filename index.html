@@ -1053,11 +1053,12 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
       const availabilityRows = availabilityResult.data || [];
       const assignmentRows = assignmentResult.data || [];
 
-      state.profiles = profileRows.map(row => ({
-        id: String(row.id),
-        email: row.email || "",
-        role: row.role || "umpire"
-      }));
+     state.profiles = profileRows.map(row => ({
+  id: String(row.id),
+  email: row.email || "",
+  role: row.role || "umpire",
+  roles: Array.isArray(row.roles) && row.roles.length ? row.roles : [row.role || "umpire"]
+}));
 
       state.umpires = state.profiles
         .filter(row => row.role === 'umpire')
