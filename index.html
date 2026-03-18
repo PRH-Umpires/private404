@@ -311,7 +311,6 @@
 
       /* Exact mobile order */
       #authCard{order:1 !important;}
-      #yourViewCard{order:2 !important;}
       #dashboardCard{order:3 !important;}
       #availabilityCard{order:4 !important;}
       #fixturesCard{order:5 !important;}
@@ -395,15 +394,9 @@
   <div class="small muted auth-helper" id="authStatus">Sign in to manage your availability.</div>
 </div>
 
-        <div class="card" id="yourViewCard">
-          <div class="section-title">
-            <h3>Your View</h3>
-          </div>
-          <label>Role</label>
-          <div id="currentRole" style="padding:12px 13px;border:1px solid #d1d5db;border-radius:12px;background:#fff;text-transform:capitalize;">Not signed in</div>
-          <input id="viewMode" type="hidden" value="umpire" />
-          <select id="umpireSelect" class="hidden" aria-hidden="true" tabindex="-1"></select>
-        </div>
+        <input id="viewMode" type="hidden" value="umpire" />
+        <div id="currentRole" class="hidden">Not signed in</div>
+        <select id="umpireSelect" class="hidden" aria-hidden="true" tabindex="-1"></select>
 
         <div class="card" id="adminPanel">
           <div class="section-title">
