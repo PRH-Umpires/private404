@@ -145,12 +145,24 @@
     .fixture-footer{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:14px}
     .counts{display:flex;gap:8px;flex-wrap:wrap}
     .counts .tag{font-size:11px}
-    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      padding-right:4px;
+    }
+    .two-col > div{
+      min-width:0;
+    }
     .hidden{display:none !important}
     .small{font-size:12px}
     .view-toggle{display:flex;gap:6px}
-    .view-toggle .btn{min-width:84px}
-    .view-toggle .btn.active-view{background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.28)}
+    .view-toggle .btn{
+      min-width:84px;
+      border-radius:999px;
+      padding:8px 14px;
+      transition:all 0.2s ease;
+    }
     .table-wrap{overflow:auto}
     table{width:100%;border-collapse:collapse}
     th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;vertical-align:top}
@@ -255,6 +267,13 @@
       }
       .hero-actions #viewToggle{
         flex-shrink:0;
+      }
+      .two-col{
+        gap:10px;
+        padding-right:0;
+      }
+      .two-col > div{
+        padding-right:2px;
       }
       .view-toggle .btn{
         min-width:0;
@@ -1053,7 +1072,6 @@ function updateActiveViewButton() {
       els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
       updateHeaderUserBanner();
       updateAuthVisibility();
-      updateViewToggle();
       updateViewToggle();
       render();
     }
