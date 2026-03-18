@@ -72,13 +72,19 @@
     .sidebar .card + .card{margin-top:16px}
     label{display:block;font-size:13px;font-weight:600;margin:14px 0 7px}
     input, select, textarea{
-      width:100%;
-      padding:12px 13px;
-      border:1px solid #d1d5db;
-      border-radius:12px;
-      font:inherit;
-      background:#fff;
-    }
+  width:100%;
+  padding:12px 13px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  font:inherit;
+  background:#fff;
+}
+
+/* Fix time/date input overlap (desktop) */
+#addFixtureCard input[type="date"],
+#addFixtureCard input[type="time"]{
+  padding-right:42px;
+}
     textarea{min-height:90px;resize:vertical}
     .btn{
       border:none;
