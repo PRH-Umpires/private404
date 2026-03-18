@@ -781,11 +781,11 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
     }
 
     function currentUmpireId() {
-      if (currentUser && !isAdmin()) {
-        return String(currentUser.id);
-      }
-      return els.umpireSelect.value || '';
-    }
+  if (currentUser && isUmpire()) {
+    return String(currentUser.id);
+  }
+  return els.umpireSelect.value || '';
+}
 
     function getUmpire(id) {
       return state.umpires.find(u => String(u.id) === String(id));
