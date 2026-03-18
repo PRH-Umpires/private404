@@ -1298,6 +1298,13 @@
         return;
       }
 
+      const availability = getAvailability(fixture, umpireId);
+      const availabilityStatus = availability?.status || '';
+      if (availabilityStatus !== 'Available') {
+        alert('Only umpires with an Available status can be assigned.');
+        return;
+      }
+
       const existingAssignments = getAssignmentsForFixture(fixtureId);
       const maxAssignments = Math.max(1, Number(fixture.umpiresNeeded || 2));
 
@@ -1450,9 +1457,11 @@
                 resp?.status === 'Unavailable' ? 'unavailable' : '';
 
               const assigned = isAssignedToFixture(fixture.id, u.id);
+              const isAvailableForAssignment = resp?.status === 'Available';
+              const assignDisabled = !isAvailableForAssignment || fixtureIsFull || fixtureIsClosed;
               const assignButton = assigned
                 ? `<button class="btn btn-danger small" onclick="unassignUmpire('${fixture.id}','${u.id}')" ${fixtureIsClosed ? 'disabled' : ''}>Remove</button>`
-                : `<button class="btn btn-secondary small" onclick="assignUmpire('${fixture.id}','${u.id}')" ${(fixtureIsFull || fixtureIsClosed) ? 'disabled' : ''}>Assign</button>`;
+                : `<button class="btn btn-secondary small" onclick="assignUmpire('${fixture.id}','${u.id}')" ${assignDisabled ? 'disabled' : ''}>Assign</button>`;
 
               return `<tr>
                 <td>${u.name}<div class="small muted">${u.email || ''}</div></td>
