@@ -920,19 +920,20 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
           return;
         }
 
-        if (data.user) {
-          const { error: profileError } = await supabaseClient
-            .from('profiles')
-            .upsert({
-              id: data.user.id,
-              email: data.user.email,
-              role: 'umpire'
-            }, { onConflict: 'id' });
+       if (data.user) {
+  const { error: profileError } = await supabaseClient
+    .from('profiles')
+    .upsert({
+      id: data.user.id,
+      email: data.user.email,
+      role: 'umpire',
+      roles: ['umpire']
+    }, { onConflict: 'id' });
 
-          if (profileError) {
-            console.error('Profile creation error:', profileError);
-          }
-        }
+  if (profileError) {
+    console.error('Profile creation error:', profileError);
+  }
+}
 
         setAuthBusy(false);
         els.authStatus.textContent = 'Account created. New users are added as umpires by default. Change the role in Supabase profiles if needed.';
