@@ -271,7 +271,6 @@
         padding:5px 9px;
       }
 
-      /* Hero tighter */
       .hero{gap:12px}
       .hero h1{font-size:24px;line-height:1.15}
       .hero p{font-size:14px;line-height:1.45;margin-top:6px}
@@ -281,7 +280,6 @@
         max-width:100%;
       }
 
-      /* Login card: no zoom, no overflow */
       #authCard{
         overflow:hidden;
         padding:10px;
@@ -355,7 +353,6 @@
       #availabilityCard{order:4 !important;}
       #fixturesCard{order:5 !important;}
       #adminPanel{order:6 !important;}
-      #addUmpireCard{order:7 !important;}
       #addFixtureCard{order:8 !important;}
 
       /* Keep stats under Dashboard on mobile */
@@ -521,21 +518,6 @@
           </div>
         </div>
 
-        <div class="card" id="addUmpireCard">
-          <div class="section-title">
-            <h3>Enable Umpire</h3>
-          </div>
-          <label for="umpireName">Display name (optional)</label>
-          <input id="umpireName" placeholder="e.g. Sarah Jones" />
-          <label for="umpireEmail">User email</label>
-          <input id="umpireEmail" type="email" placeholder="e.g. sarah@example.com" />
-          <label for="umpireLevel">Grade / Level</label>
-          <input id="umpireLevel" placeholder="e.g. Level 2" />
-          <label for="umpireArea">Area / Base</label>
-          <input id="umpireArea" placeholder="e.g. Reading" />
-          <button type="button" class="btn btn-primary" id="saveUmpireSupabaseBtn" style="margin-top:14px;width:100%">Enable umpire</button>
-        </div>
-
         <div class="card" id="addFixtureCard">
           <div class="section-title">
             <h3>Add Fixture</h3>
@@ -655,13 +637,7 @@
       currentRole: document.getElementById('currentRole'),
       umpireSelect: document.getElementById('umpireSelect'),
       adminPanel: document.getElementById('adminPanel'),
-      addUmpireCard: document.getElementById('addUmpireCard'),
       addFixtureCard: document.getElementById('addFixtureCard'),
-      umpireName: document.getElementById('umpireName'),
-      umpireEmail: document.getElementById('umpireEmail'),
-      umpireLevel: document.getElementById('umpireLevel'),
-      umpireArea: document.getElementById('umpireArea'),
-      addUmpireBtn: document.getElementById('saveUmpireSupabaseBtn'),
       fixtureDate: document.getElementById('fixtureDate'),
       fixtureTime: document.getElementById('fixtureTime'),
       fixtureTitle: document.getElementById('fixtureTitle'),
@@ -1100,57 +1076,6 @@
       render();
     }
 
-    async function addUmpire() {
-      if (!isAdmin()) {
-        alert('Only admins can enable umpires.');
-        return;
-      }
-
-      const email = els.umpireEmail.value.trim().toLowerCase();
-
-      if (!email) {
-        alert('Please enter the user email.');
-        return;
-      }
-
-      const { data: profile, error: profileError } = await supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('email', email)
-        .maybeSingle();
-
-      if (profileError) {
-        console.error('Error finding profile:', profileError);
-        alert(profileError.message || 'Could not check profile.');
-        return;
-      }
-
-      if (!profile) {
-        alert('That user needs to create an account first. Once they sign up, enter the same email here to enable umpire access.');
-        return;
-      }
-
-      const { error } = await supabaseClient
-        .from('profiles')
-        .update({ role: 'umpire' })
-        .eq('id', profile.id);
-
-      if (error) {
-        console.error("Error enabling umpire:", error);
-        alert(error.message || "Error enabling umpire");
-        return;
-      }
-
-      els.umpireName.value = '';
-      els.umpireEmail.value = '';
-      els.umpireLevel.value = '';
-      els.umpireArea.value = '';
-
-      await syncStateFromSupabase();
-      await syncLoggedInUmpire();
-      alert("Umpire enabled");
-    }
-
     async function addFixture() {
       if (!isAdmin()) {
         alert('Only admins can add fixtures.');
@@ -1557,7 +1482,6 @@
     function renderAdminCards() {
       const admin = isAdmin();
       els.adminPanel.classList.toggle('hidden', !admin);
-      els.addUmpireCard.classList.toggle('hidden', !admin);
       els.addFixtureCard.classList.toggle('hidden', !admin);
       els.dashboardText.textContent = admin
         ? 'Add fixtures, manage availability, and assign umpires.'
@@ -1582,7 +1506,6 @@
     window.unassignUmpire = unassignUmpire;
     window.deleteFixture = deleteFixture;
 
-    els.addUmpireBtn.addEventListener('click', addUmpire);
     els.addFixtureBtn.addEventListener('click', addFixture);
     els.viewMode.addEventListener('change', render);
     els.umpireSelect.addEventListener('change', render);
@@ -1613,9 +1536,6 @@
     els.logoutBtn.addEventListener('click', signOutUser);
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && document.activeElement === els.umpireEmail && isAdmin()) {
-        els.addUmpireBtn.click();
-      }
       if (e.key === 'Enter' && (document.activeElement === els.loginEmail || document.activeElement === els.loginPassword)) {
         els.loginBtn.click();
       }
