@@ -785,6 +785,9 @@
     }
 
     function currentUmpireId() {
+      if (currentUser && !isAdmin()) {
+        return String(currentUser.id);
+      }
       return els.umpireSelect.value || '';
     }
 
@@ -1346,13 +1349,23 @@
 
     function renderUmpireSelect() {
       const current = currentUmpireId();
-      els.umpireSelect.innerHTML = state.umpires.length
-        ? state.umpires.map(u => `<option value="${u.id}">${u.name}${u.email ? ' · ' + u.email : ''}</option>`).join('')
+      const umpireOptions = [...state.umpires];
+
+      if (currentUser && !umpireOptions.some(u => String(u.id) === String(currentUser.id))) {
+        umpireOptions.push({
+          id: String(currentUser.id),
+          name: displayNameFromProfile(currentProfile) || displayNameFromProfile({ email: currentUser.email || '' }),
+          email: currentUser.email || ''
+        });
+      }
+
+      els.umpireSelect.innerHTML = umpireOptions.length
+        ? umpireOptions.map(u => `<option value="${u.id}">${u.name}${u.email ? ' · ' + u.email : ''}</option>`).join('')
         : '<option value="">No umpires yet</option>';
 
-      if (currentUser && state.umpires.some(u => String(u.id) === String(currentUser.id))) {
+      if (currentUser && umpireOptions.some(u => String(u.id) === String(currentUser.id))) {
         els.umpireSelect.value = String(currentUser.id);
-      } else if (state.umpires.some(u => String(u.id) === String(current))) {
+      } else if (umpireOptions.some(u => String(u.id) === String(current))) {
         els.umpireSelect.value = current;
       } else {
         els.umpireSelect.value = '';
@@ -1382,6 +1395,7 @@
       const view = currentView();
       const umpireId = currentUmpireId();
       const fixtures = filteredFixtures();
+      const canRespond = view === 'umpire' && !!umpireId;
 
       if (!fixtures.length) {
         els.fixtureList.innerHTML = `<div class="notice">No fixtures to show yet.</div>`;
@@ -1443,10 +1457,11 @@
 
             ${view === 'umpire' ? `
               <div class="availability-row">
-                <button class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Available')" ${fixtureIsClosed ? 'disabled' : ''}>Available</button>
-                <button class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe')" ${fixtureIsClosed ? 'disabled' : ''}>Maybe</button>
-                <button class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable')" ${fixtureIsClosed ? 'disabled' : ''}>Unavailable</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Available')" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Available</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe')" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Maybe</button>
+                <button class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable')" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Unavailable</button>
               </div>
+              ${!canRespond ? `<div class="notice danger-note" style="margin-top:14px">Your account is signed in, but it is not linked to an umpire profile yet.</div>` : ''}
               ${fixtureIsClosed ? `<div class="notice danger-note" style="margin-top:14px">This fixture is closed because the fixture date and time have passed.</div>` : ''}
             ` : `
               <div class="table-wrap" style="margin-top:14px">
