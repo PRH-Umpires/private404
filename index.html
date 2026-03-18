@@ -40,6 +40,7 @@
     h1,h2,h3,p{margin:0}
     .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
     .hero p{max-width:720px;opacity:.92;margin-top:8px;line-height:1.5}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;width:100%}
     .pill{
       background:rgba(255,255,255,.15);
       border:1px solid rgba(255,255,255,.18);
@@ -231,6 +232,23 @@
       }
       .table-wrap table{min-width:640px}
 
+      .hero-actions{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        flex-wrap:nowrap;
+        gap:8px;
+      }
+      .hero-actions #logoutBtn,
+      .hero-actions #userBannerInfo{
+        width:auto;
+        max-width:none;
+      }
+      .hero-actions #userBannerInfo{
+        margin-left:auto;
+        text-align:center;
+      }
       /* Hero tighter */
       .hero{gap:12px}
       .hero h1{font-size:24px;line-height:1.15}
@@ -353,32 +371,6 @@
       }
     }
 
-
-/* Hero logout button */
-#logoutBtn{
-  width:auto !important;
-  display:inline-flex !important;
-  align-items:center;
-  justify-content:center;
-  white-space:nowrap;
-  margin-top:0 !important;
-}
-
-@media (max-width: 768px){
-  .hero-actions{
-    width:100%;
-    justify-content:flex-start !important;
-  }
-  #logoutBtn{
-    width:auto !important;
-    max-width:100%;
-    align-self:flex-start !important;
-    white-space:normal !important;
-    text-align:center;
-    padding:10px 16px !important;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -388,10 +380,9 @@
         <h1>Umpire Availability Manager</h1>
         <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       </div>
-      <div class="hero-actions" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end">
+      <div class="hero-actions">
+      <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.22);padding:10px 14px;border-radius:999px;margin-right:auto">Log out</button>
       <div class="pill hidden" id="userBannerInfo"></div>
-      <button type="button" class="btn btn-ghost hidden" id="logoutBtn">Log out</button>
-      <div class="pill">Single-file app · cloud synced</div>
       </div>
     </div>
   </header>
@@ -416,6 +407,7 @@
   </div>
 
   <button type="button" class="btn btn-ghost" id="resetPasswordBtn" style="margin-top:10px;width:100%">Send password reset email</button>
+  
 
   <div class="small muted auth-helper" id="authStatus">Sign in to manage your availability.</div>
 </div>
@@ -884,6 +876,14 @@
       alert('Password reset email sent.');
     }
 
+    function updateAuthVisibility() {
+      const loggedIn = !!currentUser;
+      els.authCard.classList.toggle('hidden', loggedIn);
+      els.logoutBtn.classList.toggle('hidden', !loggedIn);
+      els.authButtons.classList.toggle('hidden', loggedIn);
+      els.resetPasswordBtn.classList.toggle('hidden', loggedIn);
+    }
+
     async function signOutUser() {
       const { error } = await supabaseClient.auth.signOut();
 
@@ -894,15 +894,14 @@
 
       currentUser = null;
       currentProfile = null;
-      els.logoutBtn.classList.add('hidden');
-      els.authButtons.classList.remove('hidden');
-      els.resetPasswordBtn.classList.remove('hidden');
       els.authStatus.textContent = 'Signed out.';
       els.currentRole.textContent = 'Not signed in';
       els.viewMode.value = 'umpire';
+      els.loginEmail.value = '';
       els.loginPassword.value = '';
       els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
       updateHeaderUserBanner();
+      updateAuthVisibility();
       render();
     }
 
@@ -916,20 +915,16 @@
 
       if (!currentUser) {
         currentProfile = null;
-        els.logoutBtn.classList.add('hidden');
-        els.authButtons.classList.remove('hidden');
-        els.resetPasswordBtn.classList.remove('hidden');
         els.authStatus.textContent = 'Sign in to manage your availability.';
         els.currentRole.textContent = 'Not signed in';
         els.viewMode.value = 'umpire';
+        els.loginEmail.value = '';
         els.loginPassword.value = '';
         updateHeaderUserBanner();
+        updateAuthVisibility();
         return;
       }
 
-      els.logoutBtn.classList.remove('hidden');
-      els.authButtons.classList.add('hidden');
-      els.resetPasswordBtn.classList.add('hidden');
       els.authStatus.textContent = `Signed in as ${currentUser.email}`;
       els.loginEmail.value = currentUser.email || '';
       els.loginPassword.value = '';
@@ -942,6 +937,7 @@
       }
 
       updateHeaderUserBanner();
+      updateAuthVisibility();
     }
 
     async function syncStateFromSupabase() {
