@@ -473,10 +473,6 @@
       <div class="hero-actions">
       <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.22);padding:10px 14px;border-radius:999px;margin-right:auto">Log out</button>
       <div class="pill hidden" id="userBannerInfo"></div>
-        <div id="viewToggle" class="hidden view-toggle">
-  <button id="adminViewBtn" class="btn btn-ghost small">Admin</button>
-  <button id="umpireViewBtn" class="btn btn-ghost small">Umpire</button>
-</div>
       </div>
     </div>
   </header>
@@ -678,48 +674,28 @@
       return source.split(/\s+/)[0];
     }
 
-    function getProfileRoles(profile) {
-  if (!profile) return [];
-  if (Array.isArray(profile.roles) && profile.roles.length) return profile.roles;
-  if (typeof profile.roles === 'string' && profile.roles.trim()) return [profile.roles.trim()];
-  if (profile.role) return [profile.role];
-  return ['umpire'];
-}
+    function formatRoleLabel(role) {
+      return role === 'admin' ? 'Admin' : 'Umpire';
+    }
 
-function hasRole(profile, roleName) {
-  return getProfileRoles(profile).includes(roleName);
-}
+    function updateHeaderUserBanner() {
+      if (!els.userBannerInfo) return;
 
-function formatRoleLabel(role) {
-  return role === 'admin' ? 'Admin' : 'Umpire';
-}
+      if (!currentUser || !currentProfile) {
+        els.userBannerInfo.textContent = '';
+        els.userBannerInfo.classList.add('hidden');
+        return;
+      }
 
-function formatRoleLabels(profile) {
-  return getProfileRoles(profile).map(formatRoleLabel).join(' / ');
-}
+      const firstName = getFirstNameFromProfile(currentProfile);
+      const roleLabel = formatRoleLabel(currentProfile?.role);
+      els.userBannerInfo.textContent = `${firstName} | ${roleLabel}`;
+      els.userBannerInfo.classList.remove('hidden');
+    }
 
-function updateHeaderUserBanner() {
-  if (!els.userBannerInfo) return;
-
-  if (!currentUser || !currentProfile) {
-    els.userBannerInfo.textContent = '';
-    els.userBannerInfo.classList.add('hidden');
-    return;
-  }
-
-  const firstName = getFirstNameFromProfile(currentProfile);
-  const roleLabel = formatRoleLabels(currentProfile);
-  els.userBannerInfo.textContent = `${firstName} | ${roleLabel}`;
-  els.userBannerInfo.classList.remove('hidden');
-}
-
-function isAdmin() {
-  return hasRole(currentProfile, 'admin');
-}
-
-function isUmpire() {
-  return hasRole(currentProfile, 'umpire');
-}
+    function isAdmin() {
+      return currentProfile?.role === 'admin';
+    }
 
     function displayNameFromProfile(profile) {
       if (!profile) return 'Unknown umpire';
@@ -745,16 +721,15 @@ function isUmpire() {
 
       if (existing) return existing;
 
-const { data: inserted, error: insertError } = await supabaseClient
-  .from('profiles')
-  .upsert({
-  id: user.id,
-  email: user.email,
-  role: 'umpire',
-  roles: ['umpire']
-}, { onConflict: 'id' })
-  .select()
-  .single();
+      const { data: inserted, error: insertError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          email: user.email,
+          role: 'umpire'
+        }, { onConflict: 'id' })
+        .select()
+        .single();
 
       if (insertError) {
         console.error('Error creating profile:', insertError);
@@ -774,9 +749,9 @@ const { data: inserted, error: insertError } = await supabaseClient
       }
 
       currentProfile = await ensureProfile(currentUser);
-      const role = isAdmin() ? 'admin' : 'umpire';
-els.viewMode.value = role;
-els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
+      const role = currentProfile?.role === 'admin' ? 'admin' : 'umpire';
+      els.viewMode.value = role;
+      els.currentRole.textContent = role;
       updateHeaderUserBanner();
     }
 
@@ -785,11 +760,11 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
     }
 
     function currentUmpireId() {
-  if (currentUser && isUmpire()) {
-    return String(currentUser.id);
-  }
-  return els.umpireSelect.value || '';
-}
+      if (currentUser && !isAdmin()) {
+        return String(currentUser.id);
+      }
+      return els.umpireSelect.value || '';
+    }
 
     function getUmpire(id) {
       return state.umpires.find(u => String(u.id) === String(id));
@@ -924,20 +899,19 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
           return;
         }
 
-       if (data.user) {
-  const { error: profileError } = await supabaseClient
-    .from('profiles')
-    .upsert({
-      id: data.user.id,
-      email: data.user.email,
-      role: 'umpire',
-      roles: ['umpire']
-    }, { onConflict: 'id' });
+        if (data.user) {
+          const { error: profileError } = await supabaseClient
+            .from('profiles')
+            .upsert({
+              id: data.user.id,
+              email: data.user.email,
+              role: 'umpire'
+            }, { onConflict: 'id' });
 
-  if (profileError) {
-    console.error('Profile creation error:', profileError);
-  }
-}
+          if (profileError) {
+            console.error('Profile creation error:', profileError);
+          }
+        }
 
         setAuthBusy(false);
         els.authStatus.textContent = 'Account created. New users are added as umpires by default. Change the role in Supabase profiles if needed.';
@@ -1057,23 +1031,22 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
       const availabilityRows = availabilityResult.data || [];
       const assignmentRows = assignmentResult.data || [];
 
-     state.profiles = profileRows.map(row => ({
-  id: String(row.id),
-  email: row.email || "",
-  role: row.role || "umpire",
-  roles: Array.isArray(row.roles) && row.roles.length ? row.roles : [row.role || "umpire"]
-}));
+      state.profiles = profileRows.map(row => ({
+        id: String(row.id),
+        email: row.email || "",
+        role: row.role || "umpire"
+      }));
 
       state.umpires = state.profiles
-  .filter(row => hasRole(row, 'umpire'))
-  .map(row => ({
-    id: String(row.id),
-    name: displayNameFromProfile(row),
-    level: "",
-    area: "",
-    email: row.email || "",
-    auth_user_id: String(row.id)
-  }));
+        .filter(row => row.role === 'umpire')
+        .map(row => ({
+          id: String(row.id),
+          name: displayNameFromProfile(row),
+          level: "",
+          area: "",
+          email: row.email || "",
+          auth_user_id: String(row.id)
+        }));
 
       state.fixtures = fixtureRows.map(row => ({
         id: String(row.id),
@@ -1385,7 +1358,7 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
       const view = currentView();
       const umpireId = currentUmpireId();
       const fixtures = filteredFixtures();
-      const canRespond = !!currentUser && isUmpire() && !!umpireId;
+      const canRespond = view === 'umpire' && !!umpireId;
 
       if (!fixtures.length) {
         els.fixtureList.innerHTML = `<div class="notice">No fixtures to show yet.</div>`;
