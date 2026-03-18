@@ -169,12 +169,11 @@
       .stats{grid-template-columns:repeat(2,1fr)}
       .two-col{grid-template-columns:1fr}
 
-      /* Mobile/tablet: keep admin tools as the final sidebar sections */
+      /* Mobile only: keep login at top, move admin tools to the very bottom */
       .sidebar{
         display:flex;
         flex-direction:column;
       }
-      #authCard{order:1}
       #adminPanel{order:97}
       #addUmpireCard{order:98}
       #addFixtureCard{order:99}
@@ -213,7 +212,8 @@
         min-width:0;
       }
       .fixture-head .tag{
-        flex-shrink:0;
+        flex:1 1 0;
+        min-width:0;
         font-size:10px;
         padding:6px 6px;
         line-height:1.2;
@@ -221,7 +221,6 @@
         white-space:normal;
         word-break:break-word;
         overflow-wrap:anywhere;
-        max-width:72px;
       }
       .fixture-title{font-size:16px;line-height:1.25}
       .meta{
