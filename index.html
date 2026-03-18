@@ -1405,7 +1405,7 @@
                 <div class="fixture-title">${fixture.title}</div>
                 <div class="muted" style="margin-top:6px">${formatDate(fixture.date, fixture.time)}</div>
               </div>
-              <span class="tag ${effectiveStatus === 'Closed' ? 'unavailable' : effectiveStatus === 'Confirmed' ? 'available' : ''}">${effectiveStatus}</span>
+              <span class="tag ${effectiveStatus === 'Closed' ? 'unavailable' : effectiveStatus === 'Confirmed' ? 'available' : ''}">${displayStatus}</span>
             </div>
 
             <div class="meta">
