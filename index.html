@@ -107,6 +107,14 @@
     .stat{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff}
     .stat b{display:block;font-size:26px;margin-top:4px}
     .list{display:grid;gap:14px}
+    .fixture-scroll{
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      max-width:100%;
+    }
+    .fixture-scroll > .fixture{
+      min-width:640px;
+    }
     .fixture{
       border:1px solid var(--line);
       border-radius:18px;
@@ -171,6 +179,14 @@
       header{padding:18px 12px}
       main{padding:12px 12px 24px}
       .card{padding:10px;border-radius:16px}
+      .fixture-scroll{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        max-width:100%;
+      }
+      .fixture-scroll > .fixture{
+        min-width:640px;
+      }
       .fixture{padding:12px}
       .topbar{align-items:flex-start;margin-bottom:12px}
       .topbar .btn{width:100%}
@@ -1177,7 +1193,7 @@
           : '';
 
         return `
-          <div class="fixture ${fixtureIsClosed ? 'closed-fixture' : ''}">
+          <div class="fixture-scroll"><div class="fixture ${fixtureIsClosed ? 'closed-fixture' : ''}">
             <div class="fixture-head">
               <div>
                 <div class="fixture-title">${fixture.title}</div>
@@ -1233,7 +1249,7 @@
               </div>
               ${view === 'admin' ? `<button class="btn btn-danger" onclick="deleteFixture('${fixture.id}')">Delete fixture</button>` : ''}
             </div>
-          </div>
+          </div></div>
         `;
       }).join('');
     }
