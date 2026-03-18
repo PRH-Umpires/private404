@@ -770,9 +770,9 @@ const { data: inserted, error: insertError } = await supabaseClient
       }
 
       currentProfile = await ensureProfile(currentUser);
-      const role = currentProfile?.role === 'admin' ? 'admin' : 'umpire';
-      els.viewMode.value = role;
-      els.currentRole.textContent = role;
+      const role = isAdmin() ? 'admin' : 'umpire';
+els.viewMode.value = role;
+els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
       updateHeaderUserBanner();
     }
 
