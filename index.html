@@ -1229,14 +1229,16 @@
 
       availabilitySaveInFlight = true;
 
-      const existing = state.availability.find(
+      const previousState = state.availability.map(row => ({ ...row }));
+      const existingIndex = state.availability.findIndex(
         r => String(r.fixtureId) === safeFixtureId && String(r.umpireId) === safeUmpireId
       );
 
-      const previousState = state.availability.map(row => ({ ...row }));
-
-      if (existing) {
-        existing.status = status;
+      if (existingIndex >= 0) {
+        state.availability[existingIndex] = {
+          ...state.availability[existingIndex],
+          status
+        };
       } else {
         state.availability.push({
           id: `temp-${Date.now()}`,
@@ -1248,25 +1250,13 @@
 
       render();
 
-      let error = null;
-
-      if (existing) {
-        const result = await supabaseClient
-          .from("availability")
-          .update({ status })
-          .eq("fixture_id", safeFixtureId)
-          .eq("umpire_id", safeUmpireId);
-        error = result.error;
-      } else {
-        const result = await supabaseClient
-          .from("availability")
-          .upsert([{
-            umpire_id: safeUmpireId,
-            fixture_id: safeFixtureId,
-            status
-          }], { onConflict: 'fixture_id,umpire_id' });
-        error = result.error;
-      }
+      const { error } = await supabaseClient
+        .from("availability")
+        .upsert([{
+          umpire_id: safeUmpireId,
+          fixture_id: safeFixtureId,
+          status
+        }], { onConflict: 'fixture_id,umpire_id' });
 
       if (error) {
         state.availability = previousState;
@@ -1572,18 +1562,6 @@
       renderFixtures();
       renderOverview();
     }
-
-    document.addEventListener('click', async (e) => {
-      const btn = e.target.closest('[data-availability-fixture][data-availability-status][data-availability-umpire]');
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-      const fixtureId = btn.getAttribute('data-availability-fixture');
-      const umpireId = btn.getAttribute('data-availability-umpire');
-      const status = btn.getAttribute('data-availability-status');
-      if (!fixtureId || !umpireId || !status || btn.disabled) return;
-      await setAvailability(fixtureId, umpireId, status);
-    }, true);
 
     setInterval(() => {
       render();
