@@ -1372,6 +1372,7 @@
         const effectiveStatus = getEffectiveFixtureStatus(fixture);
         const fixtureIsClosed = effectiveStatus === 'Closed';
         const fixtureIsFull = counts.assigned >= Number(fixture.umpiresNeeded || 2);
+        const displayStatus = effectiveStatus === 'Confirmed' ? 'Match Ready' : effectiveStatus;
 
         const candidateRows = view === 'admin'
           ? state.umpires.map(u => {
