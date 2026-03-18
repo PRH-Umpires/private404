@@ -138,7 +138,7 @@
       font-weight:700;
     }
     .availability-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:5}
-    .availability-btn{flex:1 1 140px;position:relative;z-index:6;pointer-events:auto;touch-action:manipulation;-webkit-appearance:none;appearance:none}
+    .availability-btn{flex:1 1 140px;position:relative;z-index:6;pointer-events:auto}
     .available{background:#dcfce7;color:var(--good)}
     .maybe{background:#fef3c7;color:var(--warn)}
     .unavailable{background:#fee2e2;color:var(--bad)}
@@ -1202,23 +1202,51 @@
       alert("Fixture saved");
     }
 
-    async function setAvailability(fixtureId, umpireId, status) {
-      if (!fixtureId || !umpireId) return;
+    let availabilitySaveInFlight = false;
 
-      const fixture = state.fixtures.find(f => String(f.id) === String(fixtureId));
+    async function setAvailability(fixtureId, umpireId, status) {
+      if (!fixtureId || !umpireId || !status) return;
+      if (availabilitySaveInFlight) return;
+
+      const safeFixtureId = String(fixtureId);
+      const safeUmpireId = String(umpireId);
+
+      const fixture = state.fixtures.find(f => String(f.id) === safeFixtureId);
       if (fixture && isFixtureClosed(fixture)) {
         alert('This fixture is closed because the fixture date and time have passed.');
         return;
       }
 
-      if (currentUser && !isAdmin() && String(currentUser.id) !== String(umpireId)) {
+      if (!currentUser) {
+        alert('Please sign in first.');
+        return;
+      }
+
+      if (!isAdmin() && String(currentUser.id) !== safeUmpireId) {
         alert('You can only update your own availability.');
         return;
       }
 
+      availabilitySaveInFlight = true;
+
       const existing = state.availability.find(
-        r => String(r.fixtureId) === String(fixtureId) && String(r.umpireId) === String(umpireId)
+        r => String(r.fixtureId) === safeFixtureId && String(r.umpireId) === safeUmpireId
       );
+
+      const previousState = state.availability.map(row => ({ ...row }));
+
+      if (existing) {
+        existing.status = status;
+      } else {
+        state.availability.push({
+          id: `temp-${Date.now()}`,
+          umpireId: safeUmpireId,
+          fixtureId: safeFixtureId,
+          status
+        });
+      }
+
+      render();
 
       let error = null;
 
@@ -1226,26 +1254,39 @@
         const result = await supabaseClient
           .from("availability")
           .update({ status })
-          .eq("id", existing.id);
+          .eq("fixture_id", safeFixtureId)
+          .eq("umpire_id", safeUmpireId);
         error = result.error;
       } else {
         const result = await supabaseClient
           .from("availability")
-          .insert([{
-            umpire_id: umpireId,
-            fixture_id: fixtureId,
+          .upsert([{
+            umpire_id: safeUmpireId,
+            fixture_id: safeFixtureId,
             status
-          }]);
+          }], { onConflict: 'fixture_id,umpire_id' });
         error = result.error;
       }
 
       if (error) {
+        state.availability = previousState;
+        render();
         console.error("Error saving availability:", error);
         alert(error.message || "Error saving availability");
+        availabilitySaveInFlight = false;
         return;
       }
 
       await syncStateFromSupabase();
+      availabilitySaveInFlight = false;
+    }
+
+    async function handleAvailabilityClick(event, fixtureId, umpireId, status) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      await setAvailability(fixtureId, umpireId, status);
     }
 
     async function assignUmpire(fixtureId, umpireId) {
@@ -1457,9 +1498,9 @@
 
             ${view === 'umpire' ? `
               <div class="availability-row">
-                <button type="button" class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Available" onclick="setAvailability('${fixture.id}','${umpireId}','Available'); return false;" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Available</button>
-                <button type="button" class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Maybe" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe'); return false;" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Maybe</button>
-                <button type="button" class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Unavailable" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable'); return false;" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Unavailable</button>
+                <button type="button" class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="handleAvailabilityClick(event, '${fixture.id}', '${umpireId}', 'Available')" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Available" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Available</button>
+                <button type="button" class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="handleAvailabilityClick(event, '${fixture.id}', '${umpireId}', 'Maybe')" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Maybe" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Maybe</button>
+                <button type="button" class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="handleAvailabilityClick(event, '${fixture.id}', '${umpireId}', 'Unavailable')" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Unavailable" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Unavailable</button>
               </div>
               ${!canRespond ? `<div class="notice danger-note" style="margin-top:14px">Your account is signed in, but it is not linked to an umpire profile yet.</div>` : ''}
               ${fixtureIsClosed ? `<div class="notice danger-note" style="margin-top:14px">This fixture is closed because the fixture date and time have passed.</div>` : ''}
@@ -1549,6 +1590,7 @@
     }, 30000);
 
     window.setAvailability = setAvailability;
+    window.handleAvailabilityClick = handleAvailabilityClick;
     window.assignUmpire = assignUmpire;
     window.unassignUmpire = unassignUmpire;
     window.deleteFixture = deleteFixture;
