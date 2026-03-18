@@ -137,8 +137,8 @@
       font-size:12px;
       font-weight:700;
     }
-    .availability-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .availability-btn{flex:1 1 140px}
+    .availability-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:5}
+    .availability-btn{flex:1 1 140px;position:relative;z-index:6;pointer-events:auto}
     .available{background:#dcfce7;color:var(--good)}
     .maybe{background:#fef3c7;color:var(--warn)}
     .unavailable{background:#fee2e2;color:var(--bad)}
@@ -1457,9 +1457,9 @@
 
             ${view === 'umpire' ? `
               <div class="availability-row">
-                <button class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Available')" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Available</button>
-                <button class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Maybe')" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Maybe</button>
-                <button class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" onclick="setAvailability('${fixture.id}','${umpireId}','Unavailable')" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Unavailable</button>
+                <button type="button" class="btn availability-btn ${myResponse?.status === 'Available' ? 'available' : 'btn-ghost'}" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Available" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Available</button>
+                <button type="button" class="btn availability-btn ${myResponse?.status === 'Maybe' ? 'maybe' : 'btn-ghost'}" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Maybe" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Maybe</button>
+                <button type="button" class="btn availability-btn ${myResponse?.status === 'Unavailable' ? 'unavailable' : 'btn-ghost'}" data-availability-fixture="${fixture.id}" data-availability-umpire="${umpireId}" data-availability-status="Unavailable" ${(fixtureIsClosed || !canRespond) ? 'disabled' : ''}>Unavailable</button>
               </div>
               ${!canRespond ? `<div class="notice danger-note" style="margin-top:14px">Your account is signed in, but it is not linked to an umpire profile yet.</div>` : ''}
               ${fixtureIsClosed ? `<div class="notice danger-note" style="margin-top:14px">This fixture is closed because the fixture date and time have passed.</div>` : ''}
@@ -1531,6 +1531,18 @@
       renderFixtures();
       renderOverview();
     }
+
+    document.addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-availability-fixture][data-availability-status][data-availability-umpire]');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const fixtureId = btn.getAttribute('data-availability-fixture');
+      const umpireId = btn.getAttribute('data-availability-umpire');
+      const status = btn.getAttribute('data-availability-status');
+      if (!fixtureId || !umpireId || !status || btn.disabled) return;
+      await setAvailability(fixtureId, umpireId, status);
+    }, true);
 
     setInterval(() => {
       render();
