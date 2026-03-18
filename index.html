@@ -137,6 +137,10 @@
       font-size:12px;
       font-weight:700;
     }
+    .status-confirmed{
+      background:#dcfce7;
+      color:var(--good);
+    }
     .availability-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .availability-btn{flex:1 1 140px}
     .available{background:#dcfce7;color:var(--good)}
@@ -1445,7 +1449,7 @@
                 <div class="fixture-title">${fixture.title}</div>
                 <div class="muted" style="margin-top:6px">${formatDate(fixture.date, fixture.time)}</div>
               </div>
-              <span class="tag ${effectiveStatus === 'Closed' ? 'unavailable' : ''}">${effectiveStatus}</span>
+              <span class="tag ${effectiveStatus === 'Closed' ? 'unavailable' : effectiveStatus === 'Confirmed' ? 'status-confirmed' : ''}">${effectiveStatus}</span>
             </div>
 
             <div class="meta">
