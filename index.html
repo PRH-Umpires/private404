@@ -1541,7 +1541,6 @@
     function renderAdminCards() {
       const admin = isAdmin();
       els.adminPanel.classList.toggle('hidden', !admin);
-      els.addUmpireCard.classList.add('hidden');
       els.addFixtureCard.classList.toggle('hidden', !admin);
       els.dashboardText.textContent = admin
         ? 'Add fixtures, manage availability, and assign umpires.'
