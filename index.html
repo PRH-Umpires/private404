@@ -1061,15 +1061,15 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
 }));
 
       state.umpires = state.profiles
-        .filter(row => row.role === 'umpire')
-        .map(row => ({
-          id: String(row.id),
-          name: displayNameFromProfile(row),
-          level: "",
-          area: "",
-          email: row.email || "",
-          auth_user_id: String(row.id)
-        }));
+  .filter(row => hasRole(row, 'umpire'))
+  .map(row => ({
+    id: String(row.id),
+    name: displayNameFromProfile(row),
+    level: "",
+    area: "",
+    email: row.email || "",
+    auth_user_id: String(row.id)
+  }));
 
       state.fixtures = fixtureRows.map(row => ({
         id: String(row.id),
