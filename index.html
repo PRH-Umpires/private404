@@ -140,7 +140,6 @@
     .availability-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .availability-btn{flex:1 1 140px}
     .available{background:#dcfce7;color:var(--good)}
-    .fixture-head .tag.available{background:#dcfce7 !important;color:var(--good) !important;}
     .maybe{background:#fef3c7;color:var(--warn)}
     .unavailable{background:#fee2e2;color:var(--bad)}
     .fixture-footer{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:14px}
@@ -461,25 +460,7 @@
       object-fit:contain;
     }
 
-
-    .install-btn{
-      background:#facc15;
-      color:#111827;
-      border:1px solid rgba(255,255,255,.2);
-      box-shadow:0 8px 20px rgba(0,0,0,.18);
-    }
-    .install-btn.hidden{
-      display:none !important;
-    }
-
 </style>
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1d4ed8">
-  <link rel="apple-touch-icon" href="Phoenix logo.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
 </head>
 <body>
   <header>
@@ -494,7 +475,6 @@
       </div>
       <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       <div class="hero-actions">
-      <button type="button" class="btn install-btn hidden" id="installBtn">Install App</button>
       <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.22);padding:10px 14px;border-radius:999px;margin-right:auto">Log out</button>
       <div class="pill hidden" id="userBannerInfo"></div>
       </div>
@@ -708,7 +688,6 @@
       signupBtn: document.getElementById('signupBtn'),
       resetPasswordBtn: document.getElementById('resetPasswordBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
-      installBtn: document.getElementById('installBtn'),
       authButtons: document.getElementById('authButtons'),
       authStatus: document.getElementById('authStatus'),
       userBannerInfo: document.getElementById('userBannerInfo')
@@ -1446,7 +1425,7 @@
                 <div class="fixture-title">${fixture.title}</div>
                 <div class="muted" style="margin-top:6px">${formatDate(fixture.date, fixture.time)}</div>
               </div>
-              <span class="tag ${effectiveStatus === 'Closed' ? 'unavailable' : effectiveStatus === 'Confirmed' ? 'available' : ''}">${effectiveStatus}</span>
+              <span class="tag ${effectiveStatus === 'Closed' ? 'unavailable' : ''}">${effectiveStatus}</span>
             </div>
 
             <div class="meta">
@@ -1601,42 +1580,6 @@
         }
       }, 0);
     });
-
-
-    let deferredInstallPrompt = null;
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredInstallPrompt = e;
-      if (els.installBtn) els.installBtn.classList.remove('hidden');
-    });
-
-    if (els.installBtn) {
-      els.installBtn.addEventListener('click', async () => {
-        if (!deferredInstallPrompt) {
-          alert('On iPhone: tap Share, then Add to Home Screen. On Android/Chrome: use the install option in the browser menu if shown.');
-          return;
-        }
-        deferredInstallPrompt.prompt();
-        await deferredInstallPrompt.userChoice;
-        deferredInstallPrompt = null;
-        els.installBtn.classList.add('hidden');
-      });
-    }
-
-    window.addEventListener('appinstalled', () => {
-      deferredInstallPrompt = null;
-      if (els.installBtn) els.installBtn.classList.add('hidden');
-    });
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => {
-          console.error('Service worker registration failed:', err);
-        });
-      });
-    }
-
 
     (async function initApp() {
       await syncStateFromSupabase();
