@@ -249,6 +249,27 @@
         margin-left:auto;
         text-align:center;
       }
+
+      .brand-lockup{
+        gap:10px;
+      }
+      .brand-icon{
+        width:50px;
+        height:50px;
+        border-radius:14px;
+        font-size:16px;
+      }
+      .brand-title{
+        font-size:26px;
+      }
+      .brand-subtitle{
+        font-size:13px;
+      }
+      .brand-badge{
+        font-size:10px;
+        padding:5px 9px;
+      }
+
       /* Hero tighter */
       .hero{gap:12px}
       .hero h1{font-size:24px;line-height:1.15}
@@ -371,16 +392,75 @@
       }
     }
 
+
+    .brand-lockup{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .brand-icon{
+      width:58px;
+      height:58px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      letter-spacing:.08em;
+      font-size:18px;
+      color:#fff;
+      background:linear-gradient(135deg, rgba(255,255,255,.28), rgba(255,255,255,.10));
+      border:1px solid rgba(255,255,255,.24);
+      box-shadow:0 10px 22px rgba(0,0,0,.18);
+      backdrop-filter:blur(6px);
+      flex-shrink:0;
+    }
+    .brand-text{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .brand-badge{
+      display:inline-flex;
+      align-items:center;
+      width:fit-content;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .brand-title{
+      font-size:34px;
+      line-height:1.05;
+      font-weight:800;
+      letter-spacing:-.03em;
+      margin:0;
+    }
+    .brand-subtitle{
+      font-size:14px;
+      opacity:.9;
+      margin:0;
+    }
+
 </style>
 </head>
 <body>
   <header>
     <div class="wrap hero">
-      <div>
-        <h1>PRH Umply App</h1>
-        <p style="font-size:14px;opacity:.85;margin-top:6px;">Umpire Availability Manager</p>
-        <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
+      <div class="brand-lockup">
+        <div class="brand-icon">PU</div>
+        <div class="brand-text">
+          <span class="brand-badge">PRH Official App</span>
+          <h1 class="brand-title">PRH Umply App</h1>
+          <p class="brand-subtitle">Umpire Availability Manager</p>
+        </div>
       </div>
+      <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       <div class="hero-actions">
       <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.22);padding:10px 14px;border-radius:999px;margin-right:auto">Log out</button>
       <div class="pill hidden" id="userBannerInfo"></div>
