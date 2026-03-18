@@ -194,6 +194,22 @@
       .section-title select{max-width:none !important;width:100%}
       .fixture-head{flex-direction:column;align-items:flex-start}
       .fixture-title{font-size:16px;line-height:1.25}
+
+      /* Keep status badge on right on mobile */
+      .fixture-head{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        flex-wrap:nowrap;
+      }
+      .fixture-head > div{
+        flex:1;
+        min-width:0;
+      }
+      .fixture-head .tag{
+        flex-shrink:0;
+      }
+
       .meta{
         gap:6px;
         display:grid;
