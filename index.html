@@ -524,27 +524,17 @@
 
         <div class="card" id="addUmpireCard">
           <div class="section-title">
-            <h3>Enable Umpire | Admin</h3>
+            <h3>Enable Umpire</h3>
           </div>
           <label for="umpireName">Display name (optional)</label>
           <input id="umpireName" placeholder="e.g. Sarah Jones" />
-
           <label for="umpireEmail">User email</label>
           <input id="umpireEmail" type="email" placeholder="e.g. sarah@example.com" />
-
-          <label for="roleSelect">Role assignment</label>
-          <select id="roleSelect">
-            <option value="umpire">Umpire</option>
-            <option value="admin">Admin</option>
-          </select>
-
           <label for="umpireLevel">Grade / Level</label>
           <input id="umpireLevel" placeholder="e.g. Level 2" />
-
           <label for="umpireArea">Area / Base</label>
           <input id="umpireArea" placeholder="e.g. Reading" />
-
-          <button type="button" class="btn btn-primary" id="saveUmpireSupabaseBtn" style="margin-top:14px;width:100%">Save role</button>
+          <button type="button" class="btn btn-primary" id="saveUmpireSupabaseBtn" style="margin-top:14px;width:100%">Enable umpire</button>
         </div>
 
         <div class="card" id="addFixtureCard">
@@ -670,7 +660,6 @@
       addFixtureCard: document.getElementById('addFixtureCard'),
       umpireName: document.getElementById('umpireName'),
       umpireEmail: document.getElementById('umpireEmail'),
-      roleSelect: document.getElementById('roleSelect'),
       umpireLevel: document.getElementById('umpireLevel'),
       umpireArea: document.getElementById('umpireArea'),
       addUmpireBtn: document.getElementById('saveUmpireSupabaseBtn'),
@@ -949,8 +938,8 @@
         }
 
         setAuthBusy(false);
-        els.authStatus.textContent = 'Account created. New users are added as umpires by default.';
-        alert('Account created. New users are added as umpires by default.');
+        els.authStatus.textContent = 'Account created. New users are added as umpires by default. Change the role in Supabase profiles if needed.';
+        alert('Account created. New users are added as umpires by default. Change the role in Supabase profiles if needed.');
         els.loginPassword.value = '';
       } catch (err) {
         console.error('SIGNUP CATCH ERROR:', err);
@@ -1113,12 +1102,11 @@
 
     async function addUmpire() {
       if (!isAdmin()) {
-        alert('Only admins can change user roles.');
+        alert('Only admins can enable umpires.');
         return;
       }
 
       const email = els.umpireEmail.value.trim().toLowerCase();
-      const selectedRole = (els.roleSelect?.value || 'umpire').trim().toLowerCase();
 
       if (!email) {
         alert('Please enter the user email.');
@@ -1138,22 +1126,18 @@
       }
 
       if (!profile) {
-        alert('That user needs to create an account first. Once they sign up, enter the same email here to assign their role.');
+        alert('That user needs to create an account first. Once they sign up, enter the same email here to enable umpire access.');
         return;
       }
 
-      const updates = {
-        role: selectedRole
-      };
-
       const { error } = await supabaseClient
         .from('profiles')
-        .update(updates)
+        .update({ role: 'umpire' })
         .eq('id', profile.id);
 
       if (error) {
-        console.error('Error updating role:', error);
-        alert(error.message || 'Error updating role');
+        console.error("Error enabling umpire:", error);
+        alert(error.message || "Error enabling umpire");
         return;
       }
 
@@ -1161,11 +1145,10 @@
       els.umpireEmail.value = '';
       els.umpireLevel.value = '';
       els.umpireArea.value = '';
-      if (els.roleSelect) els.roleSelect.value = 'umpire';
 
       await syncStateFromSupabase();
       await syncLoggedInUmpire();
-      alert(`Role updated to ${selectedRole === 'admin' ? 'Admin' : 'Umpire'}.`);
+      alert("Umpire enabled");
     }
 
     async function addFixture() {
