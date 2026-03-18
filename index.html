@@ -504,6 +504,36 @@
   }
 }
 
+
+/* Make Add Fixture date/time inputs match normal field sizing */
+#addFixtureCard input[type="date"],
+#addFixtureCard input[type="time"]{
+  min-height:56px;
+  height:56px;
+  padding:0 14px;
+  line-height:56px;
+  font-size:16px;
+  background:#fff;
+  color:var(--text);
+}
+
+#addFixtureCard input[type="date"]::-webkit-date-and-time-value,
+#addFixtureCard input[type="time"]::-webkit-date-and-time-value{
+  text-align:left;
+}
+
+@media (max-width: 560px){
+  #addFixtureCard input[type="date"],
+  #addFixtureCard input[type="time"]{
+    min-height:52px !important;
+    height:52px !important;
+    padding:0 14px !important;
+    line-height:52px !important;
+    font-size:16px !important;
+    border-radius:12px !important;
+  }
+}
+
 </style>
 </head>
 <body>
