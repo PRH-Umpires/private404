@@ -1381,7 +1381,7 @@ els.currentRole.textContent = getProfileRoles(currentProfile).join(',');
       const view = currentView();
       const umpireId = currentUmpireId();
       const fixtures = filteredFixtures();
-      const canRespond = view === 'umpire' && !!umpireId;
+      const canRespond = !!currentUser && isUmpire() && !!umpireId;
 
       if (!fixtures.length) {
         els.fixtureList.innerHTML = `<div class="notice">No fixtures to show yet.</div>`;
