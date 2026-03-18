@@ -363,7 +363,10 @@
         <h1>Umpire Availability Manager</h1>
         <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end">
+      <div class="pill hidden" id="userBannerInfo"></div>
       <div class="pill">Single-file app · cloud synced</div>
+      </div>
     </div>
   </header>
 
@@ -581,8 +584,34 @@
       resetPasswordBtn: document.getElementById('resetPasswordBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
       authButtons: document.getElementById('authButtons'),
-      authStatus: document.getElementById('authStatus')
+      authStatus: document.getElementById('authStatus'),
+      userBannerInfo: document.getElementById('userBannerInfo')
     };
+
+    function getFirstNameFromProfile(profile) {
+      const source = (profile?.name || profile?.full_name || profile?.display_name || displayNameFromProfile(profile) || '').trim();
+      if (!source) return 'User';
+      return source.split(/\s+/)[0];
+    }
+
+    function formatRoleLabel(role) {
+      return role === 'admin' ? 'Admin' : 'Umpire';
+    }
+
+    function updateHeaderUserBanner() {
+      if (!els.userBannerInfo) return;
+
+      if (!currentUser || !currentProfile) {
+        els.userBannerInfo.textContent = '';
+        els.userBannerInfo.classList.add('hidden');
+        return;
+      }
+
+      const firstName = getFirstNameFromProfile(currentProfile);
+      const roleLabel = formatRoleLabel(currentProfile?.role);
+      els.userBannerInfo.textContent = `${firstName} | ${roleLabel}`;
+      els.userBannerInfo.classList.remove('hidden');
+    }
 
     function isAdmin() {
       return currentProfile?.role === 'admin';
@@ -635,6 +664,7 @@
         currentProfile = null;
         els.currentRole.textContent = 'Not signed in';
         els.viewMode.value = 'umpire';
+        updateHeaderUserBanner();
         return;
       }
 
@@ -642,6 +672,7 @@
       const role = currentProfile?.role === 'admin' ? 'admin' : 'umpire';
       els.viewMode.value = role;
       els.currentRole.textContent = role;
+      updateHeaderUserBanner();
     }
 
     function currentView() {
@@ -852,6 +883,7 @@
       els.viewMode.value = 'umpire';
       els.loginPassword.value = '';
       els.umpireSelect.innerHTML = '<option value="">No umpires yet</option>';
+      updateHeaderUserBanner();
       render();
     }
 
@@ -872,6 +904,7 @@
         els.currentRole.textContent = 'Not signed in';
         els.viewMode.value = 'umpire';
         els.loginPassword.value = '';
+        updateHeaderUserBanner();
         return;
       }
 
@@ -888,6 +921,8 @@
       if (umpire) {
         els.umpireSelect.value = String(umpire.id);
       }
+
+      updateHeaderUserBanner();
     }
 
     async function syncStateFromSupabase() {
