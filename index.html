@@ -399,12 +399,7 @@
           <label>Role</label>
           <div id="currentRole" style="padding:12px 13px;border:1px solid #d1d5db;border-radius:12px;background:#fff;text-transform:capitalize;">Not signed in</div>
           <input id="viewMode" type="hidden" value="umpire" />
-
-          <div id="umpireLoginArea">
-            <label for="umpireSelect">Choose your name</label>
-            <select id="umpireSelect"></select>
-            <div class="small muted" style="margin-top:8px">Tip: users must create an account first. Admins can then mark them as umpire by email.</div>
-          </div>
+          <select id="umpireSelect" class="hidden" aria-hidden="true" tabindex="-1"></select>
         </div>
 
         <div class="card" id="adminPanel">
@@ -552,7 +547,6 @@
       viewMode: document.getElementById('viewMode'),
       currentRole: document.getElementById('currentRole'),
       umpireSelect: document.getElementById('umpireSelect'),
-      umpireLoginArea: document.getElementById('umpireLoginArea'),
       adminPanel: document.getElementById('adminPanel'),
       addUmpireCard: document.getElementById('addUmpireCard'),
       addFixtureCard: document.getElementById('addFixtureCard'),
@@ -1212,10 +1206,12 @@
         ? state.umpires.map(u => `<option value="${u.id}">${u.name}${u.email ? ' · ' + u.email : ''}</option>`).join('')
         : '<option value="">No umpires yet</option>';
 
-      if (state.umpires.some(u => String(u.id) === String(current))) {
-        els.umpireSelect.value = current;
-      } else if (currentUser && state.umpires.some(u => String(u.id) === String(currentUser.id))) {
+      if (currentUser && state.umpires.some(u => String(u.id) === String(currentUser.id))) {
         els.umpireSelect.value = String(currentUser.id);
+      } else if (state.umpires.some(u => String(u.id) === String(current))) {
+        els.umpireSelect.value = current;
+      } else {
+        els.umpireSelect.value = '';
       }
     }
 
@@ -1364,10 +1360,9 @@
       els.adminPanel.classList.toggle('hidden', !admin);
       els.addUmpireCard.classList.toggle('hidden', !admin);
       els.addFixtureCard.classList.toggle('hidden', !admin);
-      els.umpireLoginArea.classList.toggle('hidden', admin);
       els.dashboardText.textContent = admin
         ? 'Add fixtures, manage availability, and assign umpires.'
-        : 'Choose your name and update your availability for each fixture.';
+        : 'Update your availability for each fixture.';
     }
 
     function render() {
