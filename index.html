@@ -740,13 +740,34 @@
       const isDualRole = !!currentUser && isAdmin() && isUmpire();
       els.viewToggle.classList.toggle('hidden', !isDualRole);
     }
+function updateActiveViewButton() {
+  const adminBtn = document.getElementById('adminViewBtn');
+  const umpireBtn = document.getElementById('umpireViewBtn');
 
-    function updateActiveViewButton() {
-      if (!els.adminViewBtn || !els.umpireViewBtn) return;
-      els.adminViewBtn.classList.toggle('active-view', currentView() === 'admin');
-      els.umpireViewBtn.classList.toggle('active-view', currentView() === 'umpire');
-    }
+  if (!adminBtn || !umpireBtn) return;
 
+  const activeStyle = {
+    background: '#ffffff',
+    color: '#1f2937',
+    fontWeight: '700',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+  };
+
+  const inactiveStyle = {
+    background: 'rgba(255,255,255,0.15)',
+    color: '#ffffff',
+    fontWeight: '500',
+    boxShadow: 'none'
+  };
+
+  if (currentView() === 'admin') {
+    Object.assign(adminBtn.style, activeStyle);
+    Object.assign(umpireBtn.style, inactiveStyle);
+  } else {
+    Object.assign(umpireBtn.style, activeStyle);
+    Object.assign(adminBtn.style, inactiveStyle);
+  }
+}
     function displayNameFromProfile(profile) {
       if (!profile) return 'Unknown umpire';
       const email = (profile.email || '').trim();
