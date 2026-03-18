@@ -172,9 +172,27 @@
     @media (max-width: 560px){
       .wrap{max-width:100%;width:100%}
       .grid{grid-template-columns:1fr;gap:14px}
-      .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-      .stat{padding:10px;min-width:0;border-radius:14px}
-      .stat b{font-size:20px;margin-top:2px}
+      .stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:12px;
+        align-items:stretch;
+        margin-top:14px;
+      }
+      .stat{
+        padding:14px;
+        min-width:0;
+        min-height:108px;
+        border-radius:18px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+      }
+      .stat .muted{
+        display:block;
+        font-size:13px;
+        line-height:1.2;
+      }
+      .stat b{font-size:24px;margin-top:8px;line-height:1}
       .auth-actions{grid-template-columns:1fr}
       header{padding:18px 12px}
       main{padding:12px 12px 24px}
@@ -320,7 +338,14 @@
       #addFixtureCard{order:8 !important;}
 
       /* Keep stats under Dashboard on mobile */
-      #statsRow{order:3 !important; margin-top:-4px !important; margin-bottom:0 !important;}
+      #statsRow{
+        order:3 !important;
+        margin-top:12px !important;
+        margin-bottom:0 !important;
+      }
+      #dashboardCard{
+        margin-bottom:0 !important;
+      }
       #dashboardText{display:block;}
 
       /* Status button/tag same sizing treatment as venue/league/need/assigned */
