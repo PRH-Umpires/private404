@@ -354,14 +354,28 @@
     }
 
 
-/* Mobile logout button left + wrap */
+/* Hero logout button */
+#logoutBtn{
+  width:auto !important;
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  white-space:nowrap;
+  margin-top:0 !important;
+}
+
 @media (max-width: 768px){
-  .logout-btn{
-    width: auto !important;
-    align-self: flex-start !important;
-    display: inline-block !important;
-    white-space: normal !important;
-    padding: 10px 16px !important;
+  .hero-actions{
+    width:100%;
+    justify-content:flex-start !important;
+  }
+  #logoutBtn{
+    width:auto !important;
+    max-width:100%;
+    align-self:flex-start !important;
+    white-space:normal !important;
+    text-align:center;
+    padding:10px 16px !important;
   }
 }
 
@@ -374,8 +388,9 @@
         <h1>Umpire Availability Manager</h1>
         <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end">
+      <div class="hero-actions" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end">
       <div class="pill hidden" id="userBannerInfo"></div>
+      <button type="button" class="btn btn-ghost hidden" id="logoutBtn">Log out</button>
       <div class="pill">Single-file app · cloud synced</div>
       </div>
     </div>
@@ -401,7 +416,6 @@
   </div>
 
   <button type="button" class="btn btn-ghost" id="resetPasswordBtn" style="margin-top:10px;width:100%">Send password reset email</button>
-  <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="margin-top:10px;width:100%">Log out</button>
 
   <div class="small muted auth-helper" id="authStatus">Sign in to manage your availability.</div>
 </div>
