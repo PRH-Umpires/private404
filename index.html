@@ -674,28 +674,48 @@
       return source.split(/\s+/)[0];
     }
 
-    function formatRoleLabel(role) {
-      return role === 'admin' ? 'Admin' : 'Umpire';
-    }
+    function getProfileRoles(profile) {
+  if (!profile) return [];
+  if (Array.isArray(profile.roles) && profile.roles.length) return profile.roles;
+  if (typeof profile.roles === 'string' && profile.roles.trim()) return [profile.roles.trim()];
+  if (profile.role) return [profile.role];
+  return ['umpire'];
+}
 
-    function updateHeaderUserBanner() {
-      if (!els.userBannerInfo) return;
+function hasRole(profile, roleName) {
+  return getProfileRoles(profile).includes(roleName);
+}
 
-      if (!currentUser || !currentProfile) {
-        els.userBannerInfo.textContent = '';
-        els.userBannerInfo.classList.add('hidden');
-        return;
-      }
+function formatRoleLabel(role) {
+  return role === 'admin' ? 'Admin' : 'Umpire';
+}
 
-      const firstName = getFirstNameFromProfile(currentProfile);
-      const roleLabel = formatRoleLabel(currentProfile?.role);
-      els.userBannerInfo.textContent = `${firstName} | ${roleLabel}`;
-      els.userBannerInfo.classList.remove('hidden');
-    }
+function formatRoleLabels(profile) {
+  return getProfileRoles(profile).map(formatRoleLabel).join(' / ');
+}
 
-    function isAdmin() {
-      return currentProfile?.role === 'admin';
-    }
+function updateHeaderUserBanner() {
+  if (!els.userBannerInfo) return;
+
+  if (!currentUser || !currentProfile) {
+    els.userBannerInfo.textContent = '';
+    els.userBannerInfo.classList.add('hidden');
+    return;
+  }
+
+  const firstName = getFirstNameFromProfile(currentProfile);
+  const roleLabel = formatRoleLabels(currentProfile);
+  els.userBannerInfo.textContent = `${firstName} | ${roleLabel}`;
+  els.userBannerInfo.classList.remove('hidden');
+}
+
+function isAdmin() {
+  return hasRole(currentProfile, 'admin');
+}
+
+function isUmpire() {
+  return hasRole(currentProfile, 'umpire');
+}
 
     function displayNameFromProfile(profile) {
       if (!profile) return 'Unknown umpire';
