@@ -40,7 +40,6 @@
     h1,h2,h3,p{margin:0}
     .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
     .hero p{max-width:720px;opacity:.92;margin-top:8px;line-height:1.5}
-    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;width:100%}
     .pill{
       background:rgba(255,255,255,.15);
       border:1px solid rgba(255,255,255,.18);
@@ -232,23 +231,6 @@
       }
       .table-wrap table{min-width:640px}
 
-      .hero-actions{
-        width:100%;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        flex-wrap:nowrap;
-        gap:8px;
-      }
-      .hero-actions #logoutBtn,
-      .hero-actions #userBannerInfo{
-        width:auto;
-        max-width:none;
-      }
-      .hero-actions #userBannerInfo{
-        margin-left:auto;
-        text-align:center;
-      }
       /* Hero tighter */
       .hero{gap:12px}
       .hero h1{font-size:24px;line-height:1.15}
@@ -380,9 +362,10 @@
         <h1>Umpire Availability Manager</h1>
         <p>A simple app for fixtures, umpire availability, and match assignments. Umpires can manage their own availability. Admins can add games and assign officials.</p>
       </div>
-      <div class="hero-actions">
-      <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.22);padding:10px 14px;border-radius:999px;margin-right:auto">Log out</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end">
       <div class="pill hidden" id="userBannerInfo"></div>
+      <button type="button" class="btn btn-ghost hidden" id="logoutBtn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.22);padding:10px 14px;border-radius:999px">Log out</button>
+      <div class="pill">Single-file app · cloud synced</div>
       </div>
     </div>
   </header>
