@@ -24,18 +24,27 @@
         /* --- Header Section --- */
         .site-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            /* Changed from 40px to 10px to move title to the left */
-            padding: 20px 15px; 
+            justify-content: center; /* Centers the alignment container */
             background-color: #fff;
             color: var(--accent-color);
+            padding: 20px 0;
+        }
+
+        .header-content {
+            /* This width matches your main container (600px) + padding (80px) */
+            width: 680px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
         }
 
         .header-logo {
             font-family: 'Brush Script MT', cursive;
             font-size: 2.5rem;
             margin: 0;
+            /* Adjust this margin-left if you need it to move a few pixels more */
+            margin-left: 0; 
         }
 
         .mail-link {
@@ -211,30 +220,22 @@
             color: white;
         }
 
-        .btn-enter:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
         .btn-exit {
             background-color: transparent;
             color: #777;
             border: 1px solid #444;
-        }
-
-        .btn-exit:hover {
-            color: #fff;
-            border-color: #777;
         }
     </style>
 </head>
 <body>
 
     <header class="site-header">
-        <h1 class="header-logo">Mistress Deville</h1>
-        <a href="mailto:your-email@example.com" class="mail-link">
-            Mail me ✉
-        </a>
+        <div class="header-content">
+            <h1 class="header-logo">Mistress Deville</h1>
+            <a href="mailto:your-email@example.com" class="mail-link">
+                Mail me ✉
+            </a>
+        </div>
     </header>
 
     <nav>
