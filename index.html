@@ -21,13 +21,16 @@
             padding: 0;
         }
 
-        /* --- Updated Navigation with Dropdown --- */
+        /* --- Persistent Navigation with Dropdown --- */
         nav {
             background: #000;
             padding: 0;
             text-align: center;
             border-bottom: 1px solid #333;
             width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .nav-container {
@@ -205,19 +208,16 @@
 
     <nav>
         <div class="nav-container">
-            <a href="index.html" class="nav-link">Home</a>
+            <a href="index.html" class="nav-link" style="color: var(--accent-color);">Home</a>
             <a href="about.html" class="nav-link">About</a>
             <div class="dropdown">
                 <a href="sessions.html" class="dropbtn">Sessions ▼</a>
                 <div class="dropdown-content">
                     <a href="cp-judicial.html">CP, Judicial Punishments and OTK</a>
                     <a href="therapy-spanking.html">Therapy Spanking</a>
-                    <a href="#">Role Play (Coming Soon)</a>
+                    <a href="slaves.html">Role Play and Slaves</a>
                 </div>
             </div>
-            <a href="gifts.html" class="nav-link">Gifts</a>
-        </div>
-    </nav>
             <a href="gifts.html" class="nav-link">Gifts</a>
         </div>
     </nav>
