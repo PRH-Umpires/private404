@@ -45,6 +45,7 @@
             font-size: 2.8rem;
             color: var(--accent-color);
             text-decoration: none;
+            font-weight: normal;
         }
 
         .mail-link {
@@ -53,7 +54,10 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+            transition: color 0.3s;
         }
+
+        .mail-link:hover { color: var(--accent-color); }
 
         nav {
             background: #000;
@@ -64,7 +68,9 @@
             z-index: 1000;
         }
 
-        .nav-link {
+        .nav-container { display: flex; justify-content: center; }
+
+        .nav-link, .dropbtn {
             color: #888;
             text-decoration: none;
             padding: 20px 25px;
@@ -72,24 +78,59 @@
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 3px;
+            transition: all 0.4s;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
-        .nav-link:hover { color: #fff; }
+        .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
 
-        /* --- Content Layout --- */
+        /* Dropdown Logic */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #111;
+            min-width: 280px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .dropdown-content a {
+            color: #888;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .dropdown-content a:hover {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        .dropdown:hover .dropdown-content { display: block; }
+
+        /* --- Main Content --- */
         .main-content {
-            padding: 60px 20px;
+            padding: 80px 20px;
             background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
         }
 
         .container {
-            max-width: 750px;
+            max-width: 850px;
             margin: 0 auto;
             background: var(--glass-bg);
             padding: 60px;
+            border-radius: 2px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
-            text-align: center;
         }
 
         .hero-img-container {
@@ -98,61 +139,53 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .hero-img {
-            width: 100%;
-            display: block;
-            filter: brightness(90%) contrast(110%);
-        }
+        .hero-img { width: 100%; display: block; filter: brightness(90%); }
 
         h1 {
             font-family: 'Playfair Display', serif;
             color: #fff;
             font-style: italic;
             font-weight: 400;
+            text-align: center;
             font-size: 3rem;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .intro-text {
+            text-align: center;
             font-size: 1.1rem;
-            color: #fff;
             margin-bottom: 40px;
-            font-style: italic;
+            color: #fff;
         }
 
-        /* Red Diamond Bullets */
         .gift-list {
             list-style: none;
             padding: 0;
-            margin: 0 auto 50px auto;
-            max-width: 500px;
-            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .gift-list li {
-            margin-bottom: 18px;
-            padding-left: 35px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
             position: relative;
-            line-height: 1.6;
-            color: #ddd;
+            padding-left: 30px;
         }
 
         .gift-list li::before {
             content: "♦";
             position: absolute;
-            left: 5px;
+            left: 0;
             color: var(--accent-color);
-            font-size: 1.1rem;
         }
 
         .tip-box {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            color: #fff;
-            border-top: 1px solid var(--border-color);
-            padding: 30px 0;
-            margin-top: 40px;
-            letter-spacing: 1px;
+            margin-top: 50px;
+            text-align: center;
+            padding: 30px;
+            border: 1px solid rgba(122, 0, 0, 0.2);
+            background: rgba(122, 0, 0, 0.05);
+            font-style: italic;
         }
 
         @media (max-width: 600px) {
@@ -171,10 +204,19 @@
     </header>
 
     <nav>
-        <a href="index.html" class="nav-link">Entry</a>
-        <a href="about.html" class="nav-link">Profile</a>
-        <a href="sessions.html" class="nav-link">Sessions</a>
-        <a href="gifts.html" class="nav-link" style="color: #fff;">Tributes</a>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Entry</a>
+            <a href="about.html" class="nav-link">Profile</a>
+            <div class="dropdown">
+                <a href="sessions.html" class="nav-link dropbtn">Sessions ▼</a>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP & Judicial Correction</a>
+                    <a href="therapy-spanking.html">Therapeutic Spanking</a>
+                    <a href="slaves.html">Power Exchange & Role Play</a>
+                </div>
+            </div>
+            <a href="gifts.html" class="nav-link">Tributes</a>
+        </div>
     </nav>
 
     <div class="main-content">
