@@ -22,27 +22,101 @@
             line-height: 1.6;
         }
 
-        /* Simple Navigation */
-        nav {
-            background: #000;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #333;
+        /* --- Header Section (Aligned to right as per Index) --- */
+        .site-header {
+            display: flex;
+            justify-content: center;
+            background-color: #fff;
+            color: var(--accent-color);
+            padding: 20px 0;
         }
 
-        nav a {
+        .header-content {
+            width: 680px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        .header-logo {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        .mail-link {
+            text-decoration: none;
+            color: #555;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            background: #000;
+            padding: 0;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: inline-block;
+        }
+
+        .nav-link, .dropbtn {
             color: var(--text-color);
             text-decoration: none;
-            margin: 0 15px;
+            padding: 15px 20px;
+            display: inline-block;
             text-transform: uppercase;
             font-size: 0.8rem;
             letter-spacing: 1px;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
-        nav a:hover {
-            color: var(--accent-color);
+        .dropdown {
+            position: relative;
+            display: inline-block;
         }
 
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #111;
+            min-width: 260px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            z-index: 10;
+            text-align: left;
+            border: 1px solid #333;
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.75rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* --- Page Content --- */
         .container {
             max-width: 800px;
             margin: 40px auto;
@@ -54,8 +128,6 @@
 
         .hero-img {
             width: 100%;
-            max-height: 500px;
-            object-fit: cover;
             border-radius: 4px;
             margin-bottom: 30px;
             border: 1px solid #333;
@@ -65,15 +137,8 @@
             color: var(--accent-color);
             text-transform: uppercase;
             letter-spacing: 2px;
-        }
-
-        h1 { border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; }
-
-        .intro-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
 
         .highlight-box {
@@ -124,21 +189,32 @@
             transition: 0.3s;
         }
 
-        .btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        @media (max-width: 600px) {
-            .container { padding: 20px; margin: 10px; }
-        }
+        .btn:hover { background-color: var(--accent-hover); }
     </style>
 </head>
 <body>
 
+    <header class="site-header">
+        <div class="header-content">
+            <h1 class="header-logo">Mistress Deville</h1>
+            <a href="mailto:your-email@example.com" class="mail-link">Mail me ✉</a>
+        </div>
+    </header>
+
     <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html" style="color: var(--accent-color);">About</a>
-        <a href="sessions.html">Sessions</a>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link" style="color: var(--accent-color);">About</a>
+            <div class="dropdown">
+                <a href="sessions.html" class="dropbtn">Sessions ▼</a>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP, Judicial Punishments and OTK</a>
+                    <a href="therapy-spanking.html">Therapy Spanking</a>
+                    <a href="slaves.html">Role Play and Slaves</a>
+                </div>
+            </div>
+            <a href="gifts.html" class="nav-link">Gifts</a>
+        </div>
     </nav>
 
     <div class="container">
@@ -146,27 +222,41 @@
         
         <h1>Who I Am</h1>
 
-        <p>A <strong>dominatrix</strong> is a female who takes the dominant role in a BDSM relationship. A <strong>Disciplinarian</strong> is a person that metes out flagellation - severe punishment - with whips, canes and leather straps.</p>
+        <p>A <strong>dominatrix</strong> is a female who takes the dominant role in a bondage, discipline, sadism and masochism (BDSM) relationship (note that 'dominatrix' is most often the term used for paid professionals in the field).</p>
+        
+        <p>A <strong>Disciplinarian</strong> is a person that metes out flagellation - severe punishment - with whips, canes and leather straps.</p>
 
         <div class="highlight-box">
             "I am a Disciplinarian ONLY who enjoys giving out punishment. From the experienced to absolute beginners, all will receive the punishment needed and at the levels of the individual."
         </div>
 
-        <p>I am a very attractive, long legged, tall brunette who has always been able to command attention just by entering a room. I stand at 6"3 in my stilettos. I have a dominant aura that comes naturally to me. I am articulate, well read, very humorous and extremely quick witted!</p>
+        <p>A disciplinarian offers sexual services; <strong>NO</strong>, on the contrary, what she offers is a highly specialised and specific service to a person that craves and desires the need to be punished or disciplined and in some cases, severely caned by a beautiful woman.</p>
+
+        <p>I am a very attractive, long legged, tall brunette who has always been able to command attention just by entering a room. I stand at 6'3" in my stilettos. I have a dominant aura that comes naturally to me. I am articulate, well read, very humorous and extremely quick witted!</p>
+
+        <p>I have been thoroughly enjoying caning and spanking for some years now and have an incredible talent for hitting the right spot time after time!</p>
+
+        <p>You have a choice - <strong>Therapy or Correction</strong>. As an intelligent, understanding, well educated and domineering woman I am able to fulfil the needs for both ends of the spectrum. Please read about both in 'Sessions'.</p>
 
         <h2>The Boundaries</h2>
         <ul class="rules-list">
-            <li><span>✕</span> NO sexual services - ever.</li>
+            <li><span>✕</span> NO sex or sexual services - ever.</li>
             <li><span>✕</span> I do not switch - ever.</li>
             <li><span>✓</span> Based near Beaconsfield (South Bucks/London access).</li>
-            <li><span>✓</span> Specialized in CP, Judicial, Therapy Spanking, and OTK.</li>
+            <li><span>✓</span> Specialized in CP, Judicial, Therapy Spanking, OTK and Role-Play.</li>
+            <li><span>✓</span> I can punish you without leaving marks if required.</li>
         </ul>
 
+        <p><a href="gifts.html" style="color: var(--accent-color); font-weight: bold; text-decoration: none;">I accept tips and love gifts.</a></p>
+
         <div class="health-safety">
-            <h2>Health & Safety</h2>
-            <p>Please note that you are responsible to inform me of any medical conditions you have that might impact on the session. You must participate under no pressure and there will always be a <strong>'safe' word</strong>.</p>
-            <p><strong>Hygiene:</strong> If you turn up and don't meet with my high expectations of personal hygiene, you will be turned away and forfeit the tribute.</p>
-            <p><strong>Sobriety:</strong> NO alcohol, NO drugs. You must be 100% compus mentis.</p>
+            <h2>HEALTH and SAFETY etc:</h2>
+            <p>Please note that you are responsible to inform me of any medical conditions you have that might impact on the session. That you have volunteered, under no pressure, to participate in all activities. There will always be a <strong>'safe' word</strong> if you wish the session to stop.</p>
+            <p>I am a disciplinarian and Mistress ONLY so please don't insult me by asking me to switch or provide any other services that are not on this site.</p>
+            <p><strong>Hygiene:</strong> If you turn up and don't meet with my high expectations of personal hygiene, you will be turned away and the punishment is that you forfeit the tribute. Please arrive freshly showered and shaved.</p>
+            <p><strong>Sobriety:</strong> NO alcohol, NO drugs, NO hangovers. You must be 100% compus mentis. Should I detect otherwise, you will be turned away and forfeit the tribute.</p>
+            <p>The tribute is non-refundable should you cancel on the day of your appointment.</p>
+            <p><em>I have an up to date profile on the High Wycombe gallery of UK Adult Zone.</em></p>
         </div>
 
         <a href="sessions.html" class="btn">View Sessions</a>
