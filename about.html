@@ -22,7 +22,7 @@
             line-height: 1.6;
         }
 
-        /* --- Header Section (Matched to Index - No Underline) --- */
+        /* --- Header Section (Aligned to Index) --- */
         .site-header {
             display: flex;
             justify-content: center;
@@ -135,7 +135,7 @@
             border: 1px solid #333;
         }
 
-        h1 {
+        h1, h2 {
             color: var(--accent-color);
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -149,6 +149,25 @@
             padding: 20px;
             margin: 20px 0;
             font-style: italic;
+        }
+
+        .rules-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .rules-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #222;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .rules-list li span {
+            color: var(--accent-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
         }
 
         .health-safety {
@@ -217,7 +236,7 @@
 
         <p>I stand at 6'3" in my stilettos and have a dominant aura that comes naturally to me. I am articulate, well read, very humorous and extremely quick witted!</p>
 
-        <p>You have a choice - <strong>Therapy or Correction</strong>. Please read about both in 'Sessions'.</p>
+        <p>You have a choice - <strong>Therapy or Correction</strong>. As an intelligent, understanding, well educated and domineering woman I am able to fulfil the needs for both ends of the spectrum. Please read about both in 'Sessions'.</p>
 
         <p>Based near Beaconsfield, South Bucks, means that all local areas are covered as well as London and Home Counties with good road and rail access, you will find me easily enough - if I let you!</p>
 
@@ -225,9 +244,11 @@
 
         <p>If you are worried about being marked then don't be - I can punish you without leaving marks.</p>
 
-        <p><strong>I do not switch - ever - do not ask.<br>
-        No sex or sexual services- ever - do not ask.<br>
-        I accept tips and love gifts.</strong></p>
+        <ul class="rules-list">
+            <li><span>✕</span> I do not switch - ever - do not ask.</li>
+            <li><span>✕</span> No sex or sexual services - ever - do not ask.</li>
+            <li><span>✓</span> I accept tips and love gifts.</li>
+        </ul>
 
         <p>The tribute is non-refundable should you cancel on the day of your appointment or arrive inebriated, smelling of alcohol or are not freshly showered and shaved. Please do not make a booking unless you are prepared to do all the above.</p>
 
