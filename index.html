@@ -3,38 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mistress Deville | Disciplinarian</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <title>Mistress Deville | The Disciplinarian</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f0f0f;
-            --text-color: #d1d1d1;
-            --accent-color: #7a0000; /* Sophisticated oxblood red */
-            --glass-bg: rgba(25, 25, 25, 0.8);
-            --border-color: rgba(255, 255, 255, 0.05);
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --gold-accent: #c5a059; /* Sophisticated Gold */
+            --subtle-gray: #777;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             margin: 0;
-            padding: 0;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.1em;
         }
 
-        /* --- Sophisticated Header --- */
+        /* --- Elegant White Header --- */
         .site-header {
+            background-color: #ffffff;
+            padding: 30px 0;
             display: flex;
             justify-content: center;
-            background-color: #ffffff;
-            padding: 25px 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            border-bottom: 1px solid var(--gold-accent);
         }
 
         .header-content {
             width: 90%;
-            max-width: 1000px; 
+            max-width: 1100px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -42,194 +40,169 @@
 
         .header-logo {
             font-family: 'Brush Script MT', cursive;
-            font-size: 2.8rem;
-            color: var(--accent-color);
+            font-size: 3rem;
+            color: #111;
             text-decoration: none;
-            font-weight: normal;
         }
 
         .mail-link {
             text-decoration: none;
-            color: #666;
-            font-size: 0.85rem;
+            color: #111;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 0.3s;
+            letter-spacing: 3px;
+            border-bottom: 1px solid #111;
+            padding-bottom: 5px;
         }
 
-        .mail-link:hover { color: var(--accent-color); }
-
-        /* --- Minimalist Nav --- */
+        /* --- Air Navigation --- */
         nav {
-            background: #000;
-            border-bottom: 1px solid var(--border-color);
+            background: transparent;
+            padding: 40px 0;
             text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
-
-        .nav-container { display: flex; justify-content: center; }
 
         .nav-link, .dropbtn {
-            color: #888;
+            color: var(--subtle-gray);
             text-decoration: none;
-            padding: 20px 25px;
-            display: inline-block;
+            padding: 0 30px;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 3px;
-            transition: all 0.4s;
+            letter-spacing: 4px;
+            transition: 0.5s;
         }
 
-        .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
+        .nav-link:hover, .dropdown:hover .dropbtn {
+            color: var(--gold-accent);
+        }
 
-        .dropdown { position: relative; }
+        .dropdown { position: relative; display: inline-block; }
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: #111;
-            min-width: 280px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-            border: 1px solid var(--border-color);
-            text-align: left;
+            background-color: #000;
+            min-width: 250px;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 1px solid #222;
+            z-index: 10;
         }
 
         .dropdown-content a {
             color: #888;
-            padding: 15px 20px;
+            padding: 20px;
             text-decoration: none;
             display: block;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.65rem;
+            text-align: center;
+            border-bottom: 1px solid #111;
         }
 
         .dropdown-content a:hover {
-            background-color: #1a1a1a;
-            color: #fff;
-            padding-left: 25px;
+            background: #111;
+            color: var(--gold-accent);
         }
 
         .dropdown:hover .dropdown-content { display: block; }
 
-        /* --- Elegant Main Content --- */
-        .main-content {
-            padding: 80px 20px;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
-        }
-
-        .container {
-            max-width: 700px;
+        /* --- Hero Section --- */
+        .hero {
+            max-width: 900px;
             margin: 0 auto;
-            background: var(--glass-bg);
-            padding: 60px;
-            border-radius: 2px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
             text-align: center;
+            padding-bottom: 100px;
         }
 
         .hero-img {
             width: 100%;
-            margin-bottom: 50px;
-            filter: grayscale(20%) brightness(90%);
-            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 650px;
+            margin: 40px 0;
+            box-shadow: 0 20px 80px rgba(0,0,0,1);
+            border: 1px solid #222;
+        }
+
+        .title-group {
+            margin-top: -80px; /* Overlaps image slightly for high-end look */
+            position: relative;
+            z-index: 2;
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
             font-weight: 400;
-            color: #fff;
-            margin-bottom: 40px;
-            font-style: italic;
+            margin: 0;
+            text-shadow: 0 0 20px #000;
         }
 
-        .disclaimer-text {
-            font-size: 0.95rem;
-            color: #aaa;
-            line-height: 2;
-            text-align: left;
-            margin-bottom: 40px;
-        }
-
-        .disclaimer-text ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .disclaimer-text li {
-            margin-bottom: 15px;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .disclaimer-text li::before {
-            content: "—";
-            position: absolute;
-            left: 0;
-            color: var(--accent-color);
-        }
-
-        .warning-box {
+        .subtitle {
             font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            color: #fff;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 25px 0;
-            margin: 40px 0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-style: italic;
+            color: var(--gold-accent);
+            font-size: 1.5rem;
+            margin-top: 10px;
         }
 
-        /* --- Boutique Buttons --- */
-        .btn-group {
+        /* --- Entry Card --- */
+        .entry-card {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 40px;
+            border: 1px solid #1a1a1a;
+            background: linear-gradient(to bottom, #0a0a0a, #050505);
+        }
+
+        .rules-text {
+            color: #888;
+            font-size: 0.85rem;
+            line-height: 2.2;
+            margin-bottom: 40px;
+            text-align: justify;
+        }
+
+        .no-sex-warning {
+            color: var(--gold-accent);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            margin-bottom: 40px;
+            border-top: 1px solid #1a1a1a;
+            padding-top: 30px;
+        }
+
+        /* --- Buttons --- */
+        .btn-box {
             display: flex;
-            gap: 20px;
             justify-content: center;
+            gap: 40px;
         }
 
         .btn {
-            padding: 18px 45px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            transition: all 0.5s;
-            border-radius: 0;
-            width: 180px;
+            letter-spacing: 3px;
+            padding: 15px 40px;
+            transition: 0.4s;
         }
 
-        .btn-enter {
-            background-color: var(--accent-color);
-            color: #fff;
-            border: 1px solid var(--accent-color);
+        .enter-btn {
+            border: 1px solid var(--gold-accent);
+            color: var(--gold-accent);
         }
 
-        .btn-enter:hover {
-            background-color: transparent;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(122, 0, 0, 0.4);
+        .enter-btn:hover {
+            background: var(--gold-accent);
+            color: #000;
         }
 
-        .btn-exit {
-            border: 1px solid #444;
-            color: #888;
+        .exit-btn {
+            color: #444;
         }
 
-        .btn-exit:hover {
-            border-color: #fff;
-            color: #fff;
-        }
+        .exit-btn:hover { color: #fff; }
 
-        @media (max-width: 600px) {
-            .container { padding: 30px; }
-            .btn-group { flex-direction: column; align-items: center; }
-            h1 { font-size: 2.2rem; }
-        }
     </style>
 </head>
 <body>
@@ -237,49 +210,43 @@
     <header class="site-header">
         <div class="header-content">
             <a href="index.html" class="header-logo">Mistress Deville</a>
-            <a href="mailto:mistressdeville@example.com" class="mail-link">Inquiries</a>
+            <a href="mailto:contact@mistressdeville.com" class="mail-link">Private Inquiries</a>
         </div>
     </header>
 
     <nav>
-        <div class="nav-container">
-            <a href="index.html" class="nav-link">Entry</a>
-            <a href="about.html" class="nav-link">Profile</a>
-            <div class="dropdown">
-                <a class="dropbtn">Services</a>
-                <div class="dropdown-content">
-                    <a href="cp-judicial.html">CP & Judicial Correction</a>
-                    <a href="therapy-spanking.html">Therapeutic Spanking</a>
-                    <a href="slaves.html">Power Exchange & Role Play</a>
-                </div>
+        <a href="about.html" class="nav-link">The Mistress</a>
+        <div class="dropdown">
+            <a class="dropbtn">The Sessions</a>
+            <div class="dropdown-content">
+                <a href="cp-judicial.html">Judicial Discipline</a>
+                <a href="therapy-spanking.html">Therapeutic Spanking</a>
+                <a href="slaves.html">Power & Submission</a>
             </div>
-            <a href="gifts.html" class="nav-link">Tributes</a>
         </div>
+        <a href="gifts.html" class="nav-link">Tributes</a>
     </nav>
 
-    <div class="main-content">
-        <div class="container">
-            <img src="home.jpg" alt="Mistress Deville" class="hero-img">
-            
-            <h1>The Disciplinarian</h1>
+    <div class="hero">
+        <img src="home.jpg" alt="Mistress Deville" class="hero-img">
+        
+        <div class="title-group">
+            <h1>Deville</h1>
+            <div class="subtitle">The Disciplinarian</div>
+        </div>
 
-            <div class="disclaimer-text">
-                <p>Before proceeding, you must acknowledge:</p>
-                <ul>
-                    <li>You are over the age of 21 and viewing this is legal in your jurisdiction.</li>
-                    <li>You understand the standards of this private space and take full responsibility for your presence here.</li>
-                    <li>You release the creators from any and all liability.</li>
-                    <li>You are seeking professional discipline and correction.</li>
-                </ul>
+        <div class="entry-card">
+            <div class="rules-text">
+                This environment is strictly for adults. By entering, you confirm you are at least 21 years of age and assume all legal responsibility for viewing adult-oriented material. This is a space of professional discipline, built on mutual respect and consent.
             </div>
 
-            <div class="warning-box">
-                No Sexual Services Provided
+            <div class="no-sex-warning">
+                Strictly No Sexual Services
             </div>
 
-            <div class="btn-group">
-                <a href="about.html" class="btn btn-enter">Proceed</a>
-                <a href="https://www.google.com" class="btn btn-exit">Depart</a>
+            <div class="btn-box">
+                <a href="about.html" class="btn enter-btn">Enter</a>
+                <a href="https://google.com" class="btn exit-btn">Exit</a>
             </div>
         </div>
     </div>
