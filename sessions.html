@@ -25,7 +25,7 @@
         /* --- Updated Dropdown Navigation CSS --- */
         nav {
             background: #000;
-            padding: 0; /* Changed to 0 to allow links to fill height */
+            padding: 0; 
             text-align: center;
             border-bottom: 1px solid #333;
             position: sticky;
@@ -87,8 +87,6 @@
         .nav-link:hover, .dropdown:hover .dropbtn {
             color: var(--accent-color);
         }
-
-        /* --- End Navigation CSS --- */
 
         .container {
             max-width: 800px;
@@ -167,6 +165,18 @@
             padding-top: 20px;
             border-top: 1px solid #333;
         }
+
+        /* Added style for the link in footer */
+        .footer-cta a {
+            color: var(--text-color);
+            text-decoration: underline;
+            text-decoration-color: var(--accent-color);
+            transition: color 0.3s ease;
+        }
+
+        .footer-cta a:hover {
+            color: var(--accent-color);
+        }
     </style>
 </head>
 <body>
@@ -179,10 +189,11 @@
                 <a href="sessions.html" class="dropbtn" style="color: var(--accent-color);">Sessions ▼</a>
                 <div class="dropdown-content">
                     <a href="cp-judicial.html">CP, Judicial Punishments and OTK</a>
-                    <a href="#">Therapy Spanking (Coming Soon)</a>
-                    <a href="#">Role Play (Coming Soon)</a>
+                    <a href="therapy-spanking.html">Therapy Spanking</a>
+                    <a href="slaves.html">Role Play and Slaves</a>
                 </div>
             </div>
+            <a href="gifts.html" class="nav-link">Gifts</a>
         </div>
     </nav>
 
@@ -205,7 +216,7 @@
 
         <div class="session-type">
             <h3>OTK - Over The Knee</h3>
-            <p>For all naughty boys, a visit to get a jolly good spanking whilst over my knee will only do you good. I use my hand but can also use several implements.</p>
+            <p>For all naughty boys, a visit to get a jolly good spanking whilst over my knee will only do you good. I use my hand but can also use several implements to get the message across. All levels are dealt with.</p>
         </div>
 
         <div class="session-type">
@@ -233,7 +244,7 @@
         </div>
 
         <div class="footer-cta">
-            <p>I accept tips and love gifts.</p>
+            <p><a href="gifts.html">I accept tips and love gifts.</a></p>
         </div>
     </div>
 
