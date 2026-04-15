@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sessions | Mistress Deville</title>
+    <title>Mistress Deville | Disciplinarian</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0f0f0f;
             --text-color: #d1d1d1;
-            --accent-color: #7a0000;
+            --accent-color: #7a0000; /* Sophisticated oxblood red */
             --glass-bg: rgba(25, 25, 25, 0.8);
             --border-color: rgba(255, 255, 255, 0.05);
         }
@@ -23,7 +23,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* --- Header & Nav --- */
+        /* --- Sophisticated Header --- */
         .site-header {
             display: flex;
             justify-content: center;
@@ -45,6 +45,7 @@
             font-size: 2.8rem;
             color: var(--accent-color);
             text-decoration: none;
+            font-weight: normal;
         }
 
         .mail-link {
@@ -53,8 +54,12 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+            transition: color 0.3s;
         }
 
+        .mail-link:hover { color: var(--accent-color); }
+
+        /* --- Minimalist Nav --- */
         nav {
             background: #000;
             border-bottom: 1px solid var(--border-color);
@@ -64,7 +69,9 @@
             z-index: 1000;
         }
 
-        .nav-link {
+        .nav-container { display: flex; justify-content: center; }
+
+        .nav-link, .dropbtn {
             color: #888;
             text-decoration: none;
             padding: 20px 25px;
@@ -72,107 +79,167 @@
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 3px;
+            transition: all 0.4s;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
-        .nav-link:hover { color: #fff; }
+        .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
 
-        /* --- Content Layout --- */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #111;
+            min-width: 320px; /* Widened for longer titles */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-color);
+            text-align: left;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dropdown-content a {
+            color: #888;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        .dropdown:hover .dropdown-content { display: block; }
+
+        /* --- Elegant Main Content --- */
         .main-content {
-            padding: 60px 20px;
+            padding: 80px 20px;
             background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
         }
 
         .container {
-            max-width: 850px;
+            max-width: 700px;
             margin: 0 auto;
             background: var(--glass-bg);
             padding: 60px;
+            border-radius: 2px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
+            text-align: center;
         }
 
         .hero-img-container {
-            max-width: 500px;
-            margin: 0 auto 40px auto;
+            max-width: 550px;
+            margin: 0 auto 50px auto;
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
         }
 
-        .hero-img { width: 100%; display: block; filter: brightness(90%); }
+        .hero-img {
+            width: 100%;
+            display: block;
+            filter: grayscale(20%) brightness(90%);
+        }
 
-        h1, h2, h3 {
+        h1 {
             font-family: 'Playfair Display', serif;
-            color: #fff;
-            font-style: italic;
+            font-size: 3rem;
             font-weight: 400;
-        }
-
-        h1 { font-size: 3rem; text-align: center; margin-bottom: 40px; }
-        h2 { font-size: 1.8rem; margin-top: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        h3 { color: var(--accent-color); font-size: 1.4rem; margin-bottom: 10px; }
-
-        .intro-quote {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            text-align: center;
             color: #fff;
             margin-bottom: 40px;
-            line-height: 1.6;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 30px;
+            font-style: italic;
         }
 
-        .session-block { margin-bottom: 40px; line-height: 1.8; }
-
-        /* Pricing Table */
-        .price-table {
-            width: 100%;
-            margin: 40px 0;
-            border-collapse: collapse;
-            font-size: 1.1rem;
+        .disclaimer-text {
+            font-size: 0.95rem;
+            color: #aaa;
+            line-height: 2;
+            text-align: left;
+            margin-bottom: 40px;
         }
 
-        .price-table td {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .price-table td:last-child {
-            text-align: right;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        /* Red Diamond Bullets */
-        .rules-list {
+        .disclaimer-text ul {
             list-style: none;
             padding: 0;
-            margin: 30px 0;
         }
 
-        .rules-list li {
+        .disclaimer-text li {
             margin-bottom: 15px;
-            padding-left: 35px;
+            padding-left: 25px;
             position: relative;
         }
 
-        .rules-list li::before {
+        .disclaimer-text li::before {
             content: "♦";
             position: absolute;
-            left: 10px;
+            left: 0;
             color: var(--accent-color);
+            font-weight: normal;
         }
 
-        .health-safety {
-            background: rgba(122, 0, 0, 0.03);
-            padding: 40px;
-            border: 1px solid rgba(122, 0, 0, 0.1);
-            margin-top: 50px;
-            font-size: 0.95rem;
+        .warning-box {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #fff;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 25px 0;
+            margin: 40px 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 18px 45px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            transition: all 0.5s;
+            border-radius: 0;
+            width: 180px;
+        }
+
+        .btn-enter {
+            background-color: var(--accent-color);
+            color: #fff;
+            border: 1px solid var(--accent-color);
+        }
+
+        .btn-enter:hover {
+            background-color: transparent;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(122, 0, 0, 0.4);
+        }
+
+        .btn-exit {
+            border: 1px solid #444;
+            color: #888;
+        }
+
+        .btn-exit:hover {
+            border-color: #fff;
+            color: #fff;
         }
 
         @media (max-width: 600px) {
             .container { padding: 30px; }
+            .hero-img-container { margin-bottom: 30px; }
+            .btn-group { flex-direction: column; align-items: center; }
             h1 { font-size: 2.2rem; }
         }
     </style>
@@ -187,68 +254,46 @@
     </header>
 
     <nav>
-        <a href="index.html" class="nav-link">Entry</a>
-        <a href="about.html" class="nav-link">Profile</a>
-        <a href="sessions.html" class="nav-link" style="color: #fff;">Sessions</a>
-        <a href="gifts.html" class="nav-link">Tributes</a>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Entry</a>
+            <a href="about.html" class="nav-link">Profile</a>
+            <div class="dropdown">
+                <button class="dropbtn">Sessions ▼</button>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a>
+                    <a href="therapy-spanking.html">Therapy Spanking</a>
+                    <a href="slaves.html">Role Play and Slaves</a>
+                </div>
+            </div>
+            <a href="gifts.html" class="nav-link">Tributes</a>
+        </div>
     </nav>
 
     <div class="main-content">
         <div class="container">
             <div class="hero-img-container">
-                <img src="session_1.png" alt="Discipline Session" class="hero-img">
+                <img src="home.jpg" alt="Mistress Deville" class="hero-img">
+            </div>
+            
+            <h1>Disciplinarian</h1>
+
+            <div class="disclaimer-text">
+                <p>Before proceeding, you must acknowledge:</p>
+                <ul>
+                    <li>You are over the age of 21 and viewing this is legal in your jurisdiction.</li>
+                    <li>You understand the standards of this private space and take full responsibility for your presence here.</li>
+                    <li>You release the creators from any and all liability.</li>
+                    <li>You are seeking professional discipline and correction.</li>
+                </ul>
             </div>
 
-            <div class="intro-quote">
-                "You will beg for me to spank and whip you, to take you to a place that only you and I know about."
+            <div class="warning-box">
+                No Sexual Services Provided
             </div>
 
-            <div class="session-block">
-                <p>I love to spank using a Tawse, cane, paddle or whatever else may come to hand! Whichever session you choose, you will get exactly what you want.</p>
-                
-                <h3>Serious Spanking</h3>
-                <p>Serious Spanking is for the individual who knows what they need; hard punishment is good for the soul therefore feelings of clarity and motivation ensue shortly afterwards. I will help you find your limit by guiding you and understanding your needs.</p>
-
-                <h3>Therapy Spanking</h3>
-                <p>Therapy Spanking has been scientifically proven to aid in the benefit of wellbeing. Some find that being spanked offers them the opportunity to release difficult emotions and use it as a form of therapy and healing. Communication is an absolute must for this to be completely effective.</p>
-
-                <h3>OTK - Over The Knee</h3>
-                <p>Exactly as it sounds! For all naughty boys, a visit to get a jolly good spanking whilst over my knee will only do you good. I use my hand but can also use several implements to get the message across. All levels are dealt with.</p>
-
-                <h3>Role Play</h3>
-                <p>Role Play is something I really enjoy, maybe I should have been on stage and screen!</p>
-
-                <p><em>If you are worried about being marked then don't be - I can punish you without leaving marks.</em></p>
-            </div>
-
-            <h2>Tributes</h2>
-            <table class="price-table">
-                <tr><td>Fifteen Minutes</td><td>£50.00</td></tr>
-                <tr><td>Half Hour Session</td><td>£70.00</td></tr>
-                <tr><td>Forty Five Minute Session</td><td>£100.00</td></tr>
-                <tr><td>Full Hour Session</td><td>£140.00</td></tr>
-            </table>
-
-            <p style="text-align: center; color: #fff;">I accept tips and love gifts.</p>
-
-            <h2>Expectations & Conduct</h2>
-            <ul class="rules-list">
-                <li>Please arrive on time and be freshly showered, neat and tidy in appearance and well kempt.</li>
-                <li>I will not switch - ever - do not ask.</li>
-                <li>No sex - ever - do not ask.</li>
-                <li>No sexual services - ever - do not ask.</li>
-                <li>All sessions can include a discussion first to understand what you need; all details will be discussed beforehand by phone and/or email. Afterwards, there is time to gather yourself and talk about the session.</li>
-            </ul>
-
-            <div class="health-safety">
-                <h3>HEALTH and SAFETY etc:</h3>
-                <p>Please note that you are responsible to inform me of any medical conditions you have that might impact on the session. You have volunteered to participate in all activities. There will always be a <strong>'safe' word</strong> if you wish the session to stop.</p>
-                
-                <p>I am a disciplinarian and Mistress ONLY so please don't insult me by asking me to switch or provide any other services that are not on this site.</p>
-                
-                <p>If you turn up and don't meet with my high expectations of personal hygiene then I will turn you away and the punishment will be that you still give me the tribute.</p>
-                
-                <p><strong>NO alcohol, NO drugs, NO hangovers, NO pre-consumed alcohol or drugs.</strong> You must be 100% compus mentis. Should I detect otherwise, again you will be turned away but will still give me the tribute.</p>
+            <div class="btn-group">
+                <a href="about.html" class="btn btn-enter">Proceed</a>
+                <a href="https://www.google.com" class="btn btn-exit">Depart</a>
             </div>
         </div>
     </div>
