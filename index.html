@@ -17,11 +17,37 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Simple Navigation added to match About page */
+        nav {
+            background: #000;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            width: 100%;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 0 15px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .main-content {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            min-height: calc(100vh - 50px);
             padding: 20px;
         }
 
@@ -134,33 +160,41 @@
 </head>
 <body>
 
-    <div class="container">
-        <img src="home.jpg" alt="Mistress Deville" class="hero-img">
-        
-        <h1>Disciplinarian</h1>
+    <nav>
+        <a href="index.html" style="color: var(--accent-color);">Home</a>
+        <a href="about.html">Who I Am</a>
+        <a href="sessions.html">Sessions</a>
+    </nav>
 
-        <div class="disclaimer-text">
-            <p>Only enter if you:</p>
-            <ul>
-                <li>Are not liable to be offended by such materials.</li>
-                <li>Are over the age of 21 and it is legal for you to view and possess adult material in your Country/community.</li>
-                <li>Understand the standards and laws of the community, site and computer to which you are transporting this material, and are solely responsible for your actions.</li>
-                <li>Release and discharge the providers, owners and creators of this site from any and all liability which might arise.</li>
-            </ul>
+    <div class="main-content">
+        <div class="container">
+            <img src="home.jpg" alt="Mistress Deville" class="hero-img">
+            
+            <h1>Disciplinarian</h1>
+
+            <div class="disclaimer-text">
+                <p>Only enter if you:</p>
+                <ul>
+                    <li>Are not liable to be offended by such materials.</li>
+                    <li>Are over the age of 21 and it is legal for you to view and possess adult material in your Country/community.</li>
+                    <li>Understand the standards and laws of the community, site and computer to which you are transporting this material, and are solely responsible for your actions.</li>
+                    <li>Release and discharge the providers, owners and creators of this site from any and all liability which might arise.</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                There are NO SEXUAL services offered on this site.
+            </div>
+
+            <div class="btn-group">
+                <a href="sessions.html" class="btn btn-enter">Enter Site</a>
+                <a href="https://www.google.com" class="btn btn-exit">Exit</a>
+            </div>
+
+            <p class="footer-note">
+                Bookmarking or directly accessing any other page and bypassing this Agreement constitutes implicit acceptance.
+            </p>
         </div>
-
-        <div class="warning-box">
-            There are NO SEXUAL services offered on this site.
-        </div>
-
-        <div class="btn-group">
-            <a href="sessions.html" class="btn btn-enter">Enter Site</a>
-            <a href="https://www.google.com" class="btn btn-exit">Exit</a>
-        </div>
-
-        <p class="footer-note">
-            Bookmarking or directly accessing any other page and bypassing this Agreement constitutes implicit acceptance.
-        </p>
     </div>
 
 </body>
