@@ -9,7 +9,7 @@
         :root {
             --bg-color: #0f0f0f;
             --text-color: #d1d1d1;
-            --accent-color: #7a0000; /* Sophisticated oxblood red */
+            --accent-color: #7a0000;
             --glass-bg: rgba(25, 25, 25, 0.8);
             --border-color: rgba(255, 255, 255, 0.05);
         }
@@ -23,7 +23,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* --- Sophisticated Header --- */
+        /* --- Header & Nav --- */
         .site-header {
             display: flex;
             justify-content: center;
@@ -59,7 +59,6 @@
 
         .mail-link:hover { color: var(--accent-color); }
 
-        /* --- Minimalist Nav (Applied from index.html) --- */
         nav {
             background: #000;
             border-bottom: 1px solid var(--border-color);
@@ -92,7 +91,7 @@
             display: none;
             position: absolute;
             background-color: #111;
-            min-width: 280px;
+            min-width: 320px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.8);
             border: 1px solid var(--border-color);
             text-align: left;
@@ -133,14 +132,6 @@
             backdrop-filter: blur(10px);
         }
 
-        .hero-img-container {
-            max-width: 500px;
-            margin: 0 auto 40px auto;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .hero-img { width: 100%; display: block; filter: brightness(90%); }
-
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
             color: #fff;
@@ -152,29 +143,29 @@
         h2 { font-size: 1.8rem; margin-top: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         h3 { color: var(--accent-color); font-size: 1.4rem; margin-bottom: 10px; }
 
-        .intro-quote {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            text-align: center;
-            color: #fff;
+        .session-block {
             margin-bottom: 40px;
-            line-height: 1.6;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 30px;
+            line-height: 1.8;
+            text-align: justify;
         }
 
-        .session-block { margin-bottom: 40px; line-height: 1.8; }
+        .session-block a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .session-block a:hover { color: #fff; }
 
         /* Pricing Table */
         .price-table {
             width: 100%;
             margin: 40px 0;
             border-collapse: collapse;
-            font-size: 1.1rem;
         }
 
         .price-table td {
-            padding: 20px;
+            padding: 15px;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -184,32 +175,12 @@
             font-weight: bold;
         }
 
-        /* Red Diamond Bullets */
-        .rules-list {
-            list-style: none;
-            padding: 0;
-            margin: 30px 0;
-        }
-
-        .rules-list li {
-            margin-bottom: 15px;
-            padding-left: 35px;
-            position: relative;
-        }
-
-        .rules-list li::before {
-            content: "♦"; /* Diamond Character to match index bullets */
-            position: absolute;
-            left: 10px;
-            color: var(--accent-color);
-        }
-
-        .health-safety {
-            background: rgba(122, 0, 0, 0.03);
-            padding: 40px;
-            border: 1px solid rgba(122, 0, 0, 0.1);
-            margin-top: 50px;
-            font-size: 0.95rem;
+        .warning-strip {
+            background: rgba(122, 0, 0, 0.1);
+            border-left: 3px solid var(--accent-color);
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 600px) {
@@ -232,11 +203,11 @@
             <a href="index.html" class="nav-link">Entry</a>
             <a href="about.html" class="nav-link">Profile</a>
             <div class="dropdown">
-                <a class="dropbtn">Sessions</a>
+                <a href="sessions.html" class="nav-link dropbtn">Sessions ▼</a>
                 <div class="dropdown-content">
-                    <a href="cp-judicial.html">CP & Judicial Correction</a>
-                    <a href="therapy-spanking.html">Therapeutic Spanking</a>
-                    <a href="slaves.html">Power Exchange & Role Play</a>
+                    <a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a>
+                    <a href="therapy-spanking.html">Therapy Spanking</a>
+                    <a href="slaves.html">Roleplay and Slaves</a>
                 </div>
             </div>
             <a href="gifts.html" class="nav-link">Tributes</a>
@@ -245,60 +216,32 @@
 
     <div class="main-content">
         <div class="container">
-            <div class="hero-img-container">
-                <img src="session_1.png" alt="Discipline Session" class="hero-img">
-            </div>
+            <h1>Session Types</h1>
 
-            <div class="intro-quote">
-                "You will beg for me to spank and whip you, to take you to a place that only you and I know about."
+            <div class="session-block">
+                <h3><a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a></h3>
+                <p>Specializing in traditional discipline and correctional methods. From Over-The-Knee spankings to more formal judicial-style punishments, every session is tailored to your specific correctional needs and boundaries.</p>
             </div>
 
             <div class="session-block">
-                <p>I love to spank using a Tawse, cane, paddle or whatever else may come to hand! Whichever session you choose, you will get exactly what you want.</p>
-                
-                <h3>Serious Spanking</h3>
-                <p>Serious Spanking is for the individual who knows what they need; hard punishment is good for the soul therefore feelings of clarity and motivation ensue shortly afterwards. I will help you find your limit by guiding you and understanding your needs.</p>
-
-                <h3>Therapy Spanking</h3>
-                <p>Therapy Spanking has been scientifically proven to aid in the benefit of wellbeing. Some find that being spanked offers them the opportunity to release difficult emotions and use it as a form of therapy and healing. Communication is an absolute must for this to be completely effective.</p>
-
-                <h3>OTK - Over The Knee</h3>
-                <p>Exactly as it sounds! For all naughty boys, a visit to get a jolly good spanking whilst over my knee will only do you good. I use my hand but can also use several implements to get the message across. All levels are dealt with.</p>
-
-                <h3>Role Play</h3>
-                <p>Role Play is something I really enjoy, maybe I should have been on stage and screen!</p>
-
-                <p><em>If you are worried about being marked then don't be - I can punish you without leaving marks.</em></p>
+                <h3><a href="therapy-spanking.html">Therapy Spanking</a></h3>
+                <p>A focused approach using spanking as a tool for emotional and mental release. Scientifically recognized for aiding in well-being through the release of endorphins, helping to alleviate anxiety and stress in a safe, confidential environment.</p>
             </div>
 
-            <h2>Tributes</h2>
+            <div class="session-block">
+                <h3><a href="slaves.html">Roleplay and Slaves</a></h3>
+                <p>Engage in sophisticated power exchange scenarios. Whether your interest lies in serving as a house slave, a pupil, or exploring specific authority figures like a Governess or Headmistress, these sessions offer a deep dive into psychological play.</p>
+            </div>
+
+            <h2>Tribute</h2>
             <table class="price-table">
-                <tr><td>Fifteen Minutes</td><td>£50.00</td></tr>
-                <tr><td>Half Hour Session</td><td>£70.00</td></tr>
-                <tr><td>Forty Five Minute Session</td><td>£100.00</td></tr>
-                <tr><td>Full Hour Session</td><td>£140.00</td></tr>
+                <tr><td>Half Hour session</td><td>£70.00</td></tr>
+                <tr><td>Forty Five minute session</td><td>£100.00</td></tr>
+                <tr><td>Full Hour session</td><td>£140.00</td></tr>
             </table>
 
-            <p style="text-align: center; color: #fff;">I accept tips and love gifts.</p>
-
-            <h2>Expectations & Conduct</h2>
-            <ul class="rules-list">
-                <li>Please arrive on time and be freshly showered, neat and tidy in appearance and well kempt.</li>
-                <li>I will not switch - ever - do not ask.</li>
-                <li>No sex - ever - do not ask.</li>
-                <li>No sexual services - ever - do not ask.</li>
-                <li>All sessions can include a discussion first to understand what you need; all details will be discussed beforehand by phone and/or email. Afterwards, there is time to gather yourself and talk about the session.</li>
-            </ul>
-
-            <div class="health-safety">
-                <h3>HEALTH and SAFETY etc:</h3>
-                <p>Please note that you are responsible to inform me of any medical conditions you have that might impact on the session. You have volunteered to participate in all activities. There will always be a <strong>'safe' word</strong> if you wish the session to stop.</p>
-                
-                <p>I am a disciplinarian and Mistress ONLY so please don't insult me by asking me to switch or provide any other services that are not on this site.</p>
-                
-                <p>If you turn up and don't meet with my high expectations of personal hygiene then I will turn you away and the punishment will be that you still give me the tribute.</p>
-                
-                <p><strong>NO alcohol, NO drugs, NO hangovers, NO pre-consumed alcohol or drugs.</strong> You must be 100% compus mentis. Should I detect otherwise, again you will be turned away but will still give me the tribute.</p>
+            <div class="warning-strip">
+                <strong>Strict Professionalism:</strong> I am a Disciplinarian and Mistress ONLY. I do not switch, and I do not provide any form of sexual services. All sessions require participants to be 100% compus mentis and adhere to strict personal hygiene standards.
             </div>
         </div>
     </div>
