@@ -45,6 +45,7 @@
             font-size: 2.8rem;
             color: var(--accent-color);
             text-decoration: none;
+            font-weight: normal;
         }
 
         .mail-link {
@@ -53,7 +54,10 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+            transition: color 0.3s;
         }
+
+        .mail-link:hover { color: var(--accent-color); }
 
         nav {
             background: #000;
@@ -64,7 +68,9 @@
             z-index: 1000;
         }
 
-        .nav-link {
+        .nav-container { display: flex; justify-content: center; }
+
+        .nav-link, .dropbtn {
             color: #888;
             text-decoration: none;
             padding: 20px 25px;
@@ -72,13 +78,47 @@
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 3px;
+            transition: all 0.4s;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
-        .nav-link:hover { color: #fff; }
+        .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
 
-        /* --- Content Layout --- */
+        /* Dropdown Functionality */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #111;
+            min-width: 280px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .dropdown-content a {
+            color: #888;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .dropdown-content a:hover {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        .dropdown:hover .dropdown-content { display: block; }
+
+        /* --- Main Content --- */
         .main-content {
-            padding: 60px 20px;
+            padding: 80px 20px;
             background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
         }
 
@@ -87,7 +127,9 @@
             margin: 0 auto;
             background: var(--glass-bg);
             padding: 60px;
+            border-radius: 2px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
         }
 
@@ -104,39 +146,37 @@
             color: #fff;
             font-style: italic;
             font-weight: 400;
+            text-align: center;
         }
 
-        h1 { font-size: 3rem; text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 3rem; margin-bottom: 30px; }
         h2 { font-size: 1.8rem; margin-top: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        
-        .quote-banner {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            text-align: center;
-            color: #fff;
-            margin-bottom: 50px;
+
+        .text-block {
+            line-height: 1.8;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        /* Pricing Table */
+        .price-table {
+            width: 100%;
+            margin: 40px 0;
+            border-collapse: collapse;
+            font-size: 1.1rem;
+        }
+
+        .price-table td {
             padding: 20px;
-            border-top: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
         }
 
-        .text-block { line-height: 1.8; margin-bottom: 25px; font-size: 1.05rem; }
-
-        /* Pricing */
-        .price-list {
-            margin: 40px 0;
-            padding: 0;
-            list-style: none;
-            text-align: center;
-        }
-
-        .price-item {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+        .price-table td:last-child {
+            text-align: right;
             color: #fff;
+            font-weight: bold;
         }
 
-        /* Rules */
         .rules-list {
             list-style: none;
             padding: 0;
@@ -161,7 +201,6 @@
             padding: 40px;
             border: 1px solid rgba(122, 0, 0, 0.1);
             margin-top: 50px;
-            font-size: 0.95rem;
         }
 
         @media (max-width: 600px) {
@@ -180,40 +219,42 @@
     </header>
 
     <nav>
-        <a href="index.html" class="nav-link">Entry</a>
-        <a href="about.html" class="nav-link">Profile</a>
-        <a href="sessions.html" class="nav-link">Sessions</a>
-        <a href="gifts.html" class="nav-link">Tributes</a>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Entry</a>
+            <a href="about.html" class="nav-link">Profile</a>
+            <div class="dropdown">
+                <a href="sessions.html" class="nav-link dropbtn">Sessions ▼</a>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP & Judicial Correction</a>
+                    <a href="therapy-spanking.html">Therapeutic Spanking</a>
+                    <a href="slaves.html">Power Exchange & Role Play</a>
+                </div>
+            </div>
+            <a href="gifts.html" class="nav-link">Tributes</a>
+        </div>
     </nav>
 
     <div class="main-content">
         <div class="container">
             <div class="hero-img-container">
-                <img src="slaves.jpg" alt="Slaves and Role Play" class="hero-img">
+                <img src="slaves.jpg" alt="Role Play" class="hero-img">
             </div>
 
-            <div class="quote-banner">
-                "When you leave your comfort zone, you enter a better world!"
-            </div>
+            <h1>Role Play</h1>
+            
+            <p class="text-block">Headmistress, Governess, Nanny or Lady of the House are roles I play extremely well. Whichever you choose, I will take you to that place in your mind where you thought you could never go. You may serve me tea and cake or I may humiliate you or make you do things for my own amusement.</p>
+            
+            <p class="text-block">Whether it's to be my Housemaid, charge or pupil, your needs will be fulfilled. I prefer when you wear the outfits to match the role you play (provided by yourself), though this is not a necessity.</p>
 
-            <h1>SLAVES.</h1>
-            <p class="text-block">I am your Mistress, I am in charge - I will dominate your every move - if I give you permission to move. I will take you to a world filled with my desires. You will be my slave and your only aim is to please me and make me happy. You must be adept at doing what you are told and to do exactly as I tell you. If you have any useful abilities that will make my world better then I may use them, should I feel like it.</p>
-            <p class="text-block">I may let you worship my shoes and even lick them if I'm so inclined. I will make you kneel infront of me and admire my beauty. Not obeying me will be the worst thing you can do as I will punish you in a way I see fit.</p>
-
-            <h1>ROLE PLAY.</h1>
-            <p class="text-block">Headmistress, Governess, Nanny or Lady of the House are roles I play extremely well, whichever you choose, I will take you to that place in your mind where you thought you could never go. You may serve me tea and cake or I may humiliate you or make you do things for my own amusement. I can be as strict as necessary or light hearted. I have a quick wit and a sharp tongue to match each scenario but be assured, the role play will have the impact you need!</p>
-            <p class="text-block">Whether it's to be my Housemaid, charge or pupil, you're needs will be fulfilled. I prefer when you wear the outfits to match the role you play, these you provide yourself. This is not a necessity just a preference!</p>
-            <p class="text-block"><em>If you are worried about being marked then don't be - I can punish you without leaving marks.</em></p>
-
-            <div class="price-list">
-                <div class="price-item">£70.00 Half Hour session</div>
-                <div class="price-item">£100.00 Forty Five minute session</div>
-                <div class="price-item">£140.00 A full Hour.</div>
-                <p>I accept tips and love gifts.</p>
-            </div>
+            <h2>Tribute</h2>
+            <table class="price-table">
+                <tr><td>Half Hour session</td><td>£70.00</td></tr>
+                <tr><td>Forty Five minute session</td><td>£100.00</td></tr>
+                <tr><td>Full Hour session</td><td>£140.00</td></tr>
+            </table>
 
             <ul class="rules-list">
-                <li>Please arrive on time and be freshly showered and well kempt.</li>
+                <li>Arrive on time, freshly showered, and well kempt.</li>
                 <li>The tribute is non-refundable should you cancel on the day of your appointment or arrive inebriated, smelling of alcohol or are not freshly showered and shaved.</li>
                 <li>Please do not make a booking unless you are prepared to do all the above.</li>
                 <li>I will not switch - ever - do not ask.</li>
