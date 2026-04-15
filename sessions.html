@@ -9,7 +9,7 @@
         :root {
             --bg-color: #0f0f0f;
             --text-color: #d1d1d1;
-            --accent-color: #7a0000;
+            --accent-color: #7a0000; /* Sophisticated oxblood red */
             --glass-bg: rgba(25, 25, 25, 0.8);
             --border-color: rgba(255, 255, 255, 0.05);
         }
@@ -23,7 +23,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* --- Header & Nav --- */
+        /* --- Sophisticated Header --- */
         .site-header {
             display: flex;
             justify-content: center;
@@ -45,6 +45,7 @@
             font-size: 2.8rem;
             color: var(--accent-color);
             text-decoration: none;
+            font-weight: normal;
         }
 
         .mail-link {
@@ -53,8 +54,12 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+            transition: color 0.3s;
         }
 
+        .mail-link:hover { color: var(--accent-color); }
+
+        /* --- Minimalist Nav (Applied from index.html) --- */
         nav {
             background: #000;
             border-bottom: 1px solid var(--border-color);
@@ -64,7 +69,9 @@
             z-index: 1000;
         }
 
-        .nav-link {
+        .nav-container { display: flex; justify-content: center; }
+
+        .nav-link, .dropbtn {
             color: #888;
             text-decoration: none;
             padding: 20px 25px;
@@ -72,13 +79,46 @@
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 3px;
+            transition: all 0.4s;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
-        .nav-link:hover { color: #fff; }
+        .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
 
-        /* --- Content Layout --- */
+        .dropdown { position: relative; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #111;
+            min-width: 280px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .dropdown-content a {
+            color: #888;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .dropdown-content a:hover {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        .dropdown:hover .dropdown-content { display: block; }
+
+        /* --- Elegant Main Content --- */
         .main-content {
-            padding: 60px 20px;
+            padding: 80px 20px;
             background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
         }
 
@@ -87,7 +127,9 @@
             margin: 0 auto;
             background: var(--glass-bg);
             padding: 60px;
+            border-radius: 2px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
         }
 
@@ -95,7 +137,6 @@
             max-width: 500px;
             margin: 0 auto 40px auto;
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
         }
 
         .hero-img { width: 100%; display: block; filter: brightness(90%); }
@@ -157,7 +198,7 @@
         }
 
         .rules-list li::before {
-            content: "♦";
+            content: "♦"; /* Diamond Character to match index bullets */
             position: absolute;
             left: 10px;
             color: var(--accent-color);
@@ -187,10 +228,19 @@
     </header>
 
     <nav>
-        <a href="index.html" class="nav-link">Entry</a>
-        <a href="about.html" class="nav-link">Profile</a>
-        <a href="sessions.html" class="nav-link" style="color: #fff;">Sessions</a>
-        <a href="gifts.html" class="nav-link">Tributes</a>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Entry</a>
+            <a href="about.html" class="nav-link">Profile</a>
+            <div class="dropdown">
+                <a class="dropbtn">Sessions</a>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP & Judicial Correction</a>
+                    <a href="therapy-spanking.html">Therapeutic Spanking</a>
+                    <a href="slaves.html">Power Exchange & Role Play</a>
+                </div>
+            </div>
+            <a href="gifts.html" class="nav-link">Tributes</a>
+        </div>
     </nav>
 
     <div class="main-content">
