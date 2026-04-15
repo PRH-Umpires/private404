@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mistress Deville | Disciplinarian Entry</title>
+    <meta name="description" content="Professional Disciplinarian - Entry Agreement">
     <style>
         :root {
             --bg-color: #0a0a0a;
             --text-color: #e0e0e0;
             --accent-color: #920000;
             --accent-hover: #c60000;
-            --card-bg: #151515;
         }
 
         body {
@@ -19,156 +19,200 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
         }
 
-        /* --- Slim Header --- */
+        /* --- Header Section --- */
         .site-header {
             display: flex;
-            justify-content: center;
+            justify-content: center; /* Centers the alignment container */
             background-color: #fff;
             color: var(--accent-color);
-            padding: 10px 0;
+            padding: 20px 0;
         }
 
         .header-content {
-            width: 900px; 
+            /* This width matches your main container (600px) + padding (80px) */
+            width: 680px; 
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
+            padding: 0 10px;
         }
 
         .header-logo {
             font-family: 'Brush Script MT', cursive;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin: 0;
-            text-decoration: none;
-            color: var(--accent-color);
+            /* Adjust this margin-left if you need it to move a few pixels more */
+            margin-left: 0; 
         }
 
         .mail-link {
             text-decoration: none;
             color: #555;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* --- Slim Nav --- */
+        .mail-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- Persistent Navigation with Dropdown --- */
         nav {
             background: #000;
+            padding: 0;
             text-align: center;
             border-bottom: 1px solid #333;
+            width: 100%;
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
+        .nav-container {
+            display: inline-block;
+        }
+
         .nav-link, .dropbtn {
             color: var(--text-color);
             text-decoration: none;
-            padding: 12px 20px;
+            padding: 15px 20px;
             display: inline-block;
             text-transform: uppercase;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             letter-spacing: 1px;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
-        /* --- Main Layout --- */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #111;
+            min-width: 260px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            z-index: 10;
+            text-align: left;
+            border: 1px solid #333;
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.75rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .nav-link:hover, .dropdown:hover .dropbtn {
+            color: var(--accent-color);
+        }
+
+        /* --- Page Layout --- */
         .main-content {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: calc(100vh - 120px);
+            min-height: calc(100vh - 150px);
             padding: 20px;
         }
 
-        .split-container {
-            display: flex;
-            background: var(--card-bg);
-            max-width: 950px;
-            width: 100%;
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-            border: 1px solid #222;
-        }
-
-        .image-side {
-            flex: 1;
-            background: #000;
-            display: flex;
-            align-items: center;
+        .container {
+            max-width: 600px;
+            background: #151515;
+            padding: 40px;
+            border-radius: 8px;
+            border-top: 4px solid var(--accent-color);
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .hero-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            max-height: 550px;
-        }
-
-        .content-side {
-            flex: 1.2;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            border: 1px solid #333;
         }
 
         h1 {
             color: var(--accent-color);
+            font-size: 2rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 1.8rem;
-            margin-top: 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+            margin-bottom: 10px;
         }
 
         .disclaimer-text {
-            font-size: 0.85rem;
-            line-height: 1.5;
+            text-align: left;
+            line-height: 1.6;
+            font-size: 0.95rem;
             color: #bbb;
         }
 
-        .disclaimer-text ul {
-            padding-left: 18px;
-            margin: 15px 0;
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
 
-        .disclaimer-text li {
-            margin-bottom: 8px;
+        li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
         }
 
         .warning-box {
-            font-weight: bold;
-            color: #fff;
-            border-left: 3px solid var(--accent-color);
-            padding: 10px 15px;
-            margin: 20px 0;
             background: rgba(146, 0, 0, 0.1);
-            font-size: 0.8rem;
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            margin: 25px 0;
+            color: #fff;
+            font-weight: bold;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
         }
 
         .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
+            margin-top: 30px;
         }
 
         .btn {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
+            display: inline-block;
+            padding: 12px 35px;
             text-decoration: none;
             font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            margin: 10px;
             text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            transition: 0.3s;
         }
 
         .btn-enter {
@@ -176,21 +220,10 @@
             color: white;
         }
 
-        .btn-enter:hover { background-color: var(--accent-hover); }
-
         .btn-exit {
+            background-color: transparent;
+            color: #777;
             border: 1px solid #444;
-            color: #888;
-        }
-
-        .btn-exit:hover { color: #fff; border-color: #fff; }
-
-        /* Mobile Optimization */
-        @media (max-width: 850px) {
-            .split-container { flex-direction: column; max-width: 500px; }
-            .main-content { padding: 40px 20px; }
-            .hero-img { max-height: 350px; }
-            .content-side { padding: 30px; }
         }
     </style>
 </head>
@@ -198,44 +231,52 @@
 
     <header class="site-header">
         <div class="header-content">
-            <a href="index.html" class="header-logo">Mistress Deville</a>
-            <a href="mailto:your-email@example.com" class="mail-link">INQUIRIES ✉</a>
+            <h1 class="header-logo">Mistress Deville</h1>
+            <a href="mailto:your-email@example.com" class="mail-link">
+                Mail me ✉
+            </a>
         </div>
     </header>
 
     <nav>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="sessions.html" class="nav-link">Sessions</a>
-        <a href="gifts.html" class="nav-link">Gifts</a>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link" style="color: var(--accent-color);">Home</a>
+            <a href="about.html" class="nav-link">About</a>
+            <div class="dropdown">
+                <a href="sessions.html" class="dropbtn">Sessions ▼</a>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP, Judicial Punishments and OTK</a>
+                    <a href="therapy-spanking.html">Therapy Spanking</a>
+                    <a href="slaves.html">Role Play and Slaves</a>
+                </div>
+            </div>
+            <a href="gifts.html" class="nav-link">Gifts</a>
+        </div>
     </nav>
 
     <div class="main-content">
-        <div class="split-container">
-            <div class="image-side">
-                <img src="home.jpg" alt="Mistress Deville" class="hero-img">
+        <div class="container">
+            <img src="home.jpg" alt="Mistress Deville" class="hero-img">
+            
+            <h1>Disciplinarian</h1>
+
+            <div class="disclaimer-text">
+                <p>Only enter if you:</p>
+                <ul>
+                    <li>Are not liable to be offended by such materials.</li>
+                    <li>Are over the age of 21 and it is legal for you to view and possess adult material in your Country/community.</li>
+                    <li>Understand the standards and laws of the community, site and computer to which you are transporting this material, and are solely responsible for your actions.</li>
+                    <li>Release and discharge the providers, owners and creators of this site from any and all liability which might arise.</li>
+                </ul>
             </div>
 
-            <div class="content-side">
-                <h1>Disciplinarian</h1>
+            <div class="warning-box">
+                There are NO SEXUAL services offered on this site.
+            </div>
 
-                <div class="disclaimer-text">
-                    <p>Access is strictly reserved for those who acknowledge:</p>
-                    <ul>
-                        <li>You are over the age of 21.</li>
-                        <li>It is legal to view adult material in your jurisdiction.</li>
-                        <li>You are not easily offended by professional discipline.</li>
-                        <li>You release the providers from any and all liability.</li>
-                    </ul>
-                </div>
-
-                <div class="warning-box">
-                    Strictly NO sexual services offered on this site.
-                </div>
-
-                <div class="btn-group">
-                    <a href="about.html" class="btn btn-enter">Enter Site</a>
-                    <a href="https://www.google.com" class="btn btn-exit">Exit</a>
-                </div>
+            <div class="btn-group">
+                <a href="about.html" class="btn btn-enter">Enter Site</a>
+                <a href="https://www.google.com" class="btn btn-exit">Exit</a>
             </div>
         </div>
     </div>
