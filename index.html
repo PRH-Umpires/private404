@@ -3,206 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mistress Deville | The Disciplinarian</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <title>Mistress Deville | Disciplinarian Entry</title>
     <style>
         :root {
-            --bg-color: #050505;
-            --text-color: #ffffff;
-            --gold-accent: #c5a059; /* Sophisticated Gold */
-            --subtle-gray: #777;
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --accent-color: #920000;
+            --accent-hover: #c60000;
+            --card-bg: #151515;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            letter-spacing: 0.1em;
+            padding: 0;
+            overflow-x: hidden;
         }
 
-        /* --- Elegant White Header --- */
+        /* --- Slim Header --- */
         .site-header {
-            background-color: #ffffff;
-            padding: 30px 0;
             display: flex;
             justify-content: center;
-            border-bottom: 1px solid var(--gold-accent);
+            background-color: #fff;
+            color: var(--accent-color);
+            padding: 10px 0;
         }
 
         .header-content {
-            width: 90%;
-            max-width: 1100px;
+            width: 900px; 
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 20px;
         }
 
         .header-logo {
             font-family: 'Brush Script MT', cursive;
-            font-size: 3rem;
-            color: #111;
+            font-size: 2.2rem;
+            margin: 0;
             text-decoration: none;
+            color: var(--accent-color);
         }
 
         .mail-link {
             text-decoration: none;
-            color: #111;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            border-bottom: 1px solid #111;
-            padding-bottom: 5px;
+            color: #555;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
         }
 
-        /* --- Air Navigation --- */
+        /* --- Slim Nav --- */
         nav {
-            background: transparent;
-            padding: 40px 0;
+            background: #000;
             text-align: center;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .nav-link, .dropbtn {
-            color: var(--subtle-gray);
+            color: var(--text-color);
             text-decoration: none;
-            padding: 0 30px;
-            font-size: 0.7rem;
+            padding: 12px 20px;
+            display: inline-block;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            transition: 0.5s;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
         }
 
-        .nav-link:hover, .dropdown:hover .dropbtn {
-            color: var(--gold-accent);
-        }
-
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #000;
-            min-width: 250px;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 1px solid #222;
-            z-index: 10;
-        }
-
-        .dropdown-content a {
-            color: #888;
+        /* --- Main Layout --- */
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
             padding: 20px;
-            text-decoration: none;
-            display: block;
-            font-size: 0.65rem;
-            text-align: center;
-            border-bottom: 1px solid #111;
         }
 
-        .dropdown-content a:hover {
-            background: #111;
-            color: var(--gold-accent);
+        .split-container {
+            display: flex;
+            background: var(--card-bg);
+            max-width: 950px;
+            width: 100%;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            border: 1px solid #222;
         }
 
-        .dropdown:hover .dropdown-content { display: block; }
-
-        /* --- Hero Section --- */
-        .hero {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-            padding-bottom: 100px;
+        .image-side {
+            flex: 1;
+            background: #000;
+            display: flex;
+            align-items: center;
         }
 
         .hero-img {
             width: 100%;
-            max-width: 650px;
-            margin: 40px 0;
-            box-shadow: 0 20px 80px rgba(0,0,0,1);
-            border: 1px solid #222;
+            height: 100%;
+            object-fit: cover;
+            max-height: 550px;
         }
 
-        .title-group {
-            margin-top: -80px; /* Overlaps image slightly for high-end look */
-            position: relative;
-            z-index: 2;
+        .content-side {
+            flex: 1.2;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 4rem;
-            font-weight: 400;
-            margin: 0;
-            text-shadow: 0 0 20px #000;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
 
-        .subtitle {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            color: var(--gold-accent);
-            font-size: 1.5rem;
+        .disclaimer-text {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #bbb;
+        }
+
+        .disclaimer-text ul {
+            padding-left: 18px;
+            margin: 15px 0;
+        }
+
+        .disclaimer-text li {
+            margin-bottom: 8px;
+        }
+
+        .warning-box {
+            font-weight: bold;
+            color: #fff;
+            border-left: 3px solid var(--accent-color);
+            padding: 10px 15px;
+            margin: 20px 0;
+            background: rgba(146, 0, 0, 0.1);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
             margin-top: 10px;
         }
 
-        /* --- Entry Card --- */
-        .entry-card {
-            max-width: 600px;
-            margin: 60px auto;
-            padding: 40px;
-            border: 1px solid #1a1a1a;
-            background: linear-gradient(to bottom, #0a0a0a, #050505);
-        }
-
-        .rules-text {
-            color: #888;
-            font-size: 0.85rem;
-            line-height: 2.2;
-            margin-bottom: 40px;
-            text-align: justify;
-        }
-
-        .no-sex-warning {
-            color: var(--gold-accent);
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 5px;
-            margin-bottom: 40px;
-            border-top: 1px solid #1a1a1a;
-            padding-top: 30px;
-        }
-
-        /* --- Buttons --- */
-        .btn-box {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-        }
-
         .btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
             text-decoration: none;
-            font-size: 0.7rem;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            padding: 15px 40px;
-            transition: 0.4s;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
         }
 
-        .enter-btn {
-            border: 1px solid var(--gold-accent);
-            color: var(--gold-accent);
+        .btn-enter {
+            background-color: var(--accent-color);
+            color: white;
         }
 
-        .enter-btn:hover {
-            background: var(--gold-accent);
-            color: #000;
+        .btn-enter:hover { background-color: var(--accent-hover); }
+
+        .btn-exit {
+            border: 1px solid #444;
+            color: #888;
         }
 
-        .exit-btn {
-            color: #444;
+        .btn-exit:hover { color: #fff; border-color: #fff; }
+
+        /* Mobile Optimization */
+        @media (max-width: 850px) {
+            .split-container { flex-direction: column; max-width: 500px; }
+            .main-content { padding: 40px 20px; }
+            .hero-img { max-height: 350px; }
+            .content-side { padding: 30px; }
         }
-
-        .exit-btn:hover { color: #fff; }
-
     </style>
 </head>
 <body>
@@ -210,43 +199,43 @@
     <header class="site-header">
         <div class="header-content">
             <a href="index.html" class="header-logo">Mistress Deville</a>
-            <a href="mailto:contact@mistressdeville.com" class="mail-link">Private Inquiries</a>
+            <a href="mailto:your-email@example.com" class="mail-link">INQUIRIES ✉</a>
         </div>
     </header>
 
     <nav>
-        <a href="about.html" class="nav-link">The Mistress</a>
-        <div class="dropdown">
-            <a class="dropbtn">The Sessions</a>
-            <div class="dropdown-content">
-                <a href="cp-judicial.html">Judicial Discipline</a>
-                <a href="therapy-spanking.html">Therapeutic Spanking</a>
-                <a href="slaves.html">Power & Submission</a>
-            </div>
-        </div>
-        <a href="gifts.html" class="nav-link">Tributes</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="sessions.html" class="nav-link">Sessions</a>
+        <a href="gifts.html" class="nav-link">Gifts</a>
     </nav>
 
-    <div class="hero">
-        <img src="home.jpg" alt="Mistress Deville" class="hero-img">
-        
-        <div class="title-group">
-            <h1>Deville</h1>
-            <div class="subtitle">The Disciplinarian</div>
-        </div>
-
-        <div class="entry-card">
-            <div class="rules-text">
-                This environment is strictly for adults. By entering, you confirm you are at least 21 years of age and assume all legal responsibility for viewing adult-oriented material. This is a space of professional discipline, built on mutual respect and consent.
+    <div class="main-content">
+        <div class="split-container">
+            <div class="image-side">
+                <img src="home.jpg" alt="Mistress Deville" class="hero-img">
             </div>
 
-            <div class="no-sex-warning">
-                Strictly No Sexual Services
-            </div>
+            <div class="content-side">
+                <h1>Disciplinarian</h1>
 
-            <div class="btn-box">
-                <a href="about.html" class="btn enter-btn">Enter</a>
-                <a href="https://google.com" class="btn exit-btn">Exit</a>
+                <div class="disclaimer-text">
+                    <p>Access is strictly reserved for those who acknowledge:</p>
+                    <ul>
+                        <li>You are over the age of 21.</li>
+                        <li>It is legal to view adult material in your jurisdiction.</li>
+                        <li>You are not easily offended by professional discipline.</li>
+                        <li>You release the providers from any and all liability.</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    Strictly NO sexual services offered on this site.
+                </div>
+
+                <div class="btn-group">
+                    <a href="about.html" class="btn btn-enter">Enter Site</a>
+                    <a href="https://www.google.com" class="btn btn-exit">Exit</a>
+                </div>
             </div>
         </div>
     </div>
