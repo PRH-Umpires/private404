@@ -4,201 +4,220 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Therapy Spanking | Mistress Deville</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --text-color: #e0e0e0;
-            --accent-color: #920000;
-            --accent-hover: #c60000;
-            --card-bg: #151515;
+            --bg-color: #0f0f0f;
+            --text-color: #d1d1d1;
+            --accent-color: #7a0000;
+            --glass-bg: rgba(25, 25, 25, 0.8);
+            --border-color: rgba(255, 255, 255, 0.05);
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            letter-spacing: 0.02em;
         }
 
-        /* Dropdown Navigation */
+        /* --- Header & Nav --- */
+        .site-header {
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+            padding: 25px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .header-content {
+            width: 90%;
+            max-width: 1000px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 2.8rem;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .mail-link {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
         nav {
             background: #000;
-            padding: 0;
+            border-bottom: 1px solid var(--border-color);
             text-align: center;
-            border-bottom: 1px solid #333;
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .nav-container {
-            display: inline-block;
-        }
-
-        .nav-link, .dropbtn {
-            color: var(--text-color);
+        .nav-link {
+            color: #888;
             text-decoration: none;
-            padding: 15px 20px;
+            padding: 20px 25px;
             display: inline-block;
             text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #111;
-            min-width: 260px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-            z-index: 1;
-            text-align: left;
-            border: 1px solid #333;
-        }
-
-        .dropdown-content a {
-            color: var(--text-color);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
             font-size: 0.75rem;
-            border-bottom: 1px solid #222;
+            letter-spacing: 3px;
         }
 
-        .dropdown-content a:hover {
-            background-color: var(--accent-color);
-            color: white;
-        }
+        .nav-link:hover { color: #fff; }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .nav-link:hover, .dropdown:hover .dropbtn {
-            color: var(--accent-color);
+        /* --- Content Layout --- */
+        .main-content {
+            padding: 60px 20px;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
         }
 
         .container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            padding: 60px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
         }
 
-        .hero-img {
-            width: 100%;
-            border-radius: 4px;
-            margin-bottom: 30px;
-            border: 1px solid #333;
+        .hero-img-container {
+            max-width: 500px;
+            margin: 0 auto 40px auto;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        h1, h2 {
-            color: var(--accent-color);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+        .hero-img { width: 100%; display: block; filter: brightness(90%); }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: #fff;
+            font-style: italic;
+            font-weight: 400;
         }
 
-        .benefit-box {
-            background: rgba(146, 0, 0, 0.1);
-            border-left: 4px solid var(--accent-color);
+        h1 { font-size: 3rem; text-align: center; margin-bottom: 40px; }
+        h2 { font-size: 1.8rem; margin-top: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+
+        .text-block { line-height: 1.8; margin-bottom: 25px; font-size: 1.05rem; }
+
+        /* Pricing Section */
+        .price-list {
+            margin: 40px 0;
             padding: 20px;
-            margin: 25px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
         }
 
-        .price-table {
-            width: 100%;
-            margin: 30px 0;
-            border-collapse: collapse;
-            background: #111;
-        }
-
-        .price-table td {
-            padding: 15px;
-            border: 1px solid #222;
-        }
-
-        .price-table td:last-child {
-            color: var(--accent-color);
-            font-weight: bold;
-            text-align: right;
+        .price-item {
             font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #fff;
         }
 
-        .warning-strip {
-            background: #000;
-            border: 1px solid #333;
-            padding: 20px;
-            margin: 20px 0;
-            font-size: 0.9rem;
+        /* Rules */
+        .rules-list {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .rules-list li {
+            margin-bottom: 15px;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .rules-list li::before {
+            content: "♦";
+            position: absolute;
+            left: 10px;
+            color: var(--accent-color);
         }
 
         .health-safety {
-            background: #111;
-            padding: 20px;
-            border: 1px dashed #444;
-            margin-top: 30px;
+            background: rgba(122, 0, 0, 0.03);
+            padding: 40px;
+            border: 1px solid rgba(122, 0, 0, 0.1);
+            margin-top: 50px;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 30px; }
+            h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="nav-link">Home</a>
-            <a href="about.html" class="nav-link">About</a>
-            <div class="dropdown">
-                <a href="sessions.html" class="dropbtn" style="color: var(--accent-color);">Sessions ▼</a>
-                <div class="dropdown-content">
-                    <a href="cp-judicial.html">CP, Judicial Punishments and OTK</a>
-                    <a href="therapy-spanking.html">Therapy Spanking</a>
-                    <a href="#">Role Play (Coming Soon)</a>
-                </div>
-            </div>
+    <header class="site-header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">Mistress Deville</a>
+            <a href="mailto:mistressdeville@example.com" class="mail-link">Private Inquiries</a>
         </div>
+    </header>
+
+    <nav>
+        <a href="index.html" class="nav-link">Entry</a>
+        <a href="about.html" class="nav-link">Profile</a>
+        <a href="sessions.html" class="nav-link">Sessions</a>
+        <a href="gifts.html" class="nav-link">Tributes</a>
     </nav>
 
-    <div class="container">
-        <img src="therapy spanking.png" alt="Therapy Spanking" class="hero-img">
-        
-        <h1>Therapy Spanking</h1>
-        
-        <p>Therapy spanking has been scientifically proven to aid in the benefit of wellbeing. Here, the goal is emotional release—not sexual. It offers an opportunity to release difficult emotions and serves as a form of therapy to aid in the healing process, both emotionally and mentally.</p>
+    <div class="main-content">
+        <div class="container">
+            <div class="hero-img-container">
+                <img src="therapy spanking.png" alt="Therapy Spanking" class="hero-img">
+            </div>
 
-        <div class="benefit-box">
-            Many report a deep sense of happiness and well-being that can last for days. This supports research suggesting spanking can be an effective tool in relieving anxiety and working with depression through the physical release of dopamine and endorphins.
-        </div>
+            <h1>Therapy Spanking</h1>
+            
+            <p class="text-block">Therapy Spanking has been scientifically proven to aid in the benefit of wellbeing. Therapy spanking is where the goal is of emotional release - not sexual. Some clients enjoy spanking as a method of stress relief from the many responsibilities and stresses of their daily lives, from work, family and community obligations. Some find that being spanked offers them the opportunity to release difficult emotions and use it as a form of therapy and to aid in the healing process, emotionally and mentally.</p>
+            
+            <p class="text-block">Over the past few years, people have requested sessions with me for many different reasons. Some wish to work with specific emotional issues through spanking and some just come because they're drawn to it and wish to have this experience even if they're not exactly sure why.</p>
 
-        <p>Communication is an absolute must for this to be completely effective. There will be talking before and after, and if needed, during as well. Our relaxed environment helps you openly discuss your needs in complete confidentiality.</p>
+            <p class="text-block">Regardless of the reasons they come, all report experiencing similar benefits from the work I do. Many said they feel a deep sense of happiness and well being that can last for days after a spanking session. This supports recent research suggesting that spanking can be an effective tool in relieving anxiety and working with depression. This effect may be caused by the physical release of dopamine and endorphins into the system during and after a spanking. These neurotransmitters stimulate the pleasure centers of our brains and can make us feel very happy and satisfied.</p>
 
-        <h2>Tribute</h2>
-        <table class="price-table">
-            <tr><td>Half Hour session</td><td>£70.00</td></tr>
-            <tr><td>Forty Five minute session</td><td>£100.00</td></tr>
-            <tr><td>Full Hour session</td><td>£140.00</td></tr>
-        </table>
+            <p class="text-block">Communication is an absolute must for this to be completely effective. There will be talking before and after and if needed, during as well. The environment will be a relaxed one to help you openly discuss your needs and what you hope to get from our sessions and all conversations will be confidential.</p>
 
-        <div class="warning-strip">
-            <strong>Requirements:</strong> Arrive on time, freshly showered and kempt. No alcohol or drugs. 100% compus mentis. <br><br>
-            <strong>Strictly NO sex or sexual services. I accept tips and love gifts.</strong>
-        </div>
+            <p class="text-block"><em>If you are worried about being marked then don't be - I can punish you without leaving marks.</em></p>
 
-        <div class="health-safety">
-            <h2>Health & Safety</h2>
-            <p>You are responsible for informing me of any medical conditions. A <strong>safe word</strong> is always used. If hygiene or sobriety expectations are not met, you will be turned away and forfeit the tribute.</p>
+            <div class="price-list">
+                <div class="price-item">£70.00 Half Hour session</div>
+                <div class="price-item">£100.00 Forty Five minute session</div>
+                <div class="price-item">£140.00 A full Hour.</div>
+                <p>I accept tips and love gifts.</p>
+            </div>
+
+            <ul class="rules-list">
+                <li>Please arrive on time and be freshly showered and kempt.</li>
+                <li>All the above include a discussion first to iterate on what you need from your session - all details will be discussed beforehand by phone and/or email.</li>
+                <li>No sex - ever - do not ask.</li>
+                <li>No sexual services - ever - do not ask.</li>
+                <li>The tribute is non-refundable should you cancel on the day of your appointment or arrive inebriated, smelling of alcohol or are not freshly showered and shaved.</li>
+                <li>Please do not make a booking unless you are prepared to do all the above.</li>
+            </ul>
+
+            <div class="health-safety">
+                <h3>HEALTH and SAFETY etc:</h3>
+                <p class="text-block">Please note that you are responsible to inform me of any medical conditions you have that might impact on the session. You have volunteered to participate in all activities. There will always be a 'safe' word if you wish the session to stop. I am a disciplinarian and Mistress ONLY so please don't insult me by asking me to switch or provide any other services that are not mentioned on this site.</p>
+                
+                <p class="text-block">If you turn up and don't meet with my high expectations of personal hygiene then I will turn you away and the punishment will be that you still give me the tribute.</p>
+                
+                <p class="text-block"><strong>NO alcohol, NO drugs, NO hangovers, NO pre-consumed alcohol or drugs.</strong> You must be 100% compus mentis. Should I detect otherwise, again you will be turned away but you will forfeit the tribute.</p>
+            </div>
         </div>
     </div>
 
