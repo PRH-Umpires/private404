@@ -34,7 +34,7 @@
             width: 100%;
         }
 
-        /* --- Header & Nav --- */
+        /* HEADER */
         .site-header {
             display: flex;
             justify-content: center;
@@ -45,10 +45,11 @@
 
         .header-content {
             width: 90%;
-            max-width: 1000px; 
+            max-width: 1000px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
 
         .header-logo {
@@ -56,6 +57,7 @@
             font-size: 2.8rem;
             color: var(--accent-color);
             text-decoration: none;
+            min-width: 0;
             font-weight: normal;
         }
 
@@ -65,51 +67,45 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+            text-align: right;
             transition: color 0.3s;
         }
 
-        .mail-link:hover { color: var(--accent-color); }
+        .mail-link:hover {
+            color: var(--accent-color);
+        }
 
+        /* NAV */
         nav {
             background: #000;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
             position: sticky;
             top: 0;
             z-index: 1000;
-            width: 100%;
         }
 
         .nav-container {
             display: flex;
             justify-content: center;
-            align-items: stretch;
             flex-wrap: wrap;
-            width: 100%;
-            max-width: 100%;
         }
 
         .nav-link, .dropbtn {
             color: #888;
-            text-decoration: none;
-            padding: 20px 25px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            padding: 16px 14px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 3px;
-            transition: all 0.4s;
+            text-decoration: none;
             background: none;
             border: none;
             cursor: pointer;
-            white-space: nowrap;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
         }
 
-        .nav-link:hover, .dropdown:hover .dropbtn, .dropbtn[aria-expanded="true"] { color: #fff; }
+        .nav-link:hover, .dropbtn:hover {
+            color: #fff;
+        }
 
+        /* DROPDOWN */
         .dropdown {
             position: relative;
         }
@@ -117,40 +113,23 @@
         .dropdown-content {
             display: none;
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 100%;
-            background-color: #111;
-            min-width: 320px;
-            max-width: min(92vw, 420px);
-            width: max-content;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            background: #111;
+            min-width: 260px;
             border: 1px solid var(--border-color);
-            text-align: left;
         }
 
         .dropdown-content a {
             color: #888;
-            padding: 15px 20px;
-            text-decoration: none;
+            padding: 12px;
             display: block;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            white-space: normal;
-            overflow-wrap: anywhere;
+            text-decoration: none;
         }
 
-        .dropdown-content a:hover {
-            background-color: #1a1a1a;
-            color: #fff;
-            padding-left: 25px;
+        .dropdown.active .dropdown-content {
+            display: block;
         }
 
-        .dropdown:hover .dropdown-content,
-        .dropdown.open .dropdown-content { display: block; }
-
-        /* --- Main Content --- */
+        /* MAIN */
         .main-content {
             padding: 80px 20px;
             background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
@@ -173,7 +152,11 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .hero-img { width: 100%; display: block; filter: brightness(90%); }
+        .hero-img {
+            width: 100%;
+            display: block;
+            filter: brightness(90%);
+        }
 
         h1, h2 {
             font-family: 'Playfair Display', serif;
@@ -182,8 +165,18 @@
             font-weight: 400;
         }
 
-        h1 { font-size: 3rem; margin-bottom: 40px; text-align: center; }
-        h2 { font-size: 1.8rem; margin-top: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
 
         .text-block {
             line-height: 1.8;
@@ -218,95 +211,60 @@
             box-shadow: inset 0 0 0 1px var(--accent-color);
         }
 
-        @media (max-width: 760px) {
-    .site-header {
-        padding: 18px 0;
-    }
+        /* MOBILE */
+        @media (max-width: 600px) {
+            .nav-link, .dropbtn {
+                font-size: 0.65rem;
+                padding: 12px 8px;
+            }
 
-    .header-content {
-        width: min(92%, 1000px);
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        text-align: center;
-    }
+            h1 {
+                font-size: 2.2rem;
+            }
 
-    .header-logo {
-        font-size: 2.2rem;
-    }
+            .site-header {
+                padding: 18px 0;
+            }
 
-    .mail-link {
-        font-size: 0.72rem;
-        letter-spacing: 1.5px;
-        text-align: center;
-    }
+            .header-content {
+                flex-direction: column;
+                justify-content: center;
+                gap: 8px;
+                text-align: center;
+            }
 
-    .nav-container {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        align-items: stretch;
-    }
+            .header-logo {
+                font-size: 2.2rem;
+            }
 
-    .nav-link, .dropbtn {
-        width: 100%;
-        min-width: 0;
-        padding: 16px 8px;
-        font-size: 0.58rem;
-        letter-spacing: 1.4px;
-        white-space: normal;
-        line-height: 1.35;
-        text-align: center;
-    }
+            .mail-link {
+                font-size: 0.72rem;
+                letter-spacing: 1.5px;
+                text-align: center;
+            }
 
-    .dropdown {
-        min-width: 0;
-    }
+            .main-content {
+                padding: 48px 14px;
+            }
 
-    .dropdown-content {
-        position: static;
-        transform: none;
-        min-width: 0;
-        max-width: none;
-        width: 100%;
-        box-shadow: none;
-        border-left: none;
-        border-right: none;
-        border-bottom: none;
-    }
+            .container {
+                padding: 28px 18px;
+                width: 100%;
+                max-width: 100%;
+            }
 
-    .dropdown-content a {
-        padding: 14px 16px;
-        font-size: 0.68rem;
-        line-height: 1.5;
-    }
+            h2 {
+                font-size: 1.45rem;
+            }
 
-    .main-content {
-        padding: 48px 14px;
-    }
+            .text-block {
+                text-align: left;
+            }
 
-    .container {
-        padding: 28px 18px;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    h1 {
-        font-size: 2.2rem;
-    }
-
-    h2 {
-        font-size: 1.45rem;
-    }
-
-    .text-block {
-        text-align: left;
-    }
-
-    .highlight-box {
-        padding: 22px 18px;
-    }
-}
+            .highlight-box {
+                padding: 22px 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -322,15 +280,19 @@
         <div class="nav-container">
             <a href="index.html" class="nav-link">Entry</a>
             <a href="about.html" class="nav-link">Profile</a>
+
             <div class="dropdown">
-                <button type="button" class="nav-link dropbtn" aria-expanded="false" aria-controls="sessions-menu">Sessions ▼</button>
-                <div class="dropdown-content" id="sessions-menu">
-                    <a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a>
+                <button class="dropbtn">Sessions ▼</button>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP, Judicial Punishments</a>
                     <a href="therapy-spanking.html">Therapy Spanking</a>
-                    <a href="slaves.html">Roleplay and Slaves</a>
+                    <a href="slaves.html">Roleplay</a>
+                    <a href="contact.html">Contact</a>
                 </div>
             </div>
+
             <a href="gifts.html" class="nav-link">Tributes</a>
+            <a href="contact.html" class="nav-link">Contact</a>
         </div>
     </nav>
 
@@ -383,39 +345,20 @@
         </div>
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const dropdown = document.querySelector('.dropdown');
-            const dropbtn = dropdown ? dropdown.querySelector('.dropbtn') : null;
-
-            if (!dropdown || !dropbtn) return;
-
-            const closeDropdown = () => {
-                dropdown.classList.remove('open');
-                dropbtn.setAttribute('aria-expanded', 'false');
-            };
-
-            const toggleDropdown = (event) => {
-                if (window.innerWidth > 760) return;
-                event.preventDefault();
-                event.stopPropagation();
-                const isOpen = dropdown.classList.toggle('open');
-                dropbtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            };
-
-            dropbtn.addEventListener('click', toggleDropdown);
-            dropbtn.addEventListener('touchstart', toggleDropdown, { passive: false });
-
-            document.addEventListener('click', function (event) {
-                if (window.innerWidth > 760) return;
-                if (!dropdown.contains(event.target)) closeDropdown();
-            });
-
-            window.addEventListener('resize', function () {
-                if (window.innerWidth > 760) closeDropdown();
-            });
+    // mobile dropdown
+    document.querySelectorAll('.dropbtn').forEach(btn => {
+        btn.addEventListener('click', function(e){
+            e.preventDefault();
+            this.parentElement.classList.toggle('active');
         });
+    });
+
+    document.addEventListener('click', function(e){
+        if (!e.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+        }
+    });
     </script>
 
 </body>
