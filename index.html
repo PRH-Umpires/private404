@@ -16,18 +16,14 @@
     --border-color: rgba(255, 255, 255, 0.05);
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Inter', sans-serif;
     margin: 0;
-    padding: 0;
-    letter-spacing: 0.02em;
-    overflow-x: hidden; /* ✅ kills sideways scroll */
+    overflow-x: hidden;
 }
 
 /* HEADER */
@@ -36,7 +32,6 @@ body {
     justify-content: center;
     background-color: #ffffff;
     padding: 25px 0;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 
 .header-content {
@@ -55,7 +50,6 @@ body {
 }
 
 .mail-link {
-    text-decoration: none;
     color: #666;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -65,7 +59,6 @@ body {
 /* NAV */
 nav {
     background: #000;
-    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -74,54 +67,42 @@ nav {
 .nav-container {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* ✅ prevents overflow */
+    flex-wrap: wrap;
 }
 
 .nav-link, .dropbtn {
     color: #888;
-    text-decoration: none;
-    padding: 18px 18px;
-    display: inline-block;
-    text-transform: uppercase;
+    padding: 16px 14px;
     font-size: 0.7rem;
     letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
     background: none;
     border: none;
     cursor: pointer;
 }
 
-.nav-link:hover,
-.dropbtn:hover {
+.nav-link:hover, .dropbtn:hover {
     color: #fff;
 }
 
 /* DROPDOWN */
-.dropdown {
-    position: relative;
-}
+.dropdown { position: relative; }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #111;
+    background: #111;
     min-width: 260px;
     border: 1px solid var(--border-color);
-    text-align: left;
 }
 
 .dropdown-content a {
     color: #888;
-    padding: 12px 16px;
+    padding: 12px;
     display: block;
-    font-size: 0.7rem;
 }
 
-.dropdown-content a:hover {
-    color: #fff;
-    background: #1a1a1a;
-}
-
-/* ACTIVE dropdown */
 .dropdown.active .dropdown-content {
     display: block;
 }
@@ -129,15 +110,13 @@ nav {
 /* MAIN */
 .main-content {
     padding: 60px 20px;
-    background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
     background: var(--glass-bg);
-    padding: 50px 30px;
-    border: 1px solid var(--border-color);
+    padding: 40px 25px;
     text-align: center;
 }
 
@@ -148,28 +127,21 @@ nav {
 
 .hero-img {
     width: 100%;
-    display: block;
 }
 
 h1 {
     font-family: 'Playfair Display', serif;
-    font-style: italic;
     font-size: 2.8rem;
     color: #fff;
 }
 
-/* TEXT */
 .disclaimer-text {
     max-width: 600px;
     margin: 30px auto;
     text-align: left;
+    line-height: 1.8;
 }
 
-.disclaimer-text ul {
-    padding-left: 20px;
-}
-
-/* WARNING */
 .warning-box {
     border: 1px solid var(--accent-color);
     color: var(--accent-color);
@@ -179,12 +151,17 @@ h1 {
     font-size: 0.8rem;
 }
 
-/* BUTTONS */
+.agreement-note {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 20px;
+}
+
 .btn-group {
     display: flex;
     justify-content: center;
     gap: 15px;
-    flex-wrap: wrap; /* ✅ mobile safe */
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -207,19 +184,13 @@ h1 {
 
 /* MOBILE */
 @media (max-width: 600px) {
-
     .nav-link, .dropbtn {
-        padding: 14px 10px;
         font-size: 0.65rem;
-        letter-spacing: 1px;
+        padding: 12px 8px;
     }
 
     h1 {
         font-size: 2.2rem;
-    }
-
-    .container {
-        padding: 30px 20px;
     }
 
     .btn-group {
@@ -248,8 +219,8 @@ h1 {
             <div class="dropdown-content">
                 <a href="cp-judicial.html">CP, Judicial Punishments</a>
                 <a href="therapy-spanking.html">Therapy Spanking</a>
-                <a href="slaves.html">Roleplay and Slaves</a>
-                <a href="contact.html">Contact Mistress</a>
+                <a href="slaves.html">Roleplay</a>
+                <a href="contact.html">Contact</a>
             </div>
         </div>
 
@@ -259,38 +230,43 @@ h1 {
 </nav>
 
 <div class="main-content">
-    <div class="container">
+<div class="container">
 
-        <div class="hero-img-container">
-            <img src="home.jpg" class="hero-img">
-        </div>
+<div class="hero-img-container">
+    <img src="home.jpg" class="hero-img">
+</div>
 
-        <h1>Disciplinarian</h1>
+<h1>Disciplinarian</h1>
 
-        <div class="disclaimer-text">
-            <p>Only enter if you:</p>
-            <ul>
-                <li>Are not liable to be offended</li>
-                <li>Are over 21</li>
-                <li>Understand local laws</li>
-                <li>Accept responsibility</li>
-            </ul>
-        </div>
+<div class="disclaimer-text">
 
-        <div class="warning-box">
-            No sexual services offered
-        </div>
+Only enter if you:<br><br>
 
-        <div class="btn-group">
-            <a href="about.html" class="btn btn-enter">Enter Site</a>
-            <a href="https://google.com" class="btn btn-exit">Leave</a>
-        </div>
+* Are not liable to be offended by such materials.<br>
+* Are over the age of 21 and it is legal for you to view and possess adult material in your Country/community.<br>
+* Understand the standards and laws of the community, site and computer to which you are transporting this material, and are solely responsible for your actions;<br>
+* Release and discharge the providers, owners and creators of this site from any and all liability which might arise.
 
-    </div>
+</div>
+
+<div class="warning-box">
+There are NO SEXUAL services offered on this site, if that's what you want please look somewhere else.
+</div>
+
+<div class="btn-group">
+<a href="about.html" class="btn btn-enter">Enter Site</a>
+<a href="https://google.com" class="btn btn-exit">Leave Site</a>
+</div>
+
+<p class="agreement-note">
+Bookmarking or directly accessing any other page on this website and bypassing this Agreement shall constitute an implicit acceptance of this Agreement.
+</p>
+
+</div>
 </div>
 
 <script>
-// MOBILE DROPDOWN FIX
+// mobile dropdown
 document.querySelectorAll('.dropbtn').forEach(btn => {
     btn.addEventListener('click', function(e){
         e.preventDefault();
@@ -298,7 +274,6 @@ document.querySelectorAll('.dropbtn').forEach(btn => {
     });
 });
 
-// close if click outside
 document.addEventListener('click', function(e){
     if (!e.target.closest('.dropdown')) {
         document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
