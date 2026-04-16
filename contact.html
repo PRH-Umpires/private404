@@ -136,21 +136,30 @@
         }
 
 /* DROPDOWN */
-.dropdown { position: relative; }
+.dropdown { 
+    position: relative; 
+}
 
 .dropdown-content {
     display: none;
     position: absolute;
+    top: 100%;
+    left: 0;
     background: #111;
     min-width: 260px;
     border: 1px solid var(--border-color);
+    z-index: 1001;
 }
 
 .dropdown-content a {
     color: #888;
-    padding: 12px 15px;
+    padding: 14px 18px;
     display: block;
     font-size: 0.7rem;
+    text-decoration: none;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 1.4;
 }
 
 .dropdown-content a:hover {
