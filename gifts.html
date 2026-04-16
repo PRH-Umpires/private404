@@ -1,248 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gifts & Tributes | Mistress Deville</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0f0f0f;
-            --text-color: #d1d1d1;
-            --accent-color: #7a0000;
-            --glass-bg: rgba(25, 25, 25, 0.8);
-            --border-color: rgba(255, 255, 255, 0.05);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gifts & Tributes | Mistress Deville</title>
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            letter-spacing: 0.02em;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
-        /* --- Header & Nav (Consistent with Index) --- */
-        .site-header {
-            display: flex;
-            justify-content: center;
-            background-color: #ffffff;
-            padding: 25px 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
+<style>
+:root {
+    --bg-color: #0f0f0f;
+    --text-color: #d1d1d1;
+    --accent-color: #7a0000;
+    --glass-bg: rgba(25, 25, 25, 0.8);
+    --border-color: rgba(255, 255, 255, 0.05);
+}
 
-        .header-content {
-            width: 90%;
-            max-width: 1000px; 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+* { box-sizing: border-box; }
 
-        .header-logo {
-            font-family: 'Brush Script MT', cursive;
-            font-size: 2.8rem;
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: normal;
-        }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    overflow-x: hidden; /* ✅ fix */
+}
 
-        .mail-link {
-            text-decoration: none;
-            color: #666;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 0.3s;
-        }
+/* HEADER */
+.site-header {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 25px 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
 
-        .mail-link:hover { color: var(--accent-color); }
+.header-content {
+    width: 90%;
+    max-width: 1000px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        nav {
-            background: #000;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+.header-logo {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 2.8rem;
+    color: var(--accent-color);
+    text-decoration: none;
+}
 
-        .nav-container { display: flex; justify-content: center; }
+.mail-link {
+    color: #666;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
 
-        .nav-link, .dropbtn {
-            color: #888;
-            text-decoration: none;
-            padding: 20px 25px;
-            display: inline-block;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 3px;
-            transition: all 0.4s;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
+/* NAV */
+nav {
+    background: #000;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-        .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
+.nav-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* ✅ fix */
+}
 
-        /* Dropdown Logic */
-        .dropdown { position: relative; }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #111;
-            min-width: 280px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-            border: 1px solid var(--border-color);
-            text-align: left;
-        }
+.nav-link, .dropbtn {
+    color: #888;
+    padding: 18px 16px;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
 
-        .dropdown-content a {
-            color: #888;
-            padding: 15px 20px;
-            text-decoration: none;
-            display: block;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
+.nav-link:hover, .dropbtn:hover {
+    color: #fff;
+}
 
-        .dropdown-content a:hover {
-            background-color: #1a1a1a;
-            color: #fff;
-            padding-left: 25px;
-        }
+/* DROPDOWN */
+.dropdown { position: relative; }
 
-        .dropdown:hover .dropdown-content { display: block; }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: #111;
+    min-width: 260px;
+    border: 1px solid var(--border-color);
+}
 
-        /* --- Main Content --- */
-        .main-content {
-            padding: 80px 20px;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
-        }
+.dropdown-content a {
+    color: #888;
+    padding: 12px 15px;
+    display: block;
+    font-size: 0.7rem;
+}
 
-        .container {
-            max-width: 850px;
-            margin: 0 auto;
-            background: var(--glass-bg);
-            padding: 60px;
-            border-radius: 2px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-        }
+.dropdown-content a:hover {
+    color: #fff;
+    background: #1a1a1a;
+}
 
-        .hero-img-container {
-            max-width: 450px;
-            margin: 0 auto 40px auto;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+.dropdown.active .dropdown-content {
+    display: block;
+}
 
-        .hero-img { width: 100%; display: block; filter: brightness(90%); }
+/* MAIN */
+.main-content {
+    padding: 60px 20px;
+}
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            color: #fff;
-            font-style: italic;
-            font-weight: 400;
-            text-align: center;
-            font-size: 3rem;
-            margin-bottom: 30px;
-        }
+.container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: var(--glass-bg);
+    padding: 40px 25px;
+    border: 1px solid var(--border-color);
+}
 
-        .intro-text {
-            text-align: center;
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-            color: #fff;
-        }
+.hero-img-container {
+    max-width: 400px;
+    margin: 0 auto 30px;
+}
 
-        .gift-list {
-            list-style: none;
-            padding: 0;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+.hero-img {
+    width: 100%;
+}
 
-        .gift-list li {
-            padding: 15px 0;
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
-            padding-left: 30px;
-        }
+h1 {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+}
 
-        .gift-list li::before {
-            content: "♦";
-            position: absolute;
-            left: 0;
-            color: var(--accent-color);
-        }
+.intro-text {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-        .tip-box {
-            margin-top: 50px;
-            text-align: center;
-            padding: 30px;
-            border: 1px solid rgba(122, 0, 0, 0.2);
-            background: rgba(122, 0, 0, 0.05);
-            font-style: italic;
-        }
+.gift-list {
+    list-style: none;
+    padding: 0;
+}
 
-        @media (max-width: 600px) {
-            .container { padding: 30px; }
-            h1 { font-size: 2.2rem; }
-        }
-    </style>
+.gift-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-left: 25px;
+    position: relative;
+}
+
+.gift-list li::before {
+    content: "♦";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
+}
+
+.tip-box {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid rgba(122,0,0,0.3);
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .nav-link, .dropbtn {
+        padding: 12px 8px;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <header class="site-header">
-        <div class="header-content">
-            <a href="index.html" class="header-logo">Mistress Deville</a>
-            <a href="mailto:mistressdeville@example.com" class="mail-link">Private Inquiries</a>
-        </div>
-    </header>
-
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="nav-link">Entry</a>
-            <a href="about.html" class="nav-link">Profile</a>
-            <div class="dropdown">
-                <a href="sessions.html" class="nav-link dropbtn">Sessions ▼</a>
-                <div class="dropdown-content">
-                    <a href="cp-judicial.html">CP & Judicial Correction</a>
-                    <a href="therapy-spanking.html">Therapeutic Spanking</a>
-                    <a href="slaves.html">Power Exchange & Role Play</a>
-                </div>
-            </div>
-            <a href="gifts.html" class="nav-link">Tributes</a>
-        </div>
-    </nav>
-
-    <div class="main-content">
-        <div class="container">
-            <div class="hero-img-container">
-                <img src="gift.png" alt="Tributes and Gifts" class="hero-img">
-            </div>
-
-            <h1>Gifts & Tributes</h1>
-            <p class="intro-text">I know you want to keep me happy so below are some gift ideas that will do just that;</p>
-
-            <ul class="gift-list">
-                <li>Jo Malone Basil and Neroli candle/reed diffuser</li>
-                <li>Acqua di Parma Bergamotto do Calabria</li>
-                <li>Gift voucher for John Lewis</li>
-                <li>Champagne</li>
-                <li>Paolo Monti Barbera 2015, Finca Valpiedra Reserva 2011 and Pilastro Primitivo</li>
-                <li>The Chocolate Block (Waitrose Wine Cellar)</li>
-                <li>Food Hampers</li>
-            </ul>
-
-            <div class="tip-box">
-                You can also tip me at the beginning or end of the session.
-            </div>
-        </div>
+<header class="site-header">
+    <div class="header-content">
+        <a href="index.html" class="header-logo">Mistress Deville</a>
+        <a href="#" class="mail-link">Private Inquiries</a>
     </div>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <a href="index.html" class="nav-link">Entry</a>
+        <a href="about.html" class="nav-link">Profile</a>
+
+        <div class="dropdown">
+            <button class="dropbtn">Sessions ▼</button>
+            <div class="dropdown-content">
+                <a href="cp-judicial.html">CP & Judicial</a>
+                <a href="therapy-spanking.html">Therapy</a>
+                <a href="slaves.html">Roleplay</a>
+            </div>
+        </div>
+
+        <a href="gifts.html" class="nav-link">Tributes</a>
+    </div>
+</nav>
+
+<div class="main-content">
+    <div class="container">
+
+        <div class="hero-img-container">
+            <img src="gift.png" class="hero-img">
+        </div>
+
+        <h1>Gifts & Tributes</h1>
+
+        <p class="intro-text">
+            I know you want to keep me happy so below are some gift ideas:
+        </p>
+
+        <ul class="gift-list">
+            <li>Jo Malone candle</li>
+            <li>Acqua di Parma</li>
+            <li>John Lewis voucher</li>
+            <li>Champagne</li>
+            <li>Fine wines</li>
+            <li>Food hampers</li>
+        </ul>
+
+        <div class="tip-box">
+            You may also tip at the start or end of the session.
+        </div>
+
+    </div>
+</div>
+
+<script>
+// mobile dropdown
+document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', function(e){
+        e.preventDefault();
+        this.parentElement.classList.toggle('active');
+    });
+});
+
+document.addEventListener('click', function(e){
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+    }
+});
+</script>
 
 </body>
 </html>
