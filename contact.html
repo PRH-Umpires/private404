@@ -39,109 +39,88 @@
             height: auto;
         }
 
-        /* --- Header & Nav (Condensed) --- */
+        /* --- Header & Nav --- */
         .site-header {
             display: flex;
             justify-content: center;
             background-color: #ffffff;
-            padding: 15px 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+            padding: 25px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         .header-content {
-            width: min(92%, 1000px);
+            width: 90%;
+            max-width: 1000px; 
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
 
         .header-logo {
             font-family: 'Brush Script MT', cursive;
-            font-size: 2.2rem;
+            font-size: 2.8rem;
             color: var(--accent-color);
             text-decoration: none;
-            text-align: center;
+            min-width: 0;
+        }
+
+        .mail-link {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: right;
         }
 
         nav {
             background: #000;
-            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
         .nav-container {
-            width: min(100%, 1100px);
-            margin: 0 auto;
             display: flex;
             justify-content: center;
-            align-items: stretch;
             flex-wrap: wrap;
         }
 
-        .nav-link,
-        .dropbtn {
+        .nav-link, .dropbtn {
             color: #888;
-            text-decoration: none;
-            padding: 15px 18px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-transform: uppercase;
+            padding: 16px 14px;
             font-size: 0.7rem;
             letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
             background: none;
             border: none;
             cursor: pointer;
-            min-height: 48px;
-            white-space: nowrap;
-            transition: color 0.3s ease, background-color 0.3s ease;
-            -webkit-tap-highlight-color: transparent;
         }
 
-        .nav-link:hover,
-        .dropbtn:hover {
+        .nav-link:hover, .dropbtn:hover {
             color: #fff;
         }
 
-        .dropdown {
-            position: relative;
-        }
+        /* DROPDOWN */
+        .dropdown { position: relative; }
 
         .dropdown-content {
             display: none;
             position: absolute;
-            left: 0;
-            top: 100%;
-            background-color: #111;
-            min-width: 280px;
-            max-width: min(92vw, 360px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            background: #111;
+            min-width: 260px;
             border: 1px solid var(--border-color);
-            text-align: left;
-            z-index: 1001;
         }
 
         .dropdown-content a {
             color: #888;
-            padding: 14px 18px;
-            text-decoration: none;
+            padding: 12px;
             display: block;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            line-height: 1.45;
-            white-space: normal;
-            word-break: break-word;
         }
 
-        .dropdown-content a:hover {
-            background-color: #1a1a1a;
-            color: #fff;
-        }
-
-        .dropdown.open .dropdown-content {
+        .dropdown.active .dropdown-content {
             display: block;
         }
 
@@ -251,32 +230,31 @@
             background: #900000;
         }
 
-        @media (max-width: 760px) {
-            .nav-container {
-                display: grid;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-
-            .nav-link,
-            .dropbtn,
-            .dropdown {
-                width: 100%;
-            }
-
-            .dropdown-content {
-                left: 50%;
-                transform: translateX(-50%);
-                min-width: min(92vw, 340px);
-            }
-        }
-
         @media (max-width: 600px) {
+            .nav-link, .dropbtn {
+                font-size: 0.65rem;
+                padding: 12px 8px;
+            }
+
             .site-header {
-                padding: 14px 12px;
+                padding: 18px 0;
+            }
+
+            .header-content {
+                flex-direction: column;
+                justify-content: center;
+                gap: 8px;
+                text-align: center;
             }
 
             .header-logo {
-                font-size: 1.95rem;
+                font-size: 2.2rem;
+            }
+
+            .mail-link {
+                font-size: 0.72rem;
+                letter-spacing: 1.5px;
+                text-align: center;
             }
 
             .main-content {
@@ -291,35 +269,6 @@
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
-
-            .nav-container {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .nav-link,
-            .dropbtn {
-                padding: 14px 10px;
-                font-size: 0.64rem;
-                letter-spacing: 1.5px;
-                white-space: normal;
-                text-align: center;
-                line-height: 1.35;
-            }
-
-            .dropdown {
-                position: relative;
-            }
-
-            .dropdown-content {
-                position: static;
-                transform: none;
-                min-width: 100%;
-                max-width: 100%;
-                box-shadow: none;
-                border-left: none;
-                border-right: none;
-                border-bottom: none;
-            }
         }
     </style>
 </head>
@@ -328,6 +277,7 @@
     <header class="site-header">
         <div class="header-content">
             <a href="index.html" class="header-logo">Mistress Deville</a>
+            <a href="mailto:mistressdeville@example.com" class="mail-link">Private Inquiries</a>
         </div>
     </header>
 
@@ -335,14 +285,17 @@
         <div class="nav-container">
             <a href="index.html" class="nav-link">Entry</a>
             <a href="about.html" class="nav-link">Profile</a>
+
             <div class="dropdown">
-                <a href="sessions.html" class="nav-link dropbtn" aria-expanded="false">Sessions ▼</a>
+                <button class="dropbtn">Sessions ▼</button>
                 <div class="dropdown-content">
-                    <a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a>
+                    <a href="cp-judicial.html">CP, Judicial Punishments</a>
                     <a href="therapy-spanking.html">Therapy Spanking</a>
-                    <a href="slaves.html">Roleplay and Slaves</a>
+                    <a href="slaves.html">Roleplay</a>
+                    <a href="contact.html">Contact</a>
                 </div>
             </div>
+
             <a href="gifts.html" class="nav-link">Tributes</a>
             <a href="contact.html" class="nav-link" style="color:#fff">Contact</a>
         </div>
@@ -397,56 +350,20 @@
     </div>
 
     <script>
-        (function () {
-            const dropdowns = document.querySelectorAll('.dropdown');
+// mobile dropdown
+document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', function(e){
+        e.preventDefault();
+        this.parentElement.classList.toggle('active');
+    });
+});
 
-            dropdowns.forEach((dropdown) => {
-                const trigger = dropdown.querySelector('.dropbtn');
-
-                if (!trigger) return;
-
-                trigger.addEventListener('click', function (e) {
-                    const isMobile = window.matchMedia('(max-width: 760px)').matches;
-
-                    if (isMobile) {
-                        e.preventDefault();
-                        const isOpen = dropdown.classList.contains('open');
-
-                        dropdowns.forEach((item) => {
-                            item.classList.remove('open');
-                            const btn = item.querySelector('.dropbtn');
-                            if (btn) btn.setAttribute('aria-expanded', 'false');
-                        });
-
-                        if (!isOpen) {
-                            dropdown.classList.add('open');
-                            trigger.setAttribute('aria-expanded', 'true');
-                        }
-                    }
-                });
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!e.target.closest('.dropdown')) {
-                    dropdowns.forEach((dropdown) => {
-                        dropdown.classList.remove('open');
-                        const btn = dropdown.querySelector('.dropbtn');
-                        if (btn) btn.setAttribute('aria-expanded', 'false');
-                    });
-                }
-            });
-
-            window.addEventListener('resize', function () {
-                if (!window.matchMedia('(max-width: 760px)').matches) {
-                    dropdowns.forEach((dropdown) => {
-                        dropdown.classList.remove('open');
-                        const btn = dropdown.querySelector('.dropbtn');
-                        if (btn) btn.setAttribute('aria-expanded', 'false');
-                    });
-                }
-            });
-        })();
-    </script>
+document.addEventListener('click', function(e){
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+    }
+});
+</script>
 
 </body>
 </html>
