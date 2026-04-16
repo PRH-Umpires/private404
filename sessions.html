@@ -97,19 +97,24 @@ nav {
 .dropdown-content {
     display: none;
     position: absolute;
+    top: 100%;
+    left: 0;
     background: #111;
-    min-width: 260px;
+    min-width: 320px;
     border: 1px solid var(--border-color);
-
-    opacity: 0;
-    transform: translateY(6px);
-    transition: all 0.2s ease;
+    z-index: 1001;
 }
 
 .dropdown-content a {
     color: #888;
-    padding: 12px;
+    padding: 12px 15px;
     display: block;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover {
+    color: #fff;
+    background: #1a1a1a;
 }
 
 .dropdown.active .dropdown-content {
@@ -117,16 +122,9 @@ nav {
 }
 
 @media (min-width: 769px) {
-    .dropdown:hover .dropdown-content,
-    .dropdown-content:hover {
+    .dropdown:hover .dropdown-content {
         display: block;
     }
-}
-
-.dropdown:hover .dropdown-content,
-.dropdown.active .dropdown-content {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 /* MAIN */
@@ -304,20 +302,20 @@ All sessions include a consultation to understand your needs, followed by time t
 </div>
 
 <script>
-// mobile dropdown
+// mobile dropdown only
 document.querySelectorAll('.dropbtn').forEach(btn => {
-btn.addEventListener('click', function(e){
-if (window.innerWidth <= 768) {
-e.preventDefault();
-this.parentElement.classList.toggle('active');
-}
-});
+    btn.addEventListener('click', function(e){
+        if (window.innerWidth <= 768) {
+            e.preventDefault();
+            this.parentElement.classList.toggle('active');
+        }
+    });
 });
 
 document.addEventListener('click', function(e){
-if (!e.target.closest('.dropdown')) {
-document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
-}
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+    }
 });
 </script>
 
