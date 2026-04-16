@@ -361,15 +361,19 @@
         <div class="nav-container">
             <a href="index.html" class="nav-link">Entry</a>
             <a href="about.html" class="nav-link">Profile</a>
+
             <div class="dropdown">
-                <a href="sessions.html" class="nav-link dropbtn">Sessions ▼</a>
+                <button class="dropbtn">Sessions ▼</button>
                 <div class="dropdown-content">
-                    <a href="cp-judicial.html">CP & Judicial Correction</a>
-                    <a href="therapy-spanking.html">Therapeutic Spanking</a>
-                    <a href="slaves.html">Power Exchange & Role Play</a>
+                    <a href="cp-judicial.html">CP, Judicial Punishments</a>
+                    <a href="therapy-spanking.html">Therapy Spanking</a>
+                    <a href="slaves.html">Roleplay</a>
+                    <a href="contact.html">Contact</a>
                 </div>
             </div>
+
             <a href="gifts.html" class="nav-link">Tributes</a>
+            <a href="contact.html" class="nav-link">Contact</a>
         </div>
     </nav>
 
@@ -416,21 +420,20 @@
     </div>
 
     <script>
-        document.querySelectorAll('.dropbtn').forEach(btn => {
-            btn.addEventListener('click', function(e){
-                if (window.innerWidth <= 768) {
-                    e.preventDefault();
-                    this.parentElement.classList.toggle('active');
-                }
-            });
-        });
+// mobile dropdown
+document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', function(e){
+        e.preventDefault();
+        this.parentElement.classList.toggle('active');
+    });
+});
 
-        document.addEventListener('click', function(e){
-            if (!e.target.closest('.dropdown')) {
-                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
-            }
-        });
-    </script>
+document.addEventListener('click', function(e){
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+    }
+});
+</script>
 
 </body>
 </html>
