@@ -49,7 +49,6 @@ body {
     font-size: 2.8rem;
     color: var(--accent-color);
     text-decoration: none;
-    min-width: 0;
 }
 
 .mail-link {
@@ -58,10 +57,9 @@ body {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-align: right;
 }
 
-/* NAV (RESTORED) */
+/* NAV */
 nav {
     background: #000;
     position: sticky;
@@ -89,6 +87,53 @@ nav {
 
 .nav-link:hover, .dropbtn:hover {
     color: #fff;
+}
+
+/* DROPDOWN */
+.dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.sessions-link {
+    padding: 16px 8px 16px 14px;
+}
+
+.drop-caret {
+    padding: 16px 10px 16px 4px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #111;
+    min-width: 320px;
+    border: 1px solid var(--border-color);
+}
+
+.dropdown-content a {
+    color: #888;
+    padding: 12px 15px;
+    display: block;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover {
+    color: #fff;
+    background: #1a1a1a;
+}
+
+.dropdown.active .dropdown-content {
+    display: block;
+}
+
+@media (min-width: 769px) {
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
 }
 
 /* MAIN */
@@ -134,12 +179,22 @@ h1 {
 </div>
 </header>
 
-<!-- ✅ NAV BACK -->
+<!-- ✅ NAV WITH DROPDOWN -->
 <nav>
 <div class="nav-container">
 <a href="index.html" class="nav-link">Entry</a>
 <a href="about.html" class="nav-link">Profile</a>
-<a href="sessions.html" class="nav-link" style="color:#fff;">Sessions</a>
+
+<div class="dropdown">
+    <span class="nav-link sessions-link" style="color:#fff;">Sessions</span>
+    <button class="dropbtn drop-caret">▼</button>
+    <div class="dropdown-content">
+        <a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a>
+        <a href="therapy-spanking.html">Therapy Spanking</a>
+        <a href="slaves.html">Roleplay and Slaves</a>        
+    </div>
+</div>
+
 <a href="gifts.html" class="nav-link">Tributes</a>
 <a href="contact.html" class="nav-link">Contact</a>
 </div>
@@ -152,6 +207,7 @@ h1 {
 <img src="session_1.png" class="hero-img">
 </div>
 
+<h1>Sessions</h1>
 
 <p class="text-block" style="font-style: italic; text-align: center;">
 You will beg for me to spank and whip you, to take you to a place that only you and I know about. I love to spank using a Tawse, cane, paddle or whatever else may come to hand!
@@ -193,6 +249,17 @@ NO alcohol, NO drugs, NO hangovers, NO pre-consumed alcohol or drugs. You must b
 
 </div>
 </div>
+
+<script>
+document.querySelectorAll('.drop-caret').forEach(btn => {
+    btn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        const dropdown = this.parentElement;
+        dropdown.classList.toggle('active');
+    });
+});
+</script>
 
 </body>
 </html>
