@@ -100,6 +100,10 @@ nav {
     background: #111;
     min-width: 260px;
     border: 1px solid var(--border-color);
+
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all 0.2s ease;
 }
 
 .dropdown-content a {
@@ -111,12 +115,18 @@ nav {
 .dropdown.active .dropdown-content {
     display: block;
 }
-    
-   @media (min-width: 769px) {
+
+@media (min-width: 769px) {
     .dropdown:hover .dropdown-content,
     .dropdown-content:hover {
         display: block;
     }
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown.active .dropdown-content {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* MAIN */
