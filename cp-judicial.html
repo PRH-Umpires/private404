@@ -75,8 +75,6 @@
 
         nav {
             background: #000;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -85,22 +83,43 @@
         .nav-container {
             display: flex;
             justify-content: center;
-            align-items: center;
             flex-wrap: wrap;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 10px;
         }
 
-        .nav-link {
+        .nav-link, .dropbtn {
             color: #888;
-            text-decoration: none;
-            padding: 18px 18px;
-            display: inline-block;
-            text-transform: uppercase;
-            font-size: 0.72rem;
+            padding: 16px 14px;
+            font-size: 0.7rem;
             letter-spacing: 2px;
-            white-space: nowrap;
+            text-transform: uppercase;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .dropbtn:hover {
+            color: #fff;
+        }
+
+        .dropdown { position: relative; }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: #111;
+            min-width: 260px;
+            border: 1px solid var(--border-color);
+        }
+
+        .dropdown-content a {
+            color: #888;
+            padding: 12px;
+            display: block;
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block;
         }
 
         .nav-link:hover { color: #fff; }
@@ -334,8 +353,19 @@
         <div class="nav-container">
             <a href="index.html" class="nav-link">Entry</a>
             <a href="about.html" class="nav-link">Profile</a>
-            <a href="sessions.html" class="nav-link">Sessions</a>
+
+            <div class="dropdown">
+                <button class="dropbtn">Sessions ▼</button>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP, Judicial Punishments</a>
+                    <a href="therapy-spanking.html">Therapy Spanking</a>
+                    <a href="slaves.html">Roleplay</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+
             <a href="gifts.html" class="nav-link">Tributes</a>
+            <a href="contact.html" class="nav-link">Contact</a>
         </div>
     </nav>
 
@@ -394,6 +424,22 @@
             </div>
         </div>
     </div>
+
+<script>
+// mobile dropdown
+document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', function(e){
+        e.preventDefault();
+        this.parentElement.classList.toggle('active');
+    });
+});
+
+document.addEventListener('click', function(e){
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+    }
+});
+</script>
 
 </body>
 </html>
