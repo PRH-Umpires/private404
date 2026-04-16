@@ -301,13 +301,17 @@ NO alcohol, NO drugs, NO hangovers, NO pre-consumed alcohol or drugs. You must b
 </div>
 
 <script>
-document.querySelectorAll('.drop-caret').forEach(btn => {
+document.querySelectorAll('.dropbtn').forEach(btn => {
     btn.addEventListener('click', function(e){
         e.preventDefault();
-        e.stopPropagation();
-        const dropdown = this.parentElement;
-        dropdown.classList.toggle('active');
+        this.parentElement.classList.toggle('active');
     });
+});
+
+document.addEventListener('click', function(e){
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+    }
 });
 </script>
 
