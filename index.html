@@ -138,6 +138,8 @@ nav {
 .dropdown-content {
     display: none;
     position: absolute;
+    top: 100%;
+    left: 0;
     background: #111;
     min-width: 260px;
     border: 1px solid var(--border-color);
@@ -149,6 +151,11 @@ nav {
     display: block;
     text-decoration: none;
 
+.dropdown-content a:hover {
+    color: #fff;
+    background: #1a1a1a;
+}
+
     font-size: 0.7rem;
     letter-spacing: 1.5px; /* slightly softer */
     text-transform: uppercase;
@@ -157,7 +164,13 @@ nav {
 .dropdown.active .dropdown-content {
     display: block;
 }
-
+    
+@media (min-width: 769px) {
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+}
+    
 /* MAIN */
 .main-content {
     padding: 60px 20px;
