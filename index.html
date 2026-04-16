@@ -40,7 +40,25 @@
 }
 
 * { box-sizing: border-box; }
+    
+.diamond-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
 
+.diamond-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.diamond-list li::before {
+    content: "♦";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
+}
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
