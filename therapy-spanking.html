@@ -14,6 +14,15 @@
             --border-color: rgba(255, 255, 255, 0.05);
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -21,6 +30,12 @@
             margin: 0;
             padding: 0;
             letter-spacing: 0.02em;
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
         }
 
         /* --- Header & Nav --- */
@@ -38,6 +53,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
 
         .header-logo {
@@ -46,6 +62,7 @@
             color: var(--accent-color);
             text-decoration: none;
             font-weight: normal;
+            min-width: 0;
         }
 
         .mail-link {
@@ -55,6 +72,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: color 0.3s;
+            text-align: right;
         }
 
         .mail-link:hover { color: var(--accent-color); }
@@ -68,29 +86,41 @@
             z-index: 1000;
         }
 
-        .nav-container { display: flex; justify-content: center; }
+        .nav-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
 
         .nav-link, .dropbtn {
             color: #888;
             text-decoration: none;
-            padding: 20px 25px;
+            padding: 18px 18px;
             display: inline-block;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 3px;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
             transition: all 0.4s;
             background: none;
             border: none;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
 
         /* Dropdown Logic */
         .dropdown { position: relative; }
+
         .dropdown-content {
             display: none;
             position: absolute;
+            top: 100%;
+            left: 0;
             background-color: #111;
             min-width: 280px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.8);
@@ -114,7 +144,9 @@
             padding-left: 25px;
         }
 
-        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
 
         /* --- Main Content --- */
         .main-content {
@@ -131,6 +163,7 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
+            overflow: hidden;
         }
 
         .hero-img-container {
@@ -147,6 +180,7 @@
             font-style: italic;
             font-weight: 400;
             text-align: center;
+            overflow-wrap: break-word;
         }
 
         h1 { font-size: 3rem; margin-bottom: 30px; }
@@ -156,6 +190,8 @@
             line-height: 1.8;
             margin-bottom: 25px;
             text-align: justify;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .benefit-box {
@@ -164,6 +200,8 @@
             border-left: 3px solid var(--accent-color);
             margin: 40px 0;
             font-style: italic;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .price-table {
@@ -193,6 +231,8 @@
             margin-bottom: 10px;
             padding-left: 25px;
             position: relative;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .rules-list li::before {
@@ -210,9 +250,101 @@
             margin-top: 60px;
         }
 
+        @media (max-width: 768px) {
+            .header-content {
+                width: 92%;
+            }
+
+            .nav-link, .dropbtn {
+                padding: 14px 12px;
+                font-size: 0.68rem;
+                letter-spacing: 1.5px;
+            }
+
+            .container {
+                padding: 40px 28px;
+            }
+        }
+
         @media (max-width: 600px) {
-            .container { padding: 30px; }
-            h1 { font-size: 2.2rem; }
+            .site-header {
+                padding: 18px 0;
+            }
+
+            .header-content {
+                flex-direction: column;
+                justify-content: center;
+                gap: 8px;
+                text-align: center;
+            }
+
+            .header-logo {
+                font-size: 2.2rem;
+            }
+
+            .mail-link {
+                font-size: 0.72rem;
+                letter-spacing: 1.5px;
+                text-align: center;
+            }
+
+            .nav-container {
+                padding: 0 8px;
+            }
+
+            .nav-link, .dropbtn {
+                padding: 12px 8px;
+                font-size: 0.62rem;
+                letter-spacing: 1px;
+            }
+
+            .dropdown-content {
+                min-width: 240px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .main-content {
+                padding: 40px 14px;
+            }
+
+            .container { 
+                padding: 28px 18px; 
+            }
+
+            h1 { 
+                font-size: 2.2rem; 
+                margin-bottom: 24px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+                margin-top: 38px;
+            }
+
+            h3 {
+                font-size: 1.3rem;
+            }
+
+            .text-block {
+                font-size: 0.98rem;
+                line-height: 1.75;
+            }
+
+            .benefit-box {
+                padding: 22px 18px;
+                margin: 30px 0;
+            }
+
+            .price-table td {
+                padding: 12px 8px;
+                font-size: 0.95rem;
+            }
+
+            .health-safety {
+                padding: 24px 18px;
+                margin-top: 40px;
+            }
         }
     </style>
 </head>
@@ -282,6 +414,23 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.dropbtn').forEach(btn => {
+            btn.addEventListener('click', function(e){
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    this.parentElement.classList.toggle('active');
+                }
+            });
+        });
+
+        document.addEventListener('click', function(e){
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+            }
+        });
+    </script>
 
 </body>
 </html>
