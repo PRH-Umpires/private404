@@ -92,7 +92,25 @@ nav {
 }
 
 /* DROPDOWN */
-.dropdown { position: relative; }
+.dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.sessions-link {
+    padding-right: 8px;
+}
+
+.drop-caret {
+    padding-left: 4px;
+    padding-right: 10px;
+    line-height: 1;
+}
+
+.nav-link:hover, .dropdown:hover .dropbtn {
+    color: #fff;
+}
 
 .dropdown-content {
     display: none;
@@ -233,11 +251,13 @@ h1 { font-size: 2.6rem; }
 <a href="about.html" class="nav-link">Profile</a>
 
 <div class="dropdown">
-<a href="sessions.html" class="dropbtn">Sessions ▼</a>
+<a href="sessions.html" class="nav-link sessions-link">Sessions</a>
+<button class="dropbtn drop-caret" type="button" aria-label="Open Sessions menu" aria-expanded="false">▼</button>
 <div class="dropdown-content">
 <a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a>
 <a href="therapy-spanking.html">Therapy Spanking</a>
 <a href="slaves.html">Roleplay and Slaves</a>
+<a href="contact.html">Contact</a>
 </div>
 </div>
 
@@ -301,19 +321,20 @@ All sessions include a consultation to understand your needs, followed by time t
 </div>
 
 <script>
-// mobile dropdown only
-document.querySelectorAll('.dropbtn').forEach(btn => {
+document.querySelectorAll('.drop-caret').forEach(btn => {
     btn.addEventListener('click', function(e){
-        if (window.innerWidth <= 768) {
-            e.preventDefault();
-            this.parentElement.classList.toggle('active');
-        }
+        e.preventDefault();
+        e.stopPropagation();
+        const dropdown = this.parentElement;
+        const isOpen = dropdown.classList.toggle('active');
+        this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
 });
 
 document.addEventListener('click', function(e){
     if (!e.target.closest('.dropdown')) {
         document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+        document.querySelectorAll('.drop-caret').forEach(b => b.setAttribute('aria-expanded', 'false'));
     }
 });
 </script>
