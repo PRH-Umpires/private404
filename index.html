@@ -93,7 +93,7 @@
             display: none;
             position: absolute;
             background-color: #111;
-            min-width: 320px; /* Slightly wider for the new names */
+            min-width: 320px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.8);
             border: 1px solid var(--border-color);
             text-align: left;
@@ -158,18 +158,21 @@
             line-height: 1.8;
             margin-bottom: 40px;
             font-size: 0.95rem;
+            text-align: left; /* Better for lists */
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .disclaimer-text ul {
             list-style: none;
             padding: 0;
-            display: inline-block;
-            text-align: left;
+            margin-top: 15px;
         }
 
         .disclaimer-text li {
             margin-bottom: 10px;
-            padding-left: 20px;
+            padding-left: 25px;
             position: relative;
         }
 
@@ -183,15 +186,23 @@
         .warning-box {
             border: 1px solid var(--accent-color);
             color: var(--accent-color);
-            padding: 15px;
+            padding: 20px;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            font-size: 0.8rem;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
             margin-bottom: 40px;
-            display: inline-block;
+            display: block;
+            line-height: 1.5;
         }
 
-        .btn-group { display: flex; justify-content: center; gap: 20px; }
+        .agreement-note {
+            font-size: 0.75rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 30px;
+        }
+
+        .btn-group { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
 
         .btn {
             text-decoration: none;
@@ -264,23 +275,27 @@
             <h1>Disciplinarian</h1>
 
             <div class="disclaimer-text">
-                <p>Before proceeding, you must acknowledge:</p>
+                <p>Only enter if you:</p>
                 <ul>
-                    <li>You are over the age of 21 and viewing this is legal in your jurisdiction.</li>
-                    <li>You understand the standards of this private space and take full responsibility for your presence here.</li>
-                    <li>You release the creators from any and all liability.</li>
-                    <li>You are seeking professional discipline and correction.</li>
+                    <li>Are not liable to be offended by such materials.</li>
+                    <li>Are over the age of 21 and it is legal for you to view and possess adult material in your Country/community.</li>
+                    <li>Understand the standards and laws of the community, site and computer to which you are transporting this material, and are solely responsible for your actions.</li>
+                    <li>Release and discharge the providers, owners and creators of this site from any and all liability which might arise.</li>
                 </ul>
             </div>
 
             <div class="warning-box">
-                No Sexual Services Provided
+                There are NO SEXUAL services offered on this site, if that's what you want please look somewhere else.
             </div>
 
             <div class="btn-group">
-                <a href="about.html" class="btn btn-enter">Proceed</a>
-                <a href="https://www.google.com" class="btn btn-exit">Depart</a>
+                <a href="about.html" class="btn btn-enter">Enter Site</a>
+                <a href="https://www.google.com" class="btn btn-exit">Leave Site</a>
             </div>
+
+            <p class="agreement-note">
+                Bookmarking or directly accessing any other page on this website and bypassing this Agreement shall constitute an implicit acceptance of this Agreement.
+            </p>
         </div>
     </div>
 
