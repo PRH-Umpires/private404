@@ -14,6 +14,15 @@
             --border-color: rgba(255, 255, 255, 0.05);
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -21,6 +30,12 @@
             margin: 0;
             padding: 0;
             letter-spacing: 0.02em;
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
         }
 
         /* --- Header & Nav (Consistent with Index) --- */
@@ -38,6 +53,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
 
         .header-logo {
@@ -45,6 +61,7 @@
             font-size: 2.8rem;
             color: var(--accent-color);
             text-decoration: none;
+            min-width: 0;
         }
 
         .mail-link {
@@ -53,6 +70,7 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+            text-align: right;
         }
 
         nav {
@@ -64,14 +82,25 @@
             z-index: 1000;
         }
 
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+
         .nav-link {
             color: #888;
             text-decoration: none;
-            padding: 20px 25px;
+            padding: 18px 18px;
             display: inline-block;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 3px;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            white-space: nowrap;
         }
 
         .nav-link:hover { color: #fff; }
@@ -89,6 +118,7 @@
             padding: 60px;
             border: 1px solid var(--border-color);
             backdrop-filter: blur(10px);
+            overflow: hidden;
         }
 
         .hero-img-container {
@@ -97,17 +127,32 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .hero-img { width: 100%; display: block; filter: brightness(90%); }
+        .hero-img { 
+            width: 100%; 
+            display: block; 
+            filter: brightness(90%); 
+        }
 
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
             color: #fff;
             font-style: italic;
             font-weight: 400;
+            overflow-wrap: break-word;
         }
 
-        h1 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; }
-        h2 { font-size: 1.8rem; margin-top: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        h1 { 
+            font-size: 2.5rem; 
+            text-align: center; 
+            margin-bottom: 40px; 
+        }
+
+        h2 { 
+            font-size: 1.8rem; 
+            margin-top: 50px; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 10px; 
+        }
         
         .quote-banner {
             font-family: 'Playfair Display', serif;
@@ -120,7 +165,13 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .text-block { line-height: 1.8; margin-bottom: 25px; font-size: 1.05rem; }
+        .text-block { 
+            line-height: 1.8; 
+            margin-bottom: 25px; 
+            font-size: 1.05rem; 
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
 
         /* Pricing Section */
         .price-list {
@@ -148,6 +199,8 @@
             margin-bottom: 15px;
             padding-left: 35px;
             position: relative;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .rules-list li::before {
@@ -165,9 +218,106 @@
             font-size: 0.95rem;
         }
 
+        @media (max-width: 768px) {
+            .header-content {
+                width: 92%;
+            }
+
+            .nav-link {
+                padding: 14px 12px;
+                font-size: 0.68rem;
+                letter-spacing: 1.5px;
+            }
+
+            .container {
+                padding: 40px 28px;
+            }
+
+            .quote-banner {
+                font-size: 1.3rem;
+                padding: 18px;
+            }
+        }
+
         @media (max-width: 600px) {
-            .container { padding: 30px; }
-            h1 { font-size: 2rem; }
+            .site-header {
+                padding: 18px 0;
+            }
+
+            .header-content {
+                flex-direction: column;
+                justify-content: center;
+                gap: 8px;
+                text-align: center;
+            }
+
+            .header-logo {
+                font-size: 2.2rem;
+            }
+
+            .mail-link {
+                font-size: 0.72rem;
+                letter-spacing: 1.5px;
+                text-align: center;
+            }
+
+            .nav-container {
+                padding: 0 8px;
+            }
+
+            .nav-link {
+                padding: 12px 8px;
+                font-size: 0.62rem;
+                letter-spacing: 1px;
+            }
+
+            .main-content {
+                padding: 40px 14px;
+            }
+
+            .container { 
+                padding: 28px 18px; 
+            }
+
+            h1 { 
+                font-size: 2rem; 
+                margin-bottom: 28px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.35rem;
+            }
+
+            .quote-banner {
+                font-size: 1.15rem;
+                margin-bottom: 35px;
+                padding: 16px 12px;
+            }
+
+            .text-block {
+                font-size: 0.98rem;
+                line-height: 1.75;
+            }
+
+            .price-item {
+                font-size: 1.05rem;
+            }
+
+            .health-safety {
+                padding: 24px 18px;
+            }
+
+            .rules-list li {
+                padding-left: 28px;
+            }
+
+            .rules-list li::before {
+                left: 6px;
+            }
         }
     </style>
 </head>
@@ -181,10 +331,12 @@
     </header>
 
     <nav>
-        <a href="index.html" class="nav-link">Entry</a>
-        <a href="about.html" class="nav-link">Profile</a>
-        <a href="sessions.html" class="nav-link">Sessions</a>
-        <a href="gifts.html" class="nav-link">Tributes</a>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Entry</a>
+            <a href="about.html" class="nav-link">Profile</a>
+            <a href="sessions.html" class="nav-link">Sessions</a>
+            <a href="gifts.html" class="nav-link">Tributes</a>
+        </div>
     </nav>
 
     <div class="main-content">
