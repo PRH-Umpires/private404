@@ -235,7 +235,7 @@ h1 { font-size: 2.6rem; }
 <a href="about.html" class="nav-link">Profile</a>
 
 <div class="dropdown">
-<button class="dropbtn">Sessions ▼</button>
+<a href="sessions.html" class="dropbtn">Sessions ▼</a>
 <div class="dropdown-content">
 <a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a>
 <a href="therapy-spanking.html">Therapy Spanking</a>
@@ -307,8 +307,10 @@ All sessions include a consultation to understand your needs, followed by time t
 // mobile dropdown
 document.querySelectorAll('.dropbtn').forEach(btn => {
 btn.addEventListener('click', function(e){
+if (window.innerWidth <= 768) {
 e.preventDefault();
 this.parentElement.classList.toggle('active');
+}
 });
 });
 
