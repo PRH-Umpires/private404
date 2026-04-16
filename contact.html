@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Mistress | Mistress Deville</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --text-color: #d1d1d1;
+            --accent-color: #7a0000;
+            --glass-bg: rgba(25, 25, 25, 0.8);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --input-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            letter-spacing: 0.02em;
+        }
+
+        /* --- Header & Nav (Matched to Slaves.html) --- */
+        .site-header {
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+            padding: 25px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .header-content {
+            width: 90%;
+            max-width: 1000px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 2.8rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: normal;
+        }
+
+        .mail-link {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+        }
+
+        nav {
+            background: #000;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container { display: flex; justify-content: center; }
+
+        .nav-link, .dropbtn {
+            color: #888;
+            text-decoration: none;
+            padding: 20px 25px;
+            display: inline-block;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            transition: all 0.4s;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
+
+        .dropdown { position: relative; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #111;
+            min-width: 280px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .dropdown-content a {
+            color: #888;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        }
+
+        .dropdown:hover .dropdown-content { display: block; }
+
+        /* --- Main Content --- */
+        .main-content {
+            padding: 80px 20px;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            padding: 60px;
+            border-radius: 2px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-img-container {
+            max-width: 500px;
+            margin: 0 auto 40px auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hero-img { width: 100%; display: block; filter: brightness(90%); }
+
+        /* --- Form Styling (Matched to image_43d1ea.png) --- */
+        .contact-intro {
+            font-family: 'Brush Script MT', cursive;
+            color: #a82e2e;
+            font-size: 1.8rem;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 40px;
+        }
+
+        .confidential-tag {
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .required-notice {
+            color: #888;
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-family: 'Brush Script MT', cursive;
+            color: #a82e2e;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        label span {
+            color: #a82e2e;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            vertical-align: top;
+        }
+
+        .name-fields {
+            display: flex;
+            gap: 20px;
+        }
+
+        .field-sub {
+            flex: 1;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            border-radius: 2px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .sub-label {
+            font-family: 'Brush Script MT', cursive;
+            color: #a82e2e;
+            font-size: 1.4rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .submit-btn {
+            background: #eee;
+            color: #333;
+            border: none;
+            padding: 12px 40px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-color);
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 30px; }
+            .name-fields { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">Mistress Deville</a>
+            <a href="mailto:mistressdeville@example.com" class="mail-link">Private Inquiries</a>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Entry</a>
+            <a href="about.html" class="nav-link">Profile</a>
+            <div class="dropdown">
+                <a href="sessions.html" class="nav-link dropbtn">Sessions ▼</a>
+                <div class="dropdown-content">
+                    <a href="cp-judicial.html">CP & Judicial Correction</a>
+                    <a href="therapy-spanking.html">Therapeutic Spanking</a>
+                    <a href="slaves.html">Power Exchange & Role Play</a>
+                </div>
+            </div>
+            <a href="gifts.html" class="nav-link">Tributes</a>
+            <a href="contact.html" class="nav-link" style="color:#fff">Contact Mistress</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="hero-img-container">
+                <img src="contact.png" alt="Contact" class="hero-img">
+            </div>
+
+            <div class="contact-intro">
+                You can use the form below to contact me and I will respond as soon as I can. Please let me know if you need a convenient time for me to contact you back. <span class="confidential-tag">All information given is confidential.</span>
+            </div>
+
+            <p class="required-notice">* Indicates required field</p>
+
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label>Name <span>*</span></label>
+                    <div class="name-fields">
+                        <div class="field-sub">
+                            <input type="text" name="first_name" required>
+                            <span class="sub-label">First</span>
+                        </div>
+                        <div class="field-sub">
+                            <input type="text" name="last_name" required>
+                            <span class="sub-label">Last</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email <span>*</span></label>
+                    <input type="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number <span>*</span></label>
+                    <input type="tel" name="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Needs <span>*</span></label>
+                    <textarea name="needs" required></textarea>
+                </div>
+
+                <div class="submit-container">
+                    <button type="submit" class="submit-btn">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
