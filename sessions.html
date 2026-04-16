@@ -152,6 +152,8 @@ nav {
 .dropdown-content {
     display: none;
     position: absolute;
+    top: 100%;
+    left: 0;
     background: #111;
     min-width: 260px;
     border: 1px solid var(--border-color);
@@ -161,7 +163,11 @@ nav {
     color: #888;
     padding: 12px 15px;
     display: block;
+    text-decoration: none;
+
     font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
 .dropdown-content a:hover {
@@ -173,9 +179,10 @@ nav {
     display: block;
 }
 
-/* MAIN */
-.main-content {
-    padding: 60px 20px;
+@media (min-width: 769px) {
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
 }
 
 /* MAIN */
