@@ -91,63 +91,6 @@ nav {
     color: #fff;
 }
 
-/* DROPDOWN */
-.dropdown {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-}
-
-.sessions-link {
-    display: inline-block;
-    padding: 16px 8px 16px 14px;
-}
-
-.drop-caret {
-    display: inline-block;
-    padding: 16px 10px 16px 4px;
-    line-height: 1;
-    position: relative;
-    z-index: 2;
-}
-
-.nav-link:hover, .dropdown:hover .dropbtn {
-    color: #fff;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #111;
-    min-width: 320px;
-    border: 1px solid var(--border-color);
-    z-index: 1001;
-}
-
-.dropdown-content a {
-    color: #888;
-    padding: 12px 15px;
-    display: block;
-    text-decoration: none;
-}
-
-.dropdown-content a:hover {
-    color: #fff;
-    background: #1a1a1a;
-}
-
-.dropdown.active .dropdown-content {
-    display: block;
-}
-
-@media (min-width: 769px) {
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-}
-
 /* MAIN */
 .main-content {
     padding: 60px 20px;
@@ -169,72 +112,15 @@ nav {
     width: 100%;
 }
 
-h1, h2, h3 {
+h1 {
     font-family: 'Playfair Display', serif;
     color: #fff;
     text-align: center;
 }
 
-h1 { font-size: 2.6rem; }
-
 .text-block {
     line-height: 1.8;
     margin-bottom: 25px;
-}
-
-.session-link {
-    color: var(--accent-color);
-    text-decoration: none;
-}
-
-/* PRICE */
-.price-table {
-    width: 100%;
-    margin: 40px 0;
-    border-collapse: collapse;
-}
-
-.price-table td {
-    padding: 15px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.price-table td:last-child {
-    text-align: right;
-    color: #fff;
-    font-weight: bold;
-}
-
-/* WARNING */
-.warning-strip {
-    padding: 20px;
-    border: 1px solid rgba(122,0,0,0.3);
-    margin-top: 30px;
-    text-align: center;
-}
-
-/* MOBILE */
-@media (max-width: 600px) {
-    .site-header {
-        padding: 18px 0;
-    }
-
-    .header-content {
-        flex-direction: column;
-        justify-content: center;
-        gap: 8px;
-        text-align: center;
-    }
-
-    .header-logo {
-        font-size: 2.2rem;
-    }
-
-    .mail-link {
-        font-size: 0.72rem;
-        letter-spacing: 1.5px;
-        text-align: center;
-    }
 }
 </style>
 </head>
@@ -242,31 +128,11 @@ h1 { font-size: 2.6rem; }
 <body>
 
 <header class="site-header">
-    <div class="header-content">
-        <a href="index.html" class="header-logo">Mistress Deville</a>
-        <a href="mailto:mistressdeville@example.com" class="mail-link">Private Inquiries</a>
-    </div>
+<div class="header-content">
+<a href="index.html" class="header-logo">Mistress Deville</a>
+<a href="mailto:mistressdeville@example.com" class="mail-link">Private Inquiries</a>
+</div>
 </header>
-
-<nav>
-<div class="nav-container">
-<a href="index.html" class="nav-link">Entry</a>
-<a href="about.html" class="nav-link">Profile</a>
-
-<div class="dropdown">
-    <span class="nav-link sessions-link" style="color:#fff;">Sessions</span>
-    <button class="dropbtn drop-caret" type="button">▼</button>
-    <div class="dropdown-content">
-        <a href="cp-judicial.html">CP, Judicial Punishments and OTK Spanking</a>
-        <a href="therapy-spanking.html">Therapy Spanking</a>
-        <a href="slaves.html">Roleplay and Slaves</a>        
-    </div>
-</div>
-
-<a href="gifts.html" class="nav-link">Tributes</a>
-<a href="contact.html" class="nav-link">Contact</a>
-</div>
-</nav>
 
 <div class="main-content">
 <div class="container">
@@ -281,7 +147,6 @@ h1 { font-size: 2.6rem; }
 You will beg for me to spank and whip you, to take you to a place that only you and I know about. I love to spank using a Tawse, cane, paddle or whatever else may come to hand!
 </p>
 
-<!-- ✅ YOUR TEXT INSERTED EXACTLY HERE -->
 <div class="text-block">
 You will beg for me to spank and whip you, to take you to a place that only you and I know about.<br><br>
 I love to spank using a Tawse, cane, paddle or whatever else may come to hand!<br><br>
@@ -316,37 +181,8 @@ If you turn up and don't meet with my high expectations of personal hygiene then
 NO alcohol, NO drugs, NO hangovers, NO pre-consumed alcohol or drugs. You must be 100% compus mentis. Should I detect otherwise, again you will be turned away but will still give me the tribute.
 </div>
 
-<h2>Tribute</h2>
-
-<table class="price-table">
-<tr><td>Fifteen minutes</td><td>£50.00</td></tr>
-<tr><td>Half Hour session</td><td>£70.00</td></tr>
-<tr><td>Forty Five minute session</td><td>£100.00</td></tr>
-<tr><td>Full Hour session</td><td>£140.00</td></tr>
-</table>
-
-<div class="warning-strip">
-<strong>
-I will not switch - ever - do not ask.<br>
-No sex - ever - do not ask.<br>
-No sexual services - ever - do not ask.
-</strong><br><br>
-All sessions include a consultation to understand your needs, followed by time to gather yourself afterward. I accept tips and love gifts.
-</div>
-
 </div>
 </div>
-
-<script>
-document.querySelectorAll('.drop-caret').forEach(btn => {
-    btn.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        const dropdown = this.parentElement;
-        const isOpen = dropdown.classList.toggle('active');
-    });
-});
-</script>
 
 </body>
 </html>
