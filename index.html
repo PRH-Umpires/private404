@@ -32,12 +32,11 @@
 
 <style>
 :root {
-    --bg-color: #1a1a1a;            
-    --text-color: #e6e0d8;            
-    --accent-color: #7a0000;  
-    --cream-bg: #e9e2d7; 
-    --glass-bg: rgba(34, 34, 34, 0.85);
-    --border-color: rgba(255, 255, 255, 0.08);
+    --bg-color: #0f0f0f;
+    --text-color: #d1d1d1;
+    --accent-color: #7a0000; 
+    --glass-bg: rgba(25, 25, 25, 0.8);
+    --border-color: rgba(255, 255, 255, 0.05);
 }
 
 * { box-sizing: border-box; }
@@ -72,7 +71,7 @@ body {
 .site-header {
     display: flex;
     justify-content: center;
-    background-color: #e6e0d8;
+    background-color: #ffffff;
     padding: 25px 0;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
@@ -96,7 +95,7 @@ body {
 
 .mail-link {
     text-decoration: none;
-    color: #7a7268;
+    color: #666;
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -183,13 +182,11 @@ nav {
 .container {
     max-width: 800px;
     margin: 0 auto;
-    background: #e9e2d7; /* warm cream */
-    color: #2a2a2a;       /* dark text for contrast */
+    background: var(--glass-bg);
     padding: 40px 25px;
     text-align: center;
-    border: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
+
 .hero-img-container {
     max-width: 400px;
     margin: 0 auto 30px;
@@ -202,7 +199,7 @@ nav {
 h1 {
     font-family: 'Playfair Display', serif;
     font-size: 2.8rem;
-    color: #2a2a2a;
+    color: #fff;
 }
 
 .disclaimer-text {
