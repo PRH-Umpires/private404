@@ -71,16 +71,16 @@
             height: auto;
         }
 
-        /* --- Header & Nav --- */
+/* HEADER */
 .site-header {
     display: flex;
     justify-content: center;
-    background-color: #e6e0d8; /* warm cream */
+    background-color: #e6e0d8;
     padding: 25px 0;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 
-        .header-content {
+.header-content {
     width: 90%;
     max-width: 1100px;
     margin: 0 auto;
@@ -89,7 +89,7 @@
     align-items: center;
 }
 
-        .header-logo {
+.header-logo {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2.8rem;
     letter-spacing: 1.5px;
@@ -98,47 +98,64 @@
     font-weight: 500;
 }
 
-        .mail-link {
-            text-decoration: none;
-            color: #666;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: right;
-        }
+.mail-link {
+    text-decoration: none;
+    color: #666;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
 
-        nav {
-            background: #000;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+/* NAV */
+nav {
+    background: #000;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-        .nav-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+.nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
 
-        .nav-link, .dropbtn {
-            color: #888;
-            padding: 16px 14px;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-decoration: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
+.nav-link, .dropbtn {
+    color: #888;
+    padding: 16px 14px;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    min-height: 52px;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+}
 
-        .nav-link:hover, .dropbtn:hover {
-            color: #fff;
-        }
+.nav-link:hover, .dropbtn:hover {
+    color: #fff;
+}
 
 /* DROPDOWN */
-.dropdown { 
-    position: relative; 
+.dropdown {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+.dropbtn {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .dropdown-content {
