@@ -303,52 +303,75 @@ nav {
             background: #900000;
         }
 
-        @media (max-width: 600px) {
-            .nav-link, .dropbtn {
-                font-size: 0.65rem;
-                padding: 12px 8px;
-            }
+/* MOBILE */
+@media (max-width: 600px) {
+    .site-header {
+        padding: 30px 0 20px;
+    }
 
-            .site-header {
-                padding: 30px 0 20px;
-            }
+    .header-content {
+        width: 90%;
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+    }
 
-            .header-content {
-                flex-direction: column;
-                justify-content: center;
-                gap: 8px;
-                text-align: center;
-            }
+    .header-logo {
+        font-size: 2.6rem;
+        line-height: 1;
+    }
 
-            .header-logo {
-                font-size: 2.6rem;
-            }
+    .mail-link {
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #7a7066;
+        text-decoration: none;
+        line-height: 1;
+        display: block;
+    }
 
-            .mail-link {
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #7a7066;
-    text-decoration: none;
+    .nav-link, .dropbtn {
+        padding: 12px 8px;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .main-content {
+        padding: 48px 14px;
+    }
+
+    .container {
+        padding: 28px 18px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    h2 {
+        font-size: 1.45rem;
+    }
+
+    .text-block {
+        text-align: left;
+    }
+
+    .health-safety {
+        padding: 24px 18px;
+    }
+
+    .highlight-box {
+        padding: 22px 18px;
+    }
 }
-
-            .main-content {
-                padding: 20px 12px;
-            }
-
-            .container {
-                padding: 20px 16px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            input, textarea, select {
-                font-size: 16px;
-            }
-        }
     </style>
 </head>
 <body>
