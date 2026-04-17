@@ -94,8 +94,6 @@
 
         nav {
             background: #000;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -104,29 +102,24 @@
         .nav-container { 
             display: flex; 
             justify-content: center; 
-            align-items: center;
             flex-wrap: wrap;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 10px;
         }
 
         .nav-link, .dropbtn {
             color: #888;
-            text-decoration: none;
-            padding: 18px 18px;
-            display: inline-block;
-            text-transform: uppercase;
-            font-size: 0.72rem;
+            padding: 16px 14px;
+            font-size: 0.7rem;
             letter-spacing: 2px;
-            transition: all 0.4s;
+            text-transform: uppercase;
+            text-decoration: none;
             background: none;
             border: none;
             cursor: pointer;
-            white-space: nowrap;
         }
 
-        .nav-link:hover, .dropdown:hover .dropbtn { color: #fff; }
+        .nav-link:hover, .dropbtn:hover {
+            color: #fff;
+        }
 
 /* DROPDOWN */
 .dropdown { 
@@ -280,12 +273,6 @@
                 width: 92%;
             }
 
-            .nav-link, .dropbtn {
-                padding: 14px 12px;
-                font-size: 0.68rem;
-                letter-spacing: 1.5px;
-            }
-
             .container {
                 padding: 40px 28px;
             }
@@ -315,20 +302,9 @@
     text-decoration: none;
 }
 
-            .nav-container {
-                padding: 0 8px;
-            }
-
             .nav-link, .dropbtn {
+                font-size: 0.65rem;
                 padding: 12px 8px;
-                font-size: 0.62rem;
-                letter-spacing: 1px;
-            }
-
-            .dropdown-content {
-                min-width: 240px;
-                left: 50%;
-                transform: translateX(-50%);
             }
 
             .main-content {
