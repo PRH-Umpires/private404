@@ -313,77 +313,75 @@ h2 {
             }
         }
 
-        @media (max-width: 600px) {
-            .site-header {
-                padding: 30px 0 20px;
-            }
+/* MOBILE */
+@media (max-width: 600px) {
+    .site-header {
+        padding: 30px 0 20px;
+    }
 
-            .header-content {
-                flex-direction: column;
-                justify-content: center;
-                gap: 8px;
-                text-align: center;
-            }
+    .header-content {
+        width: 90%;
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+    }
 
-            .header-logo {
-                font-size: 2.6rem;
-            }
+    .header-logo {
+        font-size: 2.6rem;
+        line-height: 1;
+    }
 
-            .mail-link {
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #7a7066;
-    text-decoration: none;
+    .mail-link {
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #7a7066;
+        text-decoration: none;
+        line-height: 1;
+        display: block;
+    }
+
+    .nav-link, .dropbtn {
+        padding: 12px 8px;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .main-content {
+        padding: 48px 14px;
+    }
+
+    .container {
+        padding: 28px 18px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    h2 {
+        font-size: 1.45rem;
+    }
+
+    .text-block {
+        text-align: left;
+    }
+
+    .health-safety {
+        padding: 24px 18px;
+    }
+
+    .highlight-box {
+        padding: 22px 18px;
+    }
 }
-
-            .nav-link, .dropbtn {
-                font-size: 0.65rem;
-                padding: 12px 8px;
-            }
-
-            .main-content {
-                padding: 40px 14px;
-            }
-
-            .container { 
-                padding: 28px 18px; 
-            }
-
-            h1 { 
-                font-size: 2.2rem; 
-                margin-bottom: 24px;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-                margin-top: 38px;
-            }
-
-            h3 {
-                font-size: 1.3rem;
-            }
-
-            .text-block {
-                font-size: 0.98rem;
-                line-height: 1.75;
-            }
-
-            .benefit-box {
-                padding: 22px 18px;
-                margin: 30px 0;
-            }
-
-            .price-table td {
-                padding: 12px 8px;
-                font-size: 0.95rem;
-            }
-
-            .health-safety {
-                padding: 24px 18px;
-                margin-top: 40px;
-            }
-        }
     </style>
 </head>
 <body>
