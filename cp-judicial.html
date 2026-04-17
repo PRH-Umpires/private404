@@ -327,20 +327,27 @@ nav {
             }
         }
 
+/* MOBILE */
 @media (max-width: 600px) {
     .site-header {
         padding: 30px 0 20px;
     }
 
     .header-content {
+        width: 90%;
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
         gap: 8px;
         text-align: center;
     }
 
     .header-logo {
         font-size: 2.6rem;
+        line-height: 1;
     }
 
     .mail-link {
@@ -349,69 +356,44 @@ nav {
         text-transform: uppercase;
         color: #7a7066;
         text-decoration: none;
+        line-height: 1;
+        display: block;
     }
 
-.nav-container {
-    padding: 0 6px;
-    flex-wrap: wrap;
-}
+    .nav-link, .dropbtn {
+        padding: 12px 8px;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+    }
 
-.nav-link, .dropbtn {
-    padding: 12px 8px;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-}
-
-.nav-link:last-child {
-    white-space: nowrap;
-}
+    h1 {
+        font-size: 2.2rem;
+    }
 
     .main-content {
-        padding: 40px 14px;
+        padding: 48px 14px;
     }
 
-    .container { 
-        padding: 28px 18px; 
-    }
-
-    h1 { 
-        font-size: 2.6rem; 
-        margin-bottom: 28px;
+    .container {
+        padding: 28px 18px;
+        width: 100%;
+        max-width: 100%;
     }
 
     h2 {
-        font-size: 1.5rem;
-    }
-
-    h3 {
-        font-size: 1.35rem;
-    }
-
-    .quote-banner {
-        font-size: 1.15rem;
-        margin-bottom: 35px;
-        padding: 16px 12px;
+        font-size: 1.45rem;
     }
 
     .text-block {
-        font-size: 0.98rem;
-        line-height: 1.75;
-    }
-
-    .price-item {
-        font-size: 1.05rem;
+        text-align: left;
     }
 
     .health-safety {
         padding: 24px 18px;
     }
 
-    .rules-list li {
-        padding-left: 28px;
-    }
-
-    .rules-list li::before {
-        left: 6px;
+    .highlight-box {
+        padding: 22px 18px;
     }
 }
     </style>
